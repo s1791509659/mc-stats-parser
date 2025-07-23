@@ -1,6 +1,6 @@
 # Minecraft Stats Parser
 A tool to analyze players' stats file in mc
-
+Sorry for being lazy to fully translate the page into English.
 
 ## Browser from:
 ### 1.github pages: [MC Stats parser](https://s1791509659.github.io/mc-stats-parser/)
