@@ -963,7 +963,23 @@
             const searchContainer = document.querySelector('.search-container');
             if (searchContainer) {
                 searchContainer.style.display = 'block';
+                
+                // 添加物品搜索功能
+                const itemSearchInput = document.getElementById('item-search');
+                if (itemSearchInput) {
+                    itemSearchInput.addEventListener('input', function() {
+                        const searchTerm = this.value.toLowerCase();
+                        const itemRows = document.querySelectorAll('td[data-item-name]');
+                        itemRows.forEach(td => {
+                            const row = td.closest('tr');
+                            const itemName = td.getAttribute('data-item-name');
+                            row.style.display = itemName.includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+                }
             }
+
+            
 
             // Handle filter and sort changes
             function handleFilterAndSort() {
@@ -1417,12 +1433,17 @@
                 <span class="close-button-changelog">&times;</span>
                 <h2>bug修复日志</h2>
                 <div id="changelogContent">
-                    <h3>2025_07_23_2_Minecraft统计数据排行榜bug修复日志</h3>
+                    <h3>2025072303_搜索框Bug修复</h3>
+                    <h4>问题现象</h4>
+                    <p>搜索框失效</p>
+                    <h4>问题原因</h4>
+                    <p>修上一个bug的时候引发此bug</p>
+                    <h3>2025072302_Minecraft统计数据排行榜bug修复日志</h3>
                     <h4>问题现象</h4>
                     <p>排序后切换玩家，排序效果得不到保留</p>
                     <h4>修复方案</h4>
                     <p>切换玩家默认使用已选中排序</p>
-                    <h3>2025_07_23_1_Minecraft统计数据排行榜bug修复日志</h3>
+                    <h3>2025072301_Minecraft统计数据排行榜bug修复日志</h3>
                     <h4>问题现象</h4>
                     <p>分析服务器stats文件时发现假人xekr的僵尸猪灵击杀数据在排行榜中显示错误：原本应该显示其<strong>击杀僵尸猪灵6,917,927次</strong>，但实际却显示为<strong>被僵尸猪灵击杀1次</strong>。</p>
 
