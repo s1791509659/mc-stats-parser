@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Statistics Parser</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .filter-group {
+    margin-bottom: 15px;
+}
+
+.search-input {
+    padding: 8px 12px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: block !important;
+    visibility: visible !important;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+#playerSearchContainer {
+    display: block !important;
+    visibility: visible !important;
+}
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+            transition: border-color 0.3s, background-color 0.3s;
+            background-color: white;
+        }
+        
+        .upload-area:hover {
+            border-color: #4CAF50;
+            background-color: #f9f9f9;
+        }
+
+        .upload-area.dragover {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+        
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        #item-search {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .upload-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+        
+        #fileInfo {
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .error {
+            color: #dc3545;
+            padding: 15px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .filters {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .category-filter, .sort-select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        
+        /* 表格样式 - 响应式设计 */
+        .stats-container {
+            margin: 20px 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        
+        .stats-table th, 
+        .stats-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stats-table th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .stats-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        /* 响应式样式 */
+        @media (max-width: 768px) {
+            /* 在中等屏幕上变为两列布局 */
+            .stats-table thead {
+                display: none;
+            }
+            
+            .stats-table tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+            
+            .stats-table td {
+                display: block;
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+            
+            .stats-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 12px;
+                text-align: left;
+                font-weight: bold;
+            }
+            
+            /* 隐藏类别列，将类别作为标题显示 */
+            .stats-table td:nth-child(1) {
+                background-color: #f0f0f0;
+                font-weight: bold;
+                text-align: center;
+                padding: 12px;
+            }
+            
+            .stats-table td:nth-child(1)::before {
+                display: none;
+            }
+            
+            .stats-table td:nth-child(2) {
+                border-bottom: 1px solid #eee;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 在小屏幕上变为单列布局 */
+            .stats-table td {
+                display: block;
+                text-align: left;
+                padding: 8px 12px;
+                position: relative;
+            }
+            
+            .stats-table td::before {
+                display: block;
+                width: 100%;
+                padding-left: 0;
+                margin-bottom: 4px;
+            }
+            
+            .stats-table td:nth-child(1) {
+                padding: 12px;
+            }
+            
+            .stats-table td:nth-child(2),
+            .stats-table td:nth-child(3) {
+                padding-left: 12px;
+            }
+        }
+    </style>
+    <script src="https://s4.zstatic.net/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+    <div style="position: relative;">
+    <h1>Minecraft Statistics Parser</h1>
+    <button id="helpButton" style="position: absolute; top: 0; right: 0; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; margin-right: 35px;">?</button>
+    <button id="changelogButton" style="position: absolute; top: 0; right: 0; background-color: #ffc107; color: white; width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer;">!</button>
+</div>
+    <p class="description">Upload your Minecraft statistics file to view detailed player statistics.</p>
+
+        <div class="upload-area">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Select File</button>
+            <input type="file" id="fileInput" accept=".json,.zip,.lang">
+            <p id="fileInfo">No file selected</p>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">Parsing data...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="filters" class="filters" style="display: none;">
+            <!-- 添加搜索框 -->
+            <div class="filter-group" id="playerSearchContainer">
+                <label for="playerSearch" class="filter-label">Search Player:</label>
+                <input type="text" id="playerSearch" class="search-input" placeholder="Enter player name or UUID">
+            </div>
+            
+            <!-- 玩家选择将在这里动态插入 -->
+            
+            <div class="filter-group">
+                <label for="categoryFilter" class="filter-label">Filter by Category:</label>
+                <select id="categoryFilter" class="category-filter">
+                    <option value="all">All Categories</option>
+                    <!-- 类别将动态生成 -->
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="sortSelect" class="filter-label">Sort by:</label>
+                <select id="sortSelect" class="sort-select">
+                    <option value="category">Category</option>
+                    <option value="count-asc">Count (Ascending)</option>
+                    <option value="count-desc">Count (Descending)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="search-container" style="display: none;">
+                <input type="text" id="item-search" placeholder="Search for items...">
+            </div>
+            <div id="tableContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // 存储翻译数据
+        let translations = {
+            category: {},
+            item: {}
+        };
+        
+        // 添加标志变量表示是否已上传翻译文件
+        let translationFileUploaded = false;
+        
+        // 存储用户缓存数据 - 新增
+        let userCache = {};
+
+        // 在标签内，userCache变量后添加
+        // 存储所有玩家的统计数据
+        let allPlayersStats = {};
+        // 存储UUID到文件名的映射
+        let uuidToFilename = {};
+
+        // 修改文件上传处理函数
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            handleFileUpload(file);
+        });
+
+        // 添加拖拽上传功能
+        const uploadArea = document.querySelector('.upload-area');
+
+        // 阻止浏览器默认拖放行为
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // 添加拖拽视觉反馈
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('dragover');
+        }
+
+        // 处理拖放文件
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            if (file) {
+                handleFileUpload(file);
+            }
+        }
+
+        // 重构文件处理逻辑为通用函数
+        function handleFileUpload(file) {
+            // Show file name
+            document.getElementById('fileInfo').textContent = `Selected: ${file.name}`;
+
+            // Show loading state
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('tableContainer').innerHTML = '';
+            document.getElementById('filters').style.display = 'none';
+            
+            // 隐藏物品搜索框
+            const searchContainer = document.querySelector('.search-container');
+            if (searchContainer) {
+                searchContainer.style.display = 'none';
+            }
+
+            // 检查是否为翻译文件
+    if (file.name.toLowerCase().endsWith('.lang') || 
+        (file.name.toLowerCase().endsWith('.json') && 
+         file.name.toLowerCase().includes('translation'))) {
+        handleTranslationFile(file);
+        return;
+    }
+
+    // 检查是否为ZIP文件
+    if (file.name.toLowerCase().endsWith('.zip')) {
+        handleZipFile(file);
+    } else if (file.name.toLowerCase() === 'usercache.json') {
+        // 单独处理usercache.json文件
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                document.getElementById('loading').style.display = 'none';
+                const success = processUserCache(e.target.result);
+                if (success) {
+                    document.getElementById('error').textContent = '用户缓存数据加载成功！现在可以上传统计数据文件或ZIP压缩包。';
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('error').style.backgroundColor = '#d4edda';
+                    document.getElementById('error').style.color = '#155724';
+                    document.getElementById('error').style.borderColor = '#c3e6cb';
+                    // 如果已有玩家数据，更新玩家名称
+                    updatePlayerSelect();
+                } else {
+                    document.getElementById('error').textContent = '无法解析usercache.json文件。请检查文件格式。';
+                    document.getElementById('error').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = `解析文件时出错: ${error.message}`;
+                document.getElementById('error').style.display = 'block';
+            }
+        };
+        reader.readAsText(file);
+    } else {
+        // 处理单个统计数据文件
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                document.getElementById('loading').style.display = 'none';
+                // 处理普通统计数据文件
+                const processedData = processMinecraftStats(e.target.result);
+
+                if (processedData && processedData.length > 0) {
+                    // 尝试从文件名提取UUID
+                    const fileName = file.name;
+                    const uuidMatch = fileName.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+                    let playerName = '未知玩家';
+                    let uuid = null;
+
+                    if (uuidMatch && uuidMatch[1]) {
+                        uuid = uuidMatch[1];
+                        playerName = getPlayerName(uuid);
+                        // 存储玩家数据
+                        allPlayersStats[uuid] = processedData;
+                        uuidToFilename[uuid] = fileName;
+                    }
+
+                    // 在表格上方显示玩家名称
+                    const tableContainer = document.getElementById('tableContainer');
+                    tableContainer.innerHTML = `<h2>玩家: ${playerName}</h2>`;
+
+                    displayAsTable(processedData);
+                    // 更新玩家选择下拉框
+                    updatePlayerSelect();
+                } else {
+                    document.getElementById('error').textContent = '未找到有效数据。请检查文件格式。';
+                    document.getElementById('error').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = `解析文件时出错: ${error.message}`;
+                document.getElementById('error').style.display = 'block';
+            }
+        };
+        reader.readAsText(file);
+    }
+        }
+
+        // 添加处理翻译文件的函数
+        function handleTranslationFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    document.getElementById('loading').style.display = 'none';
+                    let translationData;
+
+                    if (file.name.toLowerCase().endsWith('.json')) {
+                        // 处理JSON格式的翻译文件
+                        translationData = JSON.parse(e.target.result);
+                    } else if (file.name.toLowerCase().endsWith('.lang')) {
+                        // 处理Minecraft的.lang格式翻译文件
+                        translationData = parseLangFile(e.target.result);
+                    }
+
+                    if (translationData) {
+                        translations = translationData;
+                        translationFileUploaded = true;
+                        console.log('翻译文件加载成功', translations);
+                        document.getElementById('error').textContent = '翻译文件加载成功！';
+                        document.getElementById('error').style.display = 'block';
+                        document.getElementById('error').style.backgroundColor = '#d4edda';
+                        document.getElementById('error').style.color = '#155724';
+                        document.getElementById('error').style.borderColor = '#c3e6cb';
+
+                        // 如果已有玩家数据，重新处理并显示
+                        if (Object.keys(allPlayersStats).length > 0) {
+                            const firstUuid = Object.keys(allPlayersStats)[0];
+                            showPlayerStats(firstUuid);
+                        }
+                    }
+                } catch (error) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').textContent = `解析翻译文件时出错: ${error.message}`;
+                    document.getElementById('error').style.display = 'block';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 添加解析.lang文件的函数
+        function parseLangFile(content) {
+            const lines = content.split('\n');
+            const result = {
+                category: {},
+                item: {}
+            };
+
+            lines.forEach(line => {
+                // 跳过注释和空行
+                if (line.startsWith('#') || line.trim() === '') return;
+
+                const parts = line.split('=');
+                if (parts.length !== 2) return;
+
+                const key = parts[0].trim();
+                const value = parts[1].trim();
+
+                // 尝试识别类别和物品
+                if (key.startsWith('stat.category.')) {
+                    const category = key.replace('stat.category.', '');
+                    result.category[category] = value;
+                } else if (key.startsWith('item.minecraft.')) {
+                    const item = key.replace('item.minecraft.', '');
+                    result.item[item] = value;
+                } else if (key.startsWith('block.minecraft.')) {
+                    const block = key.replace('block.minecraft.', '');
+                    result.item[block] = value;
+                }
+            });
+
+            return result;
+        }
+
+        // 添加处理ZIP文件的函数
+        function handleZipFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                JSZip.loadAsync(e.target.result)
+                    .then(function(zip) {
+                        // 存储解析的文件数
+                        let processedFiles = 0;
+                        let totalFiles = 0;
+                        let hasUserCache = false;
+
+                        // 先检查文件总数
+                        zip.forEach(function(relativePath, zipEntry) {
+                            totalFiles++;
+                        });
+
+                        // 遍历ZIP中的所有文件
+                        zip.forEach(function(relativePath, zipEntry) {
+                            if (zipEntry.name.toLowerCase() === 'usercache.json') {
+                                // 处理usercache.json
+                                zipEntry.async('text')
+                                    .then(function(content) {
+                                        processUserCache(content);
+                                        hasUserCache = true;
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    })
+                                    .catch(function(error) {
+                                        console.error('读取usercache.json失败:', error);
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    });
+                            } else if (zipEntry.name.toLowerCase().endsWith('.json')) {
+                                // 处理统计数据文件
+                                zipEntry.async('text')
+                                    .then(function(content) {
+                                        const fileName = zipEntry.name;
+                                        const uuidMatch = fileName.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+
+                                        if (uuidMatch && uuidMatch[1]) {
+                                            const uuid = uuidMatch[1];
+                                            const processedData = processMinecraftStats(content);
+                                            if (processedData && processedData.length > 0) {
+                                                allPlayersStats[uuid] = processedData;
+                                                uuidToFilename[uuid] = fileName;
+                                            }
+                                        }
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    })
+                                    .catch(function(error) {
+                                        console.error('读取JSON文件失败:', error);
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    });
+                            } else {
+                                processedFiles++;
+                                checkIfAllFilesProcessed();
+                            }
+                        });
+
+                        function checkIfAllFilesProcessed() {
+                            if (processedFiles === totalFiles) {
+                                document.getElementById('loading').style.display = 'none';
+                                
+                                if (Object.keys(allPlayersStats).length === 0) {
+                                    document.getElementById('error').textContent = '未找到有效的玩家统计数据文件。';
+                                    document.getElementById('error').style.display = 'block';
+                                } else {
+                                    // 更新玩家选择下拉框
+                                    updatePlayerSelect();
+
+                                    if (hasUserCache) {
+                                        document.getElementById('error').textContent = 'ZIP文件解析成功！已加载' + Object.keys(allPlayersStats).length + '位玩家的数据。';
+                                        document.getElementById('error').style.display = 'block';
+                                        document.getElementById('error').style.backgroundColor = '#d4edda';
+                                        document.getElementById('error').style.color = '#155724';
+                                        document.getElementById('error').style.borderColor = '#c3e6cb';
+                                    } else {
+                                        document.getElementById('error').textContent = 'ZIP文件解析成功，但未找到usercache.json文件。玩家名称将显示为UUID。';
+                                        document.getElementById('error').style.display = 'block';
+                                        document.getElementById('error').style.backgroundColor = '#fff3cd';
+                                        document.getElementById('error').style.color = '#856404';
+                                        document.getElementById('error').style.borderColor = '#ffeeba';
+                                    }
+
+                                    // 显示第一个玩家的数据
+                                    const firstUuid = Object.keys(allPlayersStats)[0];
+                                    showPlayerStats(firstUuid);
+                                }
+                            }
+                        }
+                    })
+                    .catch(function(error) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('error').textContent = `解析ZIP文件时出错: ${error.message}`;
+                        document.getElementById('error').style.display = 'block';
+                    });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 添加更新玩家选择下拉框的函数
+        function updatePlayerSelect() {
+    console.log('updatePlayerSelect被调用');
+    let playerSelect = document.getElementById('playerSelect');
+    
+    // 如果玩家选择已存在，先移除它
+    if (playerSelect) {
+        playerSelect.parentNode.remove();
+    }
+    
+    // 创建新的玩家选择下拉框
+    const searchContainer = document.getElementById('playerSearchContainer');
+    const filterGroup = document.createElement('div');
+    filterGroup.className = 'filter-group';
+    filterGroup.innerHTML = `
+        <label for="playerSelect" class="filter-label">选择玩家：</label>
+        <select id="playerSelect" class="category-filter">
+        </select>
+    `;
+    
+    // 确保插入位置正确
+    if (searchContainer) {
+        // 将玩家选择插入到搜索框后面
+        searchContainer.insertAdjacentElement('afterend', filterGroup);
+        playerSelect = document.getElementById('playerSelect');
+
+        playerSelect.addEventListener('change', function() {
+            const selectedUuid = this.value;
+            if (selectedUuid) {
+                showPlayerStats(selectedUuid);
+            }
+        });
+    } else {
+        console.error('搜索容器未找到，无法创建玩家选择下拉框');
+    }
+
+    // 填充玩家选项
+    if (playerSelect) {
+        playerSelect.innerHTML = '';
+        Object.keys(allPlayersStats).forEach(uuid => {
+            const playerName = getPlayerName(uuid);
+            const option = document.createElement('option');
+            option.value = uuid;
+            option.textContent = `${playerName} (${uuidToFilename[uuid]})`;
+            playerSelect.appendChild(option);
+        });
+    }
+}
+
+        // 添加显示玩家统计数据的函数
+        function showPlayerStats(uuid) {
+            const processedData = allPlayersStats[uuid];
+            if (processedData) {
+                const playerName = getPlayerName(uuid);
+                const tableContainer = document.getElementById('tableContainer');
+                tableContainer.innerHTML = `<h2>玩家: ${playerName}</h2>`;
+                displayAsTable(processedData);
+            }
+        }
+
+
+        // 添加处理usercache.json文件的函数 - 新增
+        function processUserCache(jsonData) {
+            try {
+                const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                if (Array.isArray(data)) {
+                    data.forEach(user => {
+                        if (user.uuid && user.name) {
+                            // 存储UUID到名称的映射
+                            userCache[user.uuid] = user.name;
+                        }
+                    });
+                    console.log('用户缓存数据加载成功', userCache);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('处理用户缓存数据时出错:', error);
+                return false;
+            }
+        }
+
+        // 根据UUID获取玩家名称 - 新增
+        function getPlayerName(uuid) {
+            return userCache[uuid] || '未知玩家';
+        }
+
+        // 加载翻译文件
+        function loadTranslations() {
+    // 如果已经上传了翻译文件，直接返回
+    if (translationFileUploaded) {
+        console.log('使用已上传的翻译文件');
+        return Promise.resolve(translations);
+    }
+
+    // 尝试使用fetch加载默认翻译文件
+    return fetch('translations.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('翻译文件加载失败: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            translations = data;
+            console.log('默认翻译文件加载成功', translations);
+            return translations;
+        })
+        .catch(error => {
+            console.error('加载默认翻译文件时出错:', error);
+            // 使用默认翻译
+            return translations;
+        });
+}
+
+        // 处理 Minecraft 统计数据
+        function processMinecraftStats(jsonData) {
+            try {
+                const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                const stats = data.stats || {};
+                const result = [];
+
+                // 遍历所有统计类别
+                for (const [category, items] of Object.entries(stats)) {
+                    // 提取类别名称（移除 
+                    const categoryName = category.replace('minecraft:', '');
+                    // 翻译类别名称
+                    const translatedCategory = translations.category[categoryName] || categoryName;
+        
+                    // Iterate through all items in the category
+                    for (const [item, count] of Object.entries(items)) {
+                        // Extract item name (remove "minecraft:" prefix)
+                        const itemName = item.replace('minecraft:', '');
+                        // 翻译物品名称
+                        const translatedItem = translations.item[itemName] || itemName;
+        
+                        result.push({
+                category: translatedCategory,
+                originalCategory: categoryName, // 新增：保留原始类别ID
+                item: translatedItem,
+                originalItem: itemName, // 新增：保留原始物品ID
+                count: count
+            });
+                    }
+                }
+        
+                return result;
+            } catch (error) {
+                console.error('Error processing data:', error);
+                return null;
+            }
+        }
+        
+        // 在页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTranslations();
+            // 初始化筛选器布局
+            initFiltersLayout();
+        });
+        
+        // 初始化筛选器布局
+        function initFiltersLayout() {
+            // 确保筛选器容器可见
+            const filtersContainer = document.getElementById('filters');
+            if (filtersContainer) {
+                filtersContainer.style.display = 'flex';
+                // 调用updatePlayerSelect来创建玩家选择下拉框
+                updatePlayerSelect();
+                // 然后可以隐藏筛选器，直到有数据
+                filtersContainer.style.display = 'none';
+            }
+        }
+
+        // 在文件加载完成后添加搜索功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('playerSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const playerSelect = document.getElementById('playerSelect');
+                    if (playerSelect) {
+                        const options = playerSelect.options;
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            const text = option.text.toLowerCase();
+                            option.style.display = text.includes(searchTerm) ? '' : 'none';
+                        }
+                    }
+                });
+            } else {
+                console.error('搜索框元素未找到');
+            }
+        });
+        
+        // 修改displayAsTable函数，添加导出按钮
+        function displayAsTable(data) {
+            const tableContainer = document.getElementById('tableContainer');
+            const filtersContainer = document.getElementById('filters');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const sortSelect = document.getElementById('sortSelect');
+            
+            // Clear container
+            tableContainer.innerHTML = '';
+            
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'stats-table';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Category</th>
+                    <th>Item</th>
+                    <th>Count</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            table.appendChild(tbody);
+            
+            // Function to render table with given data
+            function renderTable(filteredData) {
+                tbody.innerHTML = '';
+                if (filteredData.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = '<td colspan="3" style="text-align: center;">No matching data</td>';
+                    tbody.appendChild(emptyRow);
+                    return;
+                }
+                
+                filteredData.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="Category">${item.category}</td>
+                <td data-label="Item" data-item-name="${item.item.toLowerCase()}">
+                <button class="item-button" 
+                        data-original-item="${item.originalItem}" 
+                        data-original-category="${item.originalCategory}">
+                    ${item.item}
+                </button>
+            </td>
+                <td data-label="Count">${item.count.toLocaleString()}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // 添加物品按钮点击事件监听
+            tbody.querySelectorAll('.item-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const originalItem = this.dataset.originalItem;
+                    const originalCategory = this.dataset.originalCategory;
+                    showItemRanking(originalItem, originalCategory);
+                });
+            });
+            }
+            
+            // Function to sort data
+            function sortData(dataToSort, sortType) {
+                const sortedData = [...dataToSort];
+                
+                switch (sortType) {
+                    case 'category':
+                        return sortedData.sort((a, b) => a.category.localeCompare(b.category));
+                    case 'count-asc':
+                        return sortedData.sort((a, b) => a.count - b.count);
+                    case 'count-desc':
+                        return sortedData.sort((a, b) => b.count - a.count);
+                    default:
+                        return sortedData;
+                }
+            }
+            
+            // Initial render with sorted data
+            let currentData = sortData(data, 'category');
+            renderTable(currentData);
+            
+            // Add table to page
+            tableContainer.appendChild(table);
+            
+            // Generate category filter options
+            const categories = [...new Set(data.map(item => item.category))].sort();
+            categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+            
+            // Show filters
+            filtersContainer.style.display = 'flex';
+            
+            // 显示物品搜索框
+            const searchContainer = document.querySelector('.search-container');
+            if (searchContainer) {
+                searchContainer.style.display = 'block';
+            }
+
+            // Handle filter and sort changes
+            function handleFilterAndSort() {
+                const selectedCategory = categoryFilter.value;
+                const sortType = sortSelect.value;
+                
+                // Filter data
+                let filteredData = selectedCategory === 'all' 
+                    ? data 
+                    : data.filter(item => item.category === selectedCategory);
+                
+                // Sort data
+                filteredData = sortData(filteredData, sortType);
+                
+                // Re-render table
+                renderTable(filteredData);
+            }
+            
+            // Add event listeners
+            categoryFilter.addEventListener('change', handleFilterAndSort);
+            sortSelect.addEventListener('change', handleFilterAndSort);
+        }
+
+        // Handle file upload - 修改
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Show file name
+            document.getElementById('fileInfo').textContent = `Selected: ${file.name}`;
+            
+            // Show loading state
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('tableContainer').innerHTML = '';
+            document.getElementById('filters').style.display = 'none';
+
+            // 检查是否为ZIP文件
+            if (file.name.toLowerCase().endsWith('.zip')) {
+                handleZipFile(file);
+            } else if (file.name.toLowerCase() === 'usercache.json') {
+                // 单独处理usercache.json文件
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        document.getElementById('loading').style.display = 'none';
+                        const success = processUserCache(e.target.result);
+                        if (success) {
+                            document.getElementById('error').textContent = '用户缓存数据加载成功！现在可以上传统计数据文件或ZIP压缩包。';
+                            document.getElementById('error').style.display = 'block';
+                            document.getElementById('error').style.backgroundColor = '#d4edda';
+                            document.getElementById('error').style.color = '#155724';
+                            document.getElementById('error').style.borderColor = '#c3e6cb';
+                            // 如果已有玩家数据，更新玩家名称
+                            updatePlayerSelect();
+                        } else {
+                            document.getElementById('error').textContent = '无法解析usercache.json文件。请检查文件格式。';
+                            document.getElementById('error').style.display = 'block';
+                        }
+                    } catch (error) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('error').textContent = `解析文件时出错: ${error.message}`;
+                        document.getElementById('error').style.display = 'block';
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                // 处理单个统计数据文件
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        document.getElementById('loading').style.display = 'none';
+                        // 处理普通统计数据文件
+                        const processedData = processMinecraftStats(e.target.result);
+
+                        if (processedData && processedData.length > 0) {
+                            // 尝试从文件名提取UUID
+                            const fileName = file.name;
+                            const uuidMatch = fileName.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+                            let playerName = '未知玩家';
+                            let uuid = null;
+
+                            if (uuidMatch && uuidMatch[1]) {
+                                uuid = uuidMatch[1];
+                                playerName = getPlayerName(uuid);
+                                // 存储玩家数据
+                                allPlayersStats[uuid] = processedData;
+                                uuidToFilename[uuid] = fileName;
+                            }
+
+                            // 在表格上方显示玩家名称
+                            const tableContainer = document.getElementById('tableContainer');
+                            tableContainer.innerHTML = `<h2>玩家: ${playerName}</h2>`;
+
+                            displayAsTable(processedData);
+                            // 更新玩家选择下拉框
+                            updatePlayerSelect();
+                        } else {
+                            document.getElementById('error').textContent = '未找到有效数据。请检查文件格式。';
+                            document.getElementById('error').style.display = 'block';
+                        }
+                    } catch (error) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('error').textContent = `解析文件时出错: ${error.message}`;
+                        document.getElementById('error').style.display = 'block';
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // 添加处理ZIP文件的函数
+        function handleZipFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                JSZip.loadAsync(e.target.result)
+                    .then(function(zip) {
+                        // 存储解析的文件数
+                        let processedFiles = 0;
+                        let totalFiles = 0;
+                        let hasUserCache = false;
+
+                        // 先检查文件总数
+                        zip.forEach(function(relativePath, zipEntry) {
+                            totalFiles++;
+                        });
+
+                        // 遍历ZIP中的所有文件
+                        zip.forEach(function(relativePath, zipEntry) {
+                            if (zipEntry.name.toLowerCase() === 'usercache.json') {
+                                // 处理usercache.json
+                                zipEntry.async('text')
+                                    .then(function(content) {
+                                        processUserCache(content);
+                                        hasUserCache = true;
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    })
+                                    .catch(function(error) {
+                                        console.error('读取usercache.json失败:', error);
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    });
+                            } else if (zipEntry.name.toLowerCase().endsWith('.json')) {
+                                // 处理统计数据文件
+                                zipEntry.async('text')
+                                    .then(function(content) {
+                                        const fileName = zipEntry.name;
+                                        const uuidMatch = fileName.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+
+                                        if (uuidMatch && uuidMatch[1]) {
+                                            const uuid = uuidMatch[1];
+                                            const processedData = processMinecraftStats(content);
+                                            if (processedData && processedData.length > 0) {
+                                                allPlayersStats[uuid] = processedData;
+                                                uuidToFilename[uuid] = fileName;
+                                            }
+                                        }
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    })
+                                    .catch(function(error) {
+                                        console.error('读取JSON文件失败:', error);
+                                        processedFiles++;
+                                        checkIfAllFilesProcessed();
+                                    });
+                            } else {
+                                processedFiles++;
+                                checkIfAllFilesProcessed();
+                            }
+                        });
+
+                        function checkIfAllFilesProcessed() {
+                            if (processedFiles === totalFiles) {
+                                document.getElementById('loading').style.display = 'none';
+                                
+                                if (Object.keys(allPlayersStats).length === 0) {
+                                    document.getElementById('error').textContent = '未找到有效的玩家统计数据文件。';
+                                    document.getElementById('error').style.display = 'block';
+                                } else {
+                                    // 更新玩家选择下拉框
+                                    updatePlayerSelect();
+
+                                    if (hasUserCache) {
+                                        document.getElementById('error').textContent = 'ZIP文件解析成功！已加载' + Object.keys(allPlayersStats).length + '位玩家的数据。';
+                                        document.getElementById('error').style.display = 'block';
+                                        document.getElementById('error').style.backgroundColor = '#d4edda';
+                                        document.getElementById('error').style.color = '#155724';
+                                        document.getElementById('error').style.borderColor = '#c3e6cb';
+                                    } else {
+                                        document.getElementById('error').textContent = 'ZIP文件解析成功，但未找到usercache.json文件。玩家名称将显示为UUID。';
+                                        document.getElementById('error').style.display = 'block';
+                                        document.getElementById('error').style.backgroundColor = '#fff3cd';
+                                        document.getElementById('error').style.color = '#856404';
+                                        document.getElementById('error').style.borderColor = '#ffeeba';
+                                    }
+
+                                    // 显示第一个玩家的数据
+                                    const firstUuid = Object.keys(allPlayersStats)[0];
+                                    showPlayerStats(firstUuid);
+                                }
+                            }
+                        }
+                    })
+                    .catch(function(error) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('error').textContent = `解析ZIP文件时出错: ${error.message}`;
+                        document.getElementById('error').style.display = 'block';
+                    });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 添加更新玩家选择下拉框的函数
+        function updatePlayerSelect() {
+    console.log('updatePlayerSelect被调用');
+    let playerSelect = document.getElementById('playerSelect');
+    if (!playerSelect) {
+        // 创建玩家选择下拉框
+        const searchContainer = document.getElementById('playerSearchContainer');
+        const filterGroup = document.createElement('div');
+        filterGroup.className = 'filter-group';
+        filterGroup.innerHTML = `
+            <label for="playerSelect" class="filter-label">选择玩家：</label>
+            <select id="playerSelect" class="category-filter">
+            </select>
+        `;
+        searchContainer.insertAdjacentElement('afterend', filterGroup);
+        playerSelect = document.getElementById('playerSelect');
+
+        playerSelect.addEventListener('change', function() {
+            const selectedUuid = this.value;
+            if (selectedUuid) {
+                showPlayerStats(selectedUuid);
+            }
+        });
+    }
+
+    // 填充玩家选项
+    playerSelect.innerHTML = '';
+    Object.keys(allPlayersStats).forEach(uuid => {
+        const playerName = getPlayerName(uuid);
+        const option = document.createElement('option');
+        option.value = uuid;
+        option.textContent = `${playerName} (${uuidToFilename[uuid]})`;
+        playerSelect.appendChild(option);
+    });
+}
+
+        // 添加显示玩家统计数据的函数
+        function showPlayerStats(uuid) {
+            const processedData = allPlayersStats[uuid];
+            if (processedData) {
+                const playerName = getPlayerName(uuid);
+                const tableContainer = document.getElementById('tableContainer');
+                tableContainer.innerHTML = `<h2>玩家: ${playerName}</h2>`;
+                displayAsTable(processedData);
+            }
+        }
+        
+        // 添加物品排行榜弹窗功能
+        function showItemRanking(itemName, category) {
+    // 收集所有玩家的该项数据
+    const playerItemData = [];
+    
+    for (const [uuid, stats] of Object.entries(allPlayersStats)) {
+        // 根据传入的类别筛选数据
+        const found = stats.find(item => 
+            item.originalItem === itemName && 
+            item.originalCategory === category
+        );
+        
+        if (found) {
+            playerItemData.push({
+                uuid: uuid,
+                playerName: getPlayerName(uuid),
+                count: found.count
+            });
+        }
+    }
+    
+    // 按数量从大到小排序
+    playerItemData.sort((a, b) => b.count - a.count);
+    
+    // 更新弹窗标题，显示类别信息
+    document.getElementById('modalTitle').textContent = `${itemName} (${category}) 排行榜`;
+            
+            // 生成排行榜表格
+            let rankingHtml = `
+                <table class="ranking-table">
+                    <tr>
+                        <th>排名</th>
+                        <th>玩家</th>
+                        <th>数量</th>
+                    </tr>
+            `;
+            
+            playerItemData.forEach((item, index) => {
+                rankingHtml += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.playerName}</td>
+                        <td>${item.count.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+            
+            rankingHtml += `</table>`;
+            document.getElementById('rankingContainer').innerHTML = rankingHtml;
+            
+            // 显示弹窗
+            const modal = document.getElementById('rankingModal');
+            modal.classList.add('show');
+        }
+        
+        // 点击弹窗外部关闭
+        window.addEventListener('click', function(event) {
+            const rankingModal = document.getElementById('rankingModal');
+            const helpModal = document.getElementById('helpModal');
+            const changelogModal = document.getElementById('changelogModal');
+            
+            if (event.target === rankingModal) {
+                rankingModal.classList.remove('show');
+            }
+            
+            if (event.target === helpModal) {
+                helpModal.classList.remove('show');
+            }
+            
+            if (event.target === changelogModal) {
+                changelogModal.classList.remove('show');
+            }
+        });
+    
+        // 确保DOM加载完成后再绑定事件
+        document.addEventListener('DOMContentLoaded', function() {
+            // 关闭排行榜弹窗事件
+            const closeButton = document.querySelector('.close-button');
+            if (closeButton) {
+                closeButton.addEventListener('click', function() {
+                    document.getElementById('rankingModal').classList.remove('show');
+                });
+            }
+            
+            // 关闭日志弹窗事件
+            const closeButtonChangelog = document.querySelector('.close-button-changelog');
+            if (closeButtonChangelog) {
+                closeButtonChangelog.addEventListener('click', function() {
+                    document.getElementById('changelogModal').classList.remove('show');
+                });
+            }
+            
+            // 帮助按钮事件
+            const helpButton = document.getElementById('helpButton');
+            if (helpButton) {
+                helpButton.addEventListener('click', function() {
+                    document.getElementById('helpModal').classList.add('show');
+                });
+            }
+            
+            // 日志按钮事件
+            const changelogButton = document.getElementById('changelogButton');
+            if (changelogButton) {
+                changelogButton.addEventListener('click', function() {
+                    document.getElementById('changelogModal').classList.add('show');
+                });
+            }
+            
+            // 关闭教程弹窗事件
+            const closeButtonHelp = document.querySelector('.close-button-help');
+            if (closeButtonHelp) {
+                closeButtonHelp.addEventListener('click', function() {
+                    document.getElementById('helpModal').classList.remove('show');
+                });
+            }
+        });
+    </script>
+    
+    <!-- 物品排行榜弹窗 -->
+    <div id="rankingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-inner-content">
+                <span class="close-button">&times;</span>
+                <h2 id="modalTitle">物品排行榜</h2>
+                <div id="rankingContainer"></div>
+            </div>
+        </div>
+    </div>
+    <!-- 教程模态框 -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-inner-content">
+                <span class="close-button-help">&times;</span>
+                <h2>使用教程</h2>
+                <div id="helpContent">
+                    <h3>支持的文件类型</h3>
+                    <p>本工具支持上传以下类型的文件：</p>
+                    
+                    <h4>1. usercache.json</h4>
+                    <p>该文件包含玩家UUID与玩家名称的映射关系，通常位于Minecraft服务器的<code>world</code>目录下。</p>
+                    <p><strong>格式要求：</strong></p>
+                    <pre>[{"uuid": "玩家UUID","name": "玩家名称","expiresOn": "过期时间"}]</pre>
+                    <p><strong>上传效果：</strong> 上传后，工具可以将UUID转换为玩家名称，使统计数据更易读。</p>
+                    
+                    <h4><a href="translations.json" style="text-decoration: none;" target="_blank">2. translations.json（点击浏览）</a></h4>
+                    <p>已自带原版物品/方块/动作翻译包，若无非原版内容无需上传。该文件包含物品ID与物品名称的翻译映射，用于将游戏内的物品ID转换为可读的名称。</p>
+                    <p><strong>格式要求：</strong></p>
+    <pre>{
+        "category": {
+            "killed": "击杀",
+            "killed_by": "被击杀",
+        },
+        "item":{
+            "acacia_boat": "金合欢木船",
+            "acacia_chest_boat": "金合欢木运输船",
+            "allay_spawn_egg": "悦灵刷怪蛋",
+        }
+    }</pre>
+                    <p><strong>上传效果：</strong> 上传后，工具会使用翻译后的名称显示物品，而不是原始ID。</p>
+                    
+                    <h4>3. 玩家统计数据文件 (.json)</h4>
+                    <p>这些文件包含单个玩家的游戏统计数据，通常位于Minecraft服务器的<code>world/stats</code>目录下，文件名通常为玩家UUID.json。</p>
+                    <p><strong>上传效果：</strong> 上传后，工具会解析并显示玩家的详细统计数据，包括挖掘、放置、击杀等各类数据。</p>
+                    
+                    <h4>4. ZIP压缩包</h4>
+                    <p>您可以将多个统计数据文件打包成ZIP格式上传，工具会自动解压并处理其中的所有有效文件。</p>
+                    
+                    <h3>使用步骤</h3>
+                    <ol>
+                        <li>点击"选择文件"按钮或拖拽文件到上传区域</li>
+                        <li>选择要上传的文件（可以是单个文件或ZIP压缩包）</li>
+                        <li>等待文件解析完成</li>
+                        <li>使用页面上的筛选器和搜索框查看统计数据</li>
+                        <li>点击表格中的物品名称可以查看该物品的玩家排行榜</li>
+                    </ol>
+                    <h3>其他信息</h3>
+                    <ol>
+                        <li>本页面由Trae_CN结合豆包AI生成</li>
+                        <li>本页面由Boring Minecraft生电服务器提供支持， Boring Minecraft 是一个和谐友爱的大家庭，支持国际版Java和基岩版，入服无门槛，欢迎每一位休闲、生电、建筑玩家，群号：897624943~</li>
+                        <li>本页面由热铁盒托管</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日志模态框 -->
+    <div id="changelogModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-inner-content">
+                <span class="close-button-changelog">&times;</span>
+                <h2>bug修复日志</h2>
+                <div id="changelogContent">
+                    <h3>2025_07_23-Minecraft统计数据排行榜bug修复日志</h3>
+                    <h4>问题现象</h4>
+                    <p>分析服务器stats文件时发现假人xekr的僵尸猪灵击杀数据在排行榜中显示错误：原本应该显示其<strong>击杀僵尸猪灵6,917,927次</strong>，但实际却显示为<strong>被僵尸猪灵击杀1次</strong>。</p>
+
+                    <h4>问题原因</h4>
+                    <p>通过代码分析，发现问题根源在于统计数据处理逻辑中混淆了<code>killed</code>和<code>killed_by</code>两个不同的统计字段：</p>
+                    <ol>
+                        <li>在<code>processMinecraftStats</code>函数中，解析玩家数据时移除了<code>minecraft:</code>前缀并使用翻译表将ID转换为显示名称，但未保留原始统计类别ID</li>
+                        <li>由于缺乏原始类别标识，排行榜功能无法区分<code>killed</code>（主动击杀）和<code>killed_by</code>（被击杀）两种不同统计类型</li>
+                        <li>点击物品查看排行榜时，默认使用了翻译后的名称进行匹配，导致错误地显示了被击杀数据而非击杀数据</li>
+                    </ol>
+
+                    <h4>修复方案</h4>
+                    <ol>
+                        <li><strong>数据处理逻辑优化</strong>：修改<code>processMinecraftStats</code>函数，在返回结果中新增<code>originalCategory</code>和<code>originalItem</code>字段保留原始ID</li>
+                        <li><strong>排行榜筛选逻辑修复</strong>：更新<code>showItemRanking</code>函数，添加<code>originalCategory === 'killed'</code>条件筛选主动击杀数据</li>
+                        <li><strong>UI交互优化</strong>：修改<code>renderTable</code>函数，为物品按钮添加<code>data-original-item</code>和<code>data-original-category</code>属性存储原始ID</li>
+                    </ol>
+
+                    <h4>修复效果</h4>
+                    <p>修复后，点击僵尸猪灵物品查看排行榜时，将正确显示玩家xekr的6,917,927次击杀数据，而非之前错误显示的1次被击杀数据。同时，系统能够正确区分不同统计类型，确保所有玩家的各类统计数据准确展示。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* 弹窗样式 */
+        .modal {
+            visibility: hidden; /* 替换 display: none */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: visibility 0.3s ease, opacity 0.3s ease; /* 添加 visibility 过渡 */
+        }
+
+        .modal.show {
+            visibility: visible; /* 替换 display: block */
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow: hidden; /* 保持外部容器溢出隐藏 */
+            box-sizing: border-box;
+            border-radius: 10px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            display: flex; /* 添加flex布局 */
+            flex-direction: column; /* 垂直排列子元素 */
+        }
+
+        /* 修改内部容器样式 */
+        .modal-inner-content {
+            max-height: 70vh; /* 限制最大高度为视口高度的70% */
+            overflow-y: auto; /* 添加垂直滚动条 */
+            padding: 20px;
+        }
+
+        /* 为弹窗内的标题和段落添加间距 */
+        .modal-inner-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .modal-inner-content h3 {
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .modal-inner-content h4 {
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-inner-content p {
+            margin-bottom: 15px;
+        }
+
+        .modal-inner-content ol,
+        .modal-inner-content ul {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+
+        /* 隐藏滚动条的样式保持不变 */
+        /* 修改滚动条样式 - 移除隐藏设置，添加窄滚动条定义 */
+        .modal-inner-content::-webkit-scrollbar {
+            width: 4px; /* 窄滚动条宽度 */
+        }
+
+        .modal-inner-content::-webkit-scrollbar-track {
+            background: #f1f1f1; /* 滚动条轨道背景 */
+            border-radius: 2px;
+        }
+
+        .modal-inner-content::-webkit-scrollbar-thumb {
+            background: #888; /* 滚动条滑块颜色 */
+            border-radius: 2px;
+        }
+
+        .modal-inner-content::-webkit-scrollbar-thumb:hover {
+            background: #555; /* 滚动条滑块悬停颜色 */
+        }
+
+        .modal-inner-content {
+            scrollbar-width: thin; /* Firefox 窄滚动条 */
+            scrollbar-color: #888 #f1f1f1; /* Firefox 滑块和轨道颜色 */
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .close-button, .close-button-help, .close-button-changelog {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-button:hover, .close-button-help:hover, .close-button-changelog:hover {
+            color: black;
+        }
+        
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .ranking-table th, .ranking-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .ranking-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .item-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        /* 教程内容样式 */
+        #helpContent h3 {
+            margin-top: 20px;
+            color: #333;
+        }
+        
+        #helpContent h4 {
+            margin-top: 15px;
+            color: #555;
+        }
+        
+        #helpContent p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        #helpContent pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        #helpContent code {
+            font-family: monospace;
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        #helpContent ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        #helpContent li {
+            margin-bottom: 5px;
+        }
+        
+        /* 自定义滚动条样式 */
+        /* Firefox浏览器滚动条样式 */
+        * {
+            scrollbar-width: thin; /* 细滚动条 */
+            scrollbar-color: #888 #f1f1f1; /* 滑块颜色 轨道颜色 */
+        }
+        
+        .modal-content {
+            scrollbar-width: auto; /* 弹窗使用自动宽度（仍会比默认细） */
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;  /* 垂直滚动条宽度 */
+            height: 6px; /* 水平滚动条高度 */
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; /* 滚动条轨道背景色 */
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888; /* 滚动条滑块颜色 */
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; /* 滚动条滑块悬停颜色 */
+        }
+        
+        /* 弹窗内容区域滚动条样式 */
+        .modal-content::-webkit-scrollbar {
+            width: 4px;  /* 弹窗垂直滚动条更细 */
+        }
+    </style>
+    
+    <!-- 添加底部超链接长条 -->
+    <div style="background-color: #f1f1f1; padding: 10px 0; text-align: center; position: fixed; bottom: 0; width: 100%; z-index: 999;">
+        <a href="https://mffyg.lanzoum.com/iO06H31hlykh" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">示例压缩包</a> |
+        <a href="https://www.kdocs.cn/l/cgGYMvid44Fv" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">Boring Minecraft 生电服务器</a> |
+        <a href="https://www.retiehe.com/" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">热铁盒</a>
+    </div>
+</body>
+</html>
