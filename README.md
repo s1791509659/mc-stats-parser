@@ -3,11 +3,13 @@ A tool to analyze players' stats file in mc
 Sorry for being lazy to fully translate the page into English.
 
 ## Browser from:
-### 1.github pages: [MC Stats parser](https://s1791509659.github.io/mc-stats-parser/)
+### 1.Github pages: [MC Stats parser](https://s1791509659.github.io/mc-stats-parser/en_us/)
+- English default
 - Available in most areas once you can open github
 - Stable and safe
 
-### 2.retinbox page: [MC Stats parser](https://stats.rth1.xyz/)
+### 2.Retinbox page: [MC Stats parser](https://stats.rth1.xyz/)
+- Chinese default
 - China-open friendly
 
 ## Introduction
