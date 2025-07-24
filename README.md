@@ -2,7 +2,7 @@
 A tool to analyze players' stats file in mc
 Sorry for being lazy to fully translate the page into English.
 
-**Click [Bilibili Tutorial](https://github.com/s1791509659/mc-stats-parser?tab=readme-ov-file) to learn more**
+**Click [Bilibili Tutorial](https://www.bilibili.com/video/BV1MWgzziEHU/) to learn more**
 
 ## Browser from:
 ### 1.Github pages: [MC Stats parser](https://s1791509659.github.io/mc-stats-parser/en_us/)
