@@ -142,7 +142,7 @@
         
         .filter-group {
             flex: 1;
-            min-width: 200px;
+            min-width: 150px; /* 减小最小宽度限制 */
         }
         
         .filter-label {
@@ -240,28 +240,76 @@
         }
         
         @media (max-width: 480px) {
+            /* 新增基础样式重置 */
+            html, body {
+                width: 100% !important;
+                overflow-x: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
             /* 在小屏幕上变为单列布局 */
             .stats-table td {
-                display: block;
-                text-align: left;
-                padding: 8px 12px;
-                position: relative;
+                display: block !important;
+                text-align: left !important;
+                padding: 8px 12px !important;
+                position: relative !important;
+                width: 100% !important;
             }
             
             .stats-table td::before {
-                display: block;
-                width: 100%;
-                padding-left: 0;
-                margin-bottom: 4px;
+                display: block !important;
+                width: 100% !important;
+                padding-left: 0 !important;
+                margin-bottom: 4px !important;
             }
             
             .stats-table td:nth-child(1) {
-                padding: 12px;
+                padding: 12px !important;
             }
             
             .stats-table td:nth-child(2),
             .stats-table td:nth-child(3) {
-                padding-left: 12px;
+                padding-left: 12px !important;
+            }
+            
+            /* 优化过滤器容器布局 */
+            .filters {
+                flex-direction: column !important;
+                gap: 10px !important;
+                align-items: stretch !important;
+                padding: 0 5px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            .filter-group {
+                min-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* 确保所有输入元素适应容器 */
+            .search-input, .category-filter, .sort-select {
+                width: 100% !important;
+                min-width: unset !important;
+                box-sizing: border-box !important;
+                padding: 8px !important;
+            }
+            
+            /* 调整容器样式 */
+            .container {
+                padding: 0 10px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* 修复表格容器溢出问题 */
+            .stats-container {
+                width: 100% !important;
+                overflow-x: hidden !important;
             }
         }
     </style>
@@ -1438,7 +1486,7 @@
                     <p>搜索框失效</p>
                     <h4>问题原因</h4>
                     <p>修上一个bug的时候引发此bug</p>
-                    <h3>2025072302_Minecraft统计数据排行榜bug修复日志</h3>
+                    <h3>2025072302_Minecraft排序bug修复日志</h3>
                     <h4>问题现象</h4>
                     <p>排序后切换玩家，排序效果得不到保留</p>
                     <h4>修复方案</h4>
