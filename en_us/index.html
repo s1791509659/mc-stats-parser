@@ -10,7 +10,6 @@
             margin: 0;
             padding: 0;
         }
-        
         .filter-group {
     margin-bottom: 15px;
 }
@@ -271,6 +270,7 @@
     <div class="container">
     <div style="position: relative;">
     <h1>Minecraft Statistics Parser</h1>
+    <button id="languageButton" style="position: absolute; top: 0; right: 0; background-color: #28a745; color: white; width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; margin-right: 70px; text-align: center; line-height: 30px;" onclick="window.location.href='../index.html'">🌐</button>
     <button id="helpButton" style="position: absolute; top: 0; right: 0; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; margin-right: 35px;">?</button>
     <button id="changelogButton" style="position: absolute; top: 0; right: 0; background-color: #ffc107; color: white; width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 18px; cursor: pointer;">!</button>
 </div>
@@ -423,7 +423,7 @@
                 document.getElementById('loading').style.display = 'none';
                 const success = processUserCache(e.target.result);
                 if (success) {
-                    document.getElementById('error').textContent = '用户缓存数据加载成功！现在可以上传统计数据文件或ZIP压缩包。';
+                    document.getElementById('error').textContent = 'User cache data loaded successfully! Now you can upload Minecraft stats files or ZIP archives.';
                     document.getElementById('error').style.display = 'block';
                     document.getElementById('error').style.backgroundColor = '#d4edda';
                     document.getElementById('error').style.color = '#155724';
@@ -431,12 +431,12 @@
                     // 如果已有玩家数据，更新玩家名称
                     updatePlayerSelect();
                 } else {
-                    document.getElementById('error').textContent = '无法解析usercache.json文件。请检查文件格式。';
+                    document.getElementById('error').textContent = 'Failed to parse usercache.json file. Please check the file format.';
                     document.getElementById('error').style.display = 'block';
                 }
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').textContent = `解析文件时出错: ${error.message}`;
+                document.getElementById('error').textContent = `Failed to parse file: ${error.message}`;
                 document.getElementById('error').style.display = 'block';
             }
         };
@@ -454,7 +454,7 @@
                     // 尝试从文件名提取UUID
                     const fileName = file.name;
                     const uuidMatch = fileName.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
-                    let playerName = '未知玩家';
+                    let playerName = 'Unknown Player';
                     let uuid = null;
 
                     if (uuidMatch && uuidMatch[1]) {
@@ -473,12 +473,12 @@
                     // 更新玩家选择下拉框
                     updatePlayerSelect();
                 } else {
-                    document.getElementById('error').textContent = '未找到有效数据。请检查文件格式。';
+                    document.getElementById('error').textContent = 'No valid data found. Please check the file format.';
                     document.getElementById('error').style.display = 'block';
                 }
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').textContent = `解析文件时出错: ${error.message}`;
+                document.getElementById('error').textContent = `Failed to parse file: ${error.message}`;
                 document.getElementById('error').style.display = 'block';
             }
         };
@@ -505,7 +505,7 @@
                     if (translationData) {
                         translations = translationData;
                         translationFileUploaded = true;
-                        console.log('翻译文件加载成功', translations);
+                        console.log('Translation file loaded successfully', translations);
                         document.getElementById('error').textContent = '翻译文件加载成功！';
                         document.getElementById('error').style.display = 'block';
                         document.getElementById('error').style.backgroundColor = '#d4edda';
@@ -589,7 +589,7 @@
                                         checkIfAllFilesProcessed();
                                     })
                                     .catch(function(error) {
-                                        console.error('读取usercache.json失败:', error);
+                                        console.error('Failed to read usercache.json:', error);
                                         processedFiles++;
                                         checkIfAllFilesProcessed();
                                     });
@@ -612,7 +612,7 @@
                                         checkIfAllFilesProcessed();
                                     })
                                     .catch(function(error) {
-                                        console.error('读取JSON文件失败:', error);
+                                        console.error('Failed to read JSON file:', error);
                                         processedFiles++;
                                         checkIfAllFilesProcessed();
                                     });
@@ -627,20 +627,20 @@
                                 document.getElementById('loading').style.display = 'none';
                                 
                                 if (Object.keys(allPlayersStats).length === 0) {
-                                    document.getElementById('error').textContent = '未找到有效的玩家统计数据文件。';
+                                    document.getElementById('error').textContent = 'No valid player statistics files found.';
                                     document.getElementById('error').style.display = 'block';
                                 } else {
                                     // 更新玩家选择下拉框
                                     updatePlayerSelect();
 
                                     if (hasUserCache) {
-                                        document.getElementById('error').textContent = 'ZIP文件解析成功！已加载' + Object.keys(allPlayersStats).length + '位玩家的数据。';
+                                        document.getElementById('error').textContent = 'ZIP file parsed successfully! Data of ' + Object.keys(allPlayersStats).length + ' players has been loaded.';
                                         document.getElementById('error').style.display = 'block';
                                         document.getElementById('error').style.backgroundColor = '#d4edda';
                                         document.getElementById('error').style.color = '#155724';
                                         document.getElementById('error').style.borderColor = '#c3e6cb';
                                     } else {
-                                        document.getElementById('error').textContent = 'ZIP文件解析成功，但未找到usercache.json文件。玩家名称将显示为UUID。';
+                                        document.getElementById('error').textContent = 'ZIP file parsed successfully, but no usercache.json file found. Player names will be displayed as UUIDs.';
                                         document.getElementById('error').style.display = 'block';
                                         document.getElementById('error').style.backgroundColor = '#fff3cd';
                                         document.getElementById('error').style.color = '#856404';
@@ -656,7 +656,7 @@
                     })
                     .catch(function(error) {
                         document.getElementById('loading').style.display = 'none';
-                        document.getElementById('error').textContent = `解析ZIP文件时出错: ${error.message}`;
+                        document.getElementById('error').textContent = `Failed to parse ZIP file: ${error.message}`;
                         document.getElementById('error').style.display = 'block';
                     });
             };
@@ -678,7 +678,7 @@
     const filterGroup = document.createElement('div');
     filterGroup.className = 'filter-group';
     filterGroup.innerHTML = `
-        <label for="playerSelect" class="filter-label">选择玩家：</label>
+        <label for="playerSelect" class="filter-label">Player：</label>
         <select id="playerSelect" class="category-filter">
         </select>
     `;
@@ -747,7 +747,7 @@
 
         // 根据UUID获取玩家名称 - 新增
         function getPlayerName(uuid) {
-            return userCache[uuid] || '未知玩家';
+            return userCache[uuid] || 'Unknow Player';
         }
 
         // 加载翻译文件
@@ -1147,13 +1147,13 @@
                                     updatePlayerSelect();
 
                                     if (hasUserCache) {
-                                        document.getElementById('error').textContent = 'ZIP文件解析成功！已加载' + Object.keys(allPlayersStats).length + '位玩家的数据。';
+                                        document.getElementById('error').textContent = 'ZIP file parsed successfully! Loaded data for ' + Object.keys(allPlayersStats).length + ' players.';
                                         document.getElementById('error').style.display = 'block';
                                         document.getElementById('error').style.backgroundColor = '#d4edda';
                                         document.getElementById('error').style.color = '#155724';
                                         document.getElementById('error').style.borderColor = '#c3e6cb';
                                     } else {
-                                        document.getElementById('error').textContent = 'ZIP文件解析成功，但未找到usercache.json文件。玩家名称将显示为UUID。';
+                                        document.getElementById('error').textContent = 'ZIP file parsed successfully, but no usercache.json file found. Player names will be displayed as UUIDs.';
                                         document.getElementById('error').style.display = 'block';
                                         document.getElementById('error').style.backgroundColor = '#fff3cd';
                                         document.getElementById('error').style.color = '#856404';
@@ -1169,7 +1169,7 @@
                     })
                     .catch(function(error) {
                         document.getElementById('loading').style.display = 'none';
-                        document.getElementById('error').textContent = `解析ZIP文件时出错: ${error.message}`;
+                        document.getElementById('error').textContent = `Failed to parse ZIP file: ${error.message}`;
                         document.getElementById('error').style.display = 'block';
                     });
             };
@@ -1186,7 +1186,7 @@
         const filterGroup = document.createElement('div');
         filterGroup.className = 'filter-group';
         filterGroup.innerHTML = `
-            <label for="playerSelect" class="filter-label">选择玩家：</label>
+            <label for="playerSelect" class="filter-label">Select Player:</label>
             <select id="playerSelect" class="category-filter">
             </select>
         `;
@@ -1356,20 +1356,20 @@
         <div class="modal-content">
             <div class="modal-inner-content">
                 <span class="close-button-help">&times;</span>
-                <h2>使用教程</h2>
+                <h2>Usage Tutorial</h2>
                 <div id="helpContent">
-                    <h3>支持的文件类型</h3>
-                    <p>本工具支持上传以下类型的文件：</p>
+                    <h3>Supported File Types</h3>
+                    <p>This tool supports uploading the following types of files:</p>
                     
                     <h4>1. usercache.json</h4>
-                    <p>该文件包含玩家UUID与玩家名称的映射关系，通常位于Minecraft服务器的<code>world</code>目录下。</p>
-                    <p><strong>格式要求：</strong></p>
-                    <pre>[{"uuid": "玩家UUID","name": "玩家名称","expiresOn": "过期时间"}]</pre>
-                    <p><strong>上传效果：</strong> 上传后，工具可以将UUID转换为玩家名称，使统计数据更易读。</p>
+                    <p>This file contains the mapping between player UUIDs and player names, usually located in the <code>world</code> directory of the Minecraft server.</p>
+                    <p><strong>Format Requirements:</strong></p>
+                    <pre>[{"uuid": "Player UUID","name": "Player Name","expiresOn": "Expiration Time"}]</pre>
+                    <p><strong>Upload Effect:</strong> After uploading, the tool can convert UUIDs to player names, making the statistics more readable.</p>
                     
-                    <h4><a href="translations.json" style="text-decoration: none;" target="_blank">2. translations.json（点击浏览）</a></h4>
-                    <p>已自带原版物品/方块/动作翻译包，若无非原版内容无需上传。该文件包含物品ID与物品名称的翻译映射，用于将游戏内的物品ID转换为可读的名称。</p>
-                    <p><strong>格式要求：</strong></p>
+                    <h4><a href="../translations.json" style="text-decoration: none;" target="_blank">2. translations.json (Click to view)</a></h4>
+                    <p>The tool already comes with a translation package for vanilla items/blocks/actions. You don't need to upload this file if you don't have non-vanilla content. This file contains the translation mapping between item IDs and item names, used to convert in-game item IDs into readable names.</p>
+                    <p><strong>Format Requirements:</strong></p>
     <pre>{
         "category": {
             "killed": "击杀",
@@ -1381,28 +1381,28 @@
             "allay_spawn_egg": "悦灵刷怪蛋",
         }
     }</pre>
-                    <p><strong>上传效果：</strong> 上传后，工具会使用翻译后的名称显示物品，而不是原始ID。</p>
+                    <p><strong>Upload Effect:</strong> After uploading, the tool will display items using translated names instead of original IDs.</p>
                     
-                    <h4>3. 玩家统计数据文件 (.json)</h4>
-                    <p>这些文件包含单个玩家的游戏统计数据，通常位于Minecraft服务器的<code>world/stats</code>目录下，文件名通常为玩家UUID.json。</p>
-                    <p><strong>上传效果：</strong> 上传后，工具会解析并显示玩家的详细统计数据，包括挖掘、放置、击杀等各类数据。</p>
+                    <h4>3. Player Statistics File (.json)</h4>
+                    <p>These files contain the game statistics of a single player and are usually located in the <code>world/stats</code> directory of the Minecraft server. The file name is typically in the format of the player's UUID.json.</p>
+                    <p><strong>Upload Effect:</strong> After uploading, the tool will parse and display the player's detailed statistics, including data on mining, placing, killing, and more.</p>
                     
-                    <h4>4. ZIP压缩包</h4>
-                    <p>您可以将多个统计数据文件打包成ZIP格式上传，工具会自动解压并处理其中的所有有效文件。</p>
+                    <h4>4. ZIP Archive</h4>
+                    <p>You can package multiple statistics files into a ZIP format and upload them. The tool will automatically extract and process all valid files within it.</p>
                     
-                    <h3>使用步骤</h3>
+                    <h3>Usage Steps</h3>
                     <ol>
-                        <li>点击"选择文件"按钮或拖拽文件到上传区域</li>
-                        <li>选择要上传的文件（可以是单个文件或ZIP压缩包）</li>
-                        <li>等待文件解析完成</li>
-                        <li>使用页面上的筛选器和搜索框查看统计数据</li>
-                        <li>点击表格中的物品名称可以查看该物品的玩家排行榜</li>
+                        <li>Click the "Select File" button or drag and drop files into the upload area.</li>
+                        <li>Choose the file(s) to upload (can be a single file or a ZIP archive).</li>
+                        <li>Wait for the file parsing to complete.</li>
+                        <li>Use the filters and search box on the page to view statistics.</li>
+                        <li>Click on the item name in the table to view the player ranking for that item.</li>
                     </ol>
-                    <h3>其他信息</h3>
+                    <h3>Additional Information</h3>
                     <ol>
-                        <li>本页面由Trae_CN结合豆包AI生成</li>
-                        <li>本页面由Boring Minecraft生电服务器提供支持， Boring Minecraft 是一个和谐友爱的大家庭，支持国际版Java和基岩版，入服无门槛，欢迎每一位休闲、生电、建筑玩家，群号：897624943~</li>
-                        <li>本页面由热铁盒托管</li>
+                        <li>This page was generated by Trae_CN in conjunction with Doubao AI.</li>
+                        <li>This page is supported by the Boring Minecraft Survival Electricity Server. Boring Minecraft is a harmonious and friendly community that supports both the international Java and Bedrock editions. There are no entry requirements, and all casual, survival electricity, and building players are welcome. Group ID: 897624943~</li>
+                        <li>This page is hosted by Hot Iron Box.</li>
                     </ol>
                 </div>
             </div>
@@ -1414,29 +1414,36 @@
         <div class="modal-content">
             <div class="modal-inner-content">
                 <span class="close-button-changelog">&times;</span>
-                <h2>bug修复日志</h2>
+                <h2>Bug Fix Log</h2>
                 <div id="changelogContent">
-                    <h3>2025_07_23-Minecraft统计数据排行榜bug修复日志</h3>
-                    <h4>问题现象</h4>
-                    <p>分析服务器stats文件时发现假人xekr的僵尸猪灵击杀数据在排行榜中显示错误：原本应该显示其<strong>击杀僵尸猪灵6,917,927次</strong>，但实际却显示为<strong>被僵尸猪灵击杀1次</strong>。</p>
-
-                    <h4>问题原因</h4>
-                    <p>通过代码分析，发现问题根源在于统计数据处理逻辑中混淆了<code>killed</code>和<code>killed_by</code>两个不同的统计字段：</p>
-                    <ol>
-                        <li>在<code>processMinecraftStats</code>函数中，解析玩家数据时移除了<code>minecraft:</code>前缀并使用翻译表将ID转换为显示名称，但未保留原始统计类别ID</li>
-                        <li>由于缺乏原始类别标识，排行榜功能无法区分<code>killed</code>（主动击杀）和<code>killed_by</code>（被击杀）两种不同统计类型</li>
-                        <li>点击物品查看排行榜时，默认使用了翻译后的名称进行匹配，导致错误地显示了被击杀数据而非击杀数据</li>
-                    </ol>
-
-                    <h4>修复方案</h4>
-                    <ol>
-                        <li><strong>数据处理逻辑优化</strong>：修改<code>processMinecraftStats</code>函数，在返回结果中新增<code>originalCategory</code>和<code>originalItem</code>字段保留原始ID</li>
-                        <li><strong>排行榜筛选逻辑修复</strong>：更新<code>showItemRanking</code>函数，添加<code>originalCategory === 'killed'</code>条件筛选主动击杀数据</li>
-                        <li><strong>UI交互优化</strong>：修改<code>renderTable</code>函数，为物品按钮添加<code>data-original-item</code>和<code>data-original-category</code>属性存储原始ID</li>
-                    </ol>
-
-                    <h4>修复效果</h4>
-                    <p>修复后，点击僵尸猪灵物品查看排行榜时，将正确显示玩家xekr的6,917,927次击杀数据，而非之前错误显示的1次被击杀数据。同时，系统能够正确区分不同统计类型，确保所有玩家的各类统计数据准确展示。</p>
+                    <h3>2025072303_Search Box Bug Fix</h3>
+                        <h4>Problem Description</h4>
+                        <p>The search box is not working.</p>
+                        <h4>Problem Cause</h4>
+                        <p>This bug was introduced while fixing the previous bug.</p>
+                    <h3>2025072302_Minecraft Sorting Bug Fix Log</h3>
+                        <h4>Problem Description</h4>
+                        <p>When switching players after sorting, the sorting effect is not retained.</p>
+                        <h4>Solution</h4>
+                        <p>Use the selected sorting method by default when switching players.</p>
+                    <h3>2025072301_Minecraft Statistics Ranking Bug Fix Log</h3>
+                        <h4>Problem Description</h4>
+                        <p>When analyzing the server stats file, it was found that the zombie piglin kill data of the dummy player xekr was incorrectly displayed in the ranking: it should have shown <strong>6,917,927 zombie piglin kills</strong>, but actually showed <strong>1 death by zombie piglin</strong>.</p>
+                        <h4>Problem Cause</h4>
+                        <p>Through code analysis, it was found that the root cause of the problem lies in the confusion of two different statistical fields, <code>killed</code> and <code>killed_by</code>, in the statistical data processing logic:</p>
+                        <ol>
+                            <li>In the <code>processMinecraftStats</code> function, when parsing player data, the <code>minecraft:</code> prefix was removed and the translation table was used to convert IDs to display names, but the original statistical category IDs were not retained.</li>
+                            <li>Due to the lack of original category identifiers, the ranking function cannot distinguish between two different statistical types: <code>killed</code> (active kills) and <code>killed_by</code> (deaths).</li>
+                            <li>When clicking on an item to view the ranking, the translated name was used for matching by default, resulting in the incorrect display of death data instead of kill data.</li>
+                        </ol>
+                        <h4>Solution</h4>
+                        <ol>
+                            <li><strong>Optimize Data Processing Logic</strong>: Modify the <code>processMinecraftStats</code> function to add <code>originalCategory</code> and <code>originalItem</code> fields to the returned results to retain the original IDs.</li>
+                            <li><strong>Fix Ranking Filtering Logic</strong>: Update the <code>showItemRanking</code> function to add the <code>originalCategory === 'killed'</code> condition to filter active kill data.</li>
+                            <li><strong>Optimize UI Interaction</strong>: Modify the <code>renderTable</code> function to add <code>data-original-item</code> and <code>data-original-category</code> attributes to item buttons to store the original IDs.</li>
+                        </ol>
+                        <h4>Fix Effect</h4>
+                        <p>After the fix, when clicking on the zombie piglin item to view the ranking, it will correctly show player xekr's 6,917,927 kills instead of the previously incorrectly displayed 1 death. Meanwhile, the system can correctly distinguish different statistical types to ensure accurate display of all players' statistical data.</p>
                 </div>
             </div>
         </div>
@@ -1661,9 +1668,8 @@
     
     <!-- 添加底部超链接长条 -->
     <div style="background-color: #f1f1f1; padding: 10px 0; text-align: center; position: fixed; bottom: 0; width: 100%; z-index: 999;">
-        <a href="https://mffyg.lanzoum.com/iO06H31hlykh" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">示例压缩包</a> |
-        <a href="https://www.kdocs.cn/l/cgGYMvid44Fv" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">Boring Minecraft 生电服务器</a> |
-        <a href="https://www.retiehe.com/" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">热铁盒</a>
+        <a href="https://mffyg.lanzoum.com/iO06H31hlykh" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">Example Zipfile</a> |
+        <a href="https://www.kdocs.cn/l/cgGYMvid44Fv" target="_blank" style="margin: 0 15px; color: #333; text-decoration: none;">Boring Minecraft Server</a>
     </div>
 </body>
 </html>
