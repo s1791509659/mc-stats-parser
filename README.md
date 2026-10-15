@@ -20,12 +20,7 @@ A tool to analyze players' stats file in Minecraft — all parsing happens **loc
 - English default
 - Available in most areas once you can open GitHub
 - Stable and safe
-
-### 2. Retinbox page: [MC Stats Parser](https://stats.rth1.xyz/)
-
-- Chinese default
-- China-network friendly
-
+- 
 ---
 
 ## ✨ Features (V3)
@@ -115,16 +110,11 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 ## 🌐 访问入口
 
-### 1. GitHub Pages：[MC Stats Parser](https://s1791509659.github.io/mc-stats-parser/en_us/)
+### 1. GitHub Pages：[MC Stats Parser](https://s1791509659.github.io/mc-stats-parser/)
 
 - 英文默认
 - 只要能打开 GitHub 就能访问
 - 稳定安全
-
-### 2. Retinbox 镜像：[MC Stats Parser](https://stats.rth1.xyz/)
-
-- 中文默认
-- 国内网络友好
 
 ---
 
