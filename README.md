@@ -5,14 +5,12 @@ Sorry for being lazy to fully translate the page into English.
 **Click [Bilibili Tutorial](https://www.bilibili.com/video/BV1MWgzziEHU/) to learn more**
 
 ## Browser from:
-### 1.Github pages: [MC Stats parser](https://s1791509659.github.io/mc-stats-parser/en_us/)
-- English default
+### 1.Github pages: [MC Stats parser](https://s1791509659.github.io/mc-stats-parser/)
 - Available in most areas once you can open github
 - Stable and safe
 
 ### 2.Retinbox page: [MC Stats parser](https://stats.rth1.xyz/)
 - Chinese default
-- China-open friendly
 
 ## Introduction
 A powerful web-based tool designed to analyze and visualize Minecraft player statistics. Upload your JSON, ZIP, or LANG files containing Minecraft stats data to unlock comprehensive insights into gameplay activities, item usage, and category-based metrics.
