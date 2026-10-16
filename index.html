@@ -617,6 +617,8 @@ canvas{max-width:100%}
 .v4-ac-empty{padding:14px 12px;text-align:center;font-size:12.5px;color:var(--muted)}
 .v4-ac-kbd{border:1px solid var(--border);border-radius:5px;padding:0 4px;font-size:10.5px;color:var(--dim)}
 .v4-ac-hintline{display:flex;gap:8px;align-items:center;justify-content:space-between}
+/* 补全框打开时：解除卡片 overflow 裁剪并提升层级，防止被下方卡片盖住 */
+.card.v4-ac-open{overflow:visible;z-index:60}
 
 /* ---------- V4：战绩卡片 ---------- */
 .v4-card-wrap img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
@@ -3022,10 +3024,20 @@ function v4IngestServerPlayer(p, raw) {
 /** 模组接口可能给出「原始 NBT 的 JSON 表示」（含 Inventory / DataVersion 等键），
  *  也可能给出已经归一化的档案对象；这里统一成后者。 */
 function v4NormalizePdata(pd) {
-  if (pd.Inventory || pd.EnderItems || pd.DataVersion != null || pd.playerGameType != null) {
-    try { return v4ParsePlayerData(pd); } catch (e) { return null; }
-  }
-  return pd;
+  if (!pd || typeof pd !== 'object') return null;
+  /* 已经是归一化档案（模组接口也可能直接给这种形态）：用它，但必须是完整形态 */
+  if (Array.isArray(pd.inv) && Array.isArray(pd.ender) && pd.equipment && typeof pd.equipment === 'object') return pd;
+  /* 其余一律按「原始 NBT 的 JSON 表示」解析一遍，得到完整字段（inv / ender / equipment
+     等下游必读的键一定存在）。解析不出有效档案就返回 null——绝不能把缺字段的半成品
+     留在 p.pd 上，否则后面 pd.inv.concat(...) 会抛错并让整次读取被判为失败。 */
+  try {
+    const parsed = v4ParsePlayerData(pd);
+    if (!parsed || !Array.isArray(parsed.inv)) return null;
+    const meaningful = parsed.dv || parsed.dimension || parsed.pos || parsed.inv.length ||
+      parsed.ender.length || Object.keys(parsed.equipment).length || parsed.effects.length ||
+      parsed.xpTotal || parsed.xpLevel || parsed.health != null || parsed.food != null;
+    return meaningful ? parsed : null;
+  } catch (e) { return null; }
 }
 
 /* ============================ 玩家进度时间线 ============================ */
@@ -3378,7 +3390,11 @@ let V4_AC_ROWS = [], V4_AC_IDX = -1;
 
 function v4AcClose() {
   const b = $('#v4AcBox');
-  if (b) b.classList.add('hidden');
+  if (b) {
+    b.classList.add('hidden');
+    const card = b.closest('.card');
+    if (card) card.classList.remove('v4-ac-open');
+  }
   V4_AC_ROWS = []; V4_AC_IDX = -1;
 }
 function v4SearchMatches(kw) {
@@ -3434,6 +3450,8 @@ function v4AcRender() {
   }
   box.innerHTML = html;
   box.classList.remove('hidden');
+  const acCard = box.closest('.card');
+  if (acCard) acCard.classList.add('v4-ac-open');
 }
 function v4AcMove(d) {
   if (!V4_AC_ROWS.length) return;

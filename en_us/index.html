@@ -617,6 +617,8 @@ canvas{max-width:100%}
 .v4-ac-empty{padding:14px 12px;text-align:center;font-size:12.5px;color:var(--muted)}
 .v4-ac-kbd{border:1px solid var(--border);border-radius:5px;padding:0 4px;font-size:10.5px;color:var(--dim)}
 .v4-ac-hintline{display:flex;gap:8px;align-items:center;justify-content:space-between}
+/* while autocomplete is open: unclip the card and lift it above the next one */
+.card.v4-ac-open{overflow:visible;z-index:60}
 
 /* ---------- V4：战绩卡片 ---------- */
 .v4-card-wrap img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
@@ -3006,10 +3008,22 @@ function v4IngestServerPlayer(p, raw) {
 /** 模组接口可能给出「原始 NBT 的 JSON 表示」（含 Inventory / DataVersion 等键），
  *  也可能给出已经归一化的档案对象；这里统一成后者。 */
 function v4NormalizePdata(pd) {
-  if (pd.Inventory || pd.EnderItems || pd.DataVersion != null || pd.playerGameType != null) {
-    try { return v4ParsePlayerData(pd); } catch (e) { return null; }
-  }
-  return pd;
+  if (!pd || typeof pd !== 'object') return null;
+  /* Already normalised profile (the mod API may hand one over directly): use it as-is,
+     but only when the shape is complete. */
+  if (Array.isArray(pd.inv) && Array.isArray(pd.ender) && pd.equipment && typeof pd.equipment === 'object') return pd;
+  /* Everything else is treated as raw NBT (the mod ships the JSON view of the NBT) and is
+     parsed once so every key the UI reads (inv / ender / equipment …) exists. When nothing
+     usable comes out we return null instead of keeping a half-built object — otherwise
+     pd.inv.concat(...) downstream throws and the whole load is reported as failed. */
+  try {
+    const parsed = v4ParsePlayerData(pd);
+    if (!parsed || !Array.isArray(parsed.inv)) return null;
+    const meaningful = parsed.dv || parsed.dimension || parsed.pos || parsed.inv.length ||
+      parsed.ender.length || Object.keys(parsed.equipment).length || parsed.effects.length ||
+      parsed.xpTotal || parsed.xpLevel || parsed.health != null || parsed.food != null;
+    return meaningful ? parsed : null;
+  } catch (e) { return null; }
 }
 
 /* ============================ 玩家进度时间线 ============================ */
@@ -3362,7 +3376,11 @@ let V4_AC_ROWS = [], V4_AC_IDX = -1;
 
 function v4AcClose() {
   const b = $('#v4AcBox');
-  if (b) b.classList.add('hidden');
+  if (b) {
+    b.classList.add('hidden');
+    const card = b.closest('.card');
+    if (card) card.classList.remove('v4-ac-open');
+  }
   V4_AC_ROWS = []; V4_AC_IDX = -1;
 }
 function v4SearchMatches(kw) {
@@ -3418,6 +3436,8 @@ function v4AcRender() {
   }
   box.innerHTML = html;
   box.classList.remove('hidden');
+  const acCard = box.closest('.card');
+  if (acCard) acCard.classList.add('v4-ac-open');
 }
 function v4AcMove(d) {
   if (!V4_AC_ROWS.length) return;
