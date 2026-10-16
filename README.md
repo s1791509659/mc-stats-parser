@@ -1,11 +1,13 @@
-# Minecraft Player Analyzer
+# MC-Statshub
 
-[![Version](https://img.shields.io/badge/version-V4-blue)](https://github.com/s1791509659/mc-stats-parser)
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/s1791509659/mc-stats-parser)
+[![Version](https://img.shields.io/badge/version-V4-blue)](https://github.com/s1791509659/MC-Statshub)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/s1791509659/MC-Statshub)
 
 **English** | [简体中文](#简体中文)
 
 A tool to analyze players' stats file in Minecraft — all parsing happens **locally in your browser**, no data is ever uploaded.
+
+> Running a server? Install the server-side mod [**MC-Statshub-Mod**](https://github.com/s1791509659/MC-Statshub-Mod) and this same dashboard goes live at `http://server-ip:8080` — no uploads at all.
 
 > Sorry for being lazy to fully translate the page UI into English (the UI is currently Chinese-first). The README below is fully bilingual.
 
@@ -15,13 +17,13 @@ A tool to analyze players' stats file in Minecraft — all parsing happens **loc
 
 ## 🌐 Access
 
-### 1. GitHub Pages: [MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/en_us/) (English) · [中文](https://s1791509659.github.io/mc-stats-parser/)
+### 1. GitHub Pages: [MC-Statshub](https://s1791509659.github.io/mc-statshub/en_us/) (English) · [中文](https://s1791509659.github.io/mc-statshub/)
 
 - English at `/en_us/`, Chinese at the root path
 - Available in most areas once you can open GitHub
 - Stable and safe
 
-### 2. Retinbox page: [MC Player Analyzer](https://stats.rth1.xyz/en_us/) (English) · [中文](https://stats.rth1.xyz/)
+### 2. Retinbox page: [MC-Statshub](https://stats.rth1.xyz/en_us/) (English) · [中文](https://stats.rth1.xyz/)
 
 - English at `/en_us/`, Chinese at the root path
 - China-network friendly
@@ -116,9 +118,11 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 # 简体中文
 
-[English](#minecraft-player-analyzer) | **简体中文**
+[English](#mc-statshub) | **简体中文**
 
 一个用于分析 Minecraft 玩家统计数据文件的工具 —— 所有解析都在**浏览器本地完成**，数据不会上传到任何服务器。
+
+> 开服？装上服务端模组 [**MC-Statshub-Mod**](https://github.com/s1791509659/MC-Statshub-Mod)，同一个看板就能在 `http://服务器IP:8080` 实时查看全服数据，连上传都不用。
 
 > 页面 UI 目前以中文为主，README 提供中英双语。
 
@@ -128,13 +132,13 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 ## 🌐 访问入口
 
-### 1. GitHub Pages：[MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/)（中文页）· [English](https://s1791509659.github.io/mc-stats-parser/en_us/)
+### 1. GitHub Pages：[MC-Statshub](https://s1791509659.github.io/mc-statshub/)（中文页）· [English](https://s1791509659.github.io/mc-statshub/en_us/)
 
 - 根路径为中文页，英文页在 `/en_us/`
 - 只要能打开 GitHub 就能访问
 - 稳定安全
 
-### 2. Retinbox 镜像：[MC Player Analyzer](https://stats.rth1.xyz/)（中文页）· [English](https://stats.rth1.xyz/en_us/)
+### 2. Retinbox 镜像：[MC-Statshub](https://stats.rth1.xyz/)（中文页）· [English](https://stats.rth1.xyz/en_us/)
 
 - 根路径为中文页，英文页在 `/en_us/`
 - 国内网络友好

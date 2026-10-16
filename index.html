@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minecraft Player Analyzer</title>
+<title>MC-Statshub · Minecraft 玩家统计中心</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
@@ -646,11 +646,12 @@ canvas{max-width:100%}
     <div class="brand">
       <div class="logo">⛏️</div>
       <div>
-        <h1>Minecraft Player Analyzer<span class="ver">V4</span></h1>
+        <h1>MC-Statshub<span class="ver">V4</span></h1>
         <div class="sub" id="dataStatus">尚未载入数据 · 拖入 stats.zip 开始</div>
       </div>
     </div>
     <div class="appbar-actions">
+      <a class="btn ghost sm" href="https://github.com/s1791509659/MC-Statshub" target="_blank" rel="noopener" title="GitHub 仓库">⭐ GitHub</a>
       <button class="btn ghost sm" id="btnHelp">⌨️ 快捷键</button>
       <button class="btn ghost sm" id="btnTheme">🌗 主题</button>
     </div>
@@ -1112,7 +1113,7 @@ canvas{max-width:100%}
 
 <script>
 /* ==========================================================================
-   Minecraft Player Analyzer
+   MC-Statshub — Minecraft 玩家统计中心
    ========================================================================== */
 
 /* ---------------------------------- 小工具 --------------------------------- */
@@ -1939,7 +1940,7 @@ const V4T = {
   cardRankAdv: '成就排名', cardRankPlay: '时长排名',
   cardRankUnit: ' 名',
   cardNoRare: '暂无成就数据',
-  cardFooter: '由 Minecraft Player Analyzer 生成',
+  cardFooter: '由 MC-Statshub 生成',
   cardKpi: { play: '游戏时长', death: '死亡次数', mob: '生物击杀', mined: '挖掘方块', placed: '放置方块', dist: '旅行距离', adv: '成就进度', level: '经验等级' },
   cardPlayers: n => '全服 ' + n + ' 位玩家'
 };
