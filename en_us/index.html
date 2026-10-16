@@ -620,6 +620,18 @@ canvas{max-width:100%}
 /* while autocomplete is open: unclip the card and lift it above the next one */
 .card.v4-ac-open{overflow:visible;z-index:60}
 
+/* ---------- V4: hover popover for container items (3 rows x 9 columns, like vanilla) ---------- */
+.v4-pop{position:fixed;z-index:200;background:var(--panel-solid);border:1px solid var(--border-strong);border-radius:12px;box-shadow:var(--shadow);padding:10px 12px;font-size:12px;pointer-events:none;display:none}
+.v4-pop-hd{font-weight:800;font-size:12.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.v4-pop-sub{font-size:11px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.v4-pop-grid{display:grid;grid-template-columns:repeat(9,34px);gap:3px}
+.v4-pop-cell{position:relative;width:34px;height:34px;border-radius:8px;background:var(--panel3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.v4-pop-cell.empty{background:rgba(148,163,184,.05);border-style:dashed}
+.v4-pop-cell .ico{width:24px;height:24px;border:none;background:none}
+.v4-pop-cell .ico img{width:24px;height:24px;image-rendering:pixelated}
+.v4-pop-cell .ico .fb{font-size:12px}
+.v4-pop-cell .ct{position:absolute;right:2px;bottom:0;font-size:10px;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.9);font-variant-numeric:tabular-nums}
+
 /* ---------- V4：战绩卡片 ---------- */
 .v4-card-wrap img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
 .v4-card-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
@@ -1344,7 +1356,12 @@ const ICON_BASES = [
   'https://testingcf.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
   'https://gcore.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
   'https://fastly.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
-  'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21/assets/minecraft/textures/'
+  'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21/assets/minecraft/textures/',
+  /* items added in 1.21.4+ (pale oak / resin / creaking heart …) are absent from the 1.21
+     mirrors, so these go last as a safety net: older items still resolve above, only
+     icons whose whole candidate list failed will reach here. */
+  'https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21.4/assets/minecraft/textures/',
+  'https://fastly.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21.4/assets/minecraft/textures/'
 ];
 const KIND_CACHE = new Map();
 
@@ -1373,7 +1390,11 @@ const ICON_ALIAS = {
   chipped_anvil: 'block/chipped_anvil.png',
   damaged_anvil: 'block/damaged_anvil.png',
   banner: 'entity/banner/base.png',
-  ominous_banner: 'entity/banner/base.png'
+  ominous_banner: 'entity/banner/base.png',
+  /* item ids whose vanilla texture file is named differently */
+  crossbow: 'item/crossbow_standby.png',
+  shield: 'entity/shield_base.png',
+  scaffolding: 'block/scaffolding_top.png'
 };
 ['white','orange','magenta','light_blue','yellow','lime','pink','gray','light_gray','cyan','purple','blue','brown','green','red','black']
   .forEach(c => { ICON_ALIAS[c + '_banner'] = 'entity/banner/base.png'; });
@@ -1432,8 +1453,11 @@ function iconHTML(cat, item, showIcons) {
     return '<span class="ico"><span class="fb">' + esc(catMeta(cat).emoji) + '</span></span>';
   }
   const urls = iconCandidates(cat, item);
+  /* src and onerror are inlined so any dynamically rendered icon (popovers, lazy redraws)
+     loads on its own; bindIconFallbacks only fills in images that still have no src, so it
+     cannot reset an in-progress fallback chain. */
   return '<span class="ico">' +
-      '<img alt="" loading="lazy" data-i="0" data-urls="' + esc(urls.join('|')) + '">' +
+      '<img alt="" loading="lazy" src="' + esc(urls[0] || '') + '" data-i="0" data-urls="' + esc(urls.join('|')) + '" onerror="__icoFail(this)">' +
       '<span class="fb hidden">' + esc(fallbackChar) + '</span>' +
     '</span>';
 }
@@ -2323,6 +2347,27 @@ function v4EnchList(c) {
   out.sort((a, b) => b.lvl - a.lvl);
   return out;
 }
+/** Normalize container contents (shulker boxes etc.): supports the legacy
+ *  BlockEntityTag.Items shape and the 1.20.5+ container component shape */
+function v4NormContainer(list) {
+  if (!Array.isArray(list) || !list.length) return null;
+  const out = [];
+  for (const c of list) {
+    if (!c || typeof c !== 'object') continue;
+    let raw = c;
+    if (!c.id && !c.Id && !c.Item && c.item != null) {
+      /* 1.20.5+ container component entry: {item:'minecraft:x',count:N,slot:S} or {item:{id:...},...} */
+      raw = typeof c.item === 'string'
+        ? { id: c.item, Count: c.count, Slot: c.slot }
+        : Object.assign({}, c.item, { Count: c.count != null ? c.count : c.item.count, Slot: c.slot });
+    }
+    const n = v4NormItem(raw);
+    if (n) out.push(n);
+  }
+  if (!out.length) return null;
+  out.sort((a, b) => (a.slot == null ? 99 : a.slot) - (b.slot == null ? 99 : b.slot));
+  return out;
+}
 function v4NormItem(it) {
   if (!it || typeof it !== 'object') return null;
   const id = it.id || it.Id || (it.Item && (it.Item.id || it.Item.Id));
@@ -2348,6 +2393,8 @@ function v4NormItem(it) {
     trim: comp['minecraft:trim'] || comp.Trim || null,
     potion: potion,
     containerCount: Array.isArray(container) ? container.length : 0,
+    containerHas: Array.isArray(container),        // has a container component (even when empty)
+    container: v4NormContainer(container),
     rarity: comp['minecraft:rarity'] || null
   };
 }
@@ -2527,18 +2574,92 @@ function v4EquipNameEN(k) {
 function v4SlotHTML(it, label) {
   if (!it) return '<div class="inv-slot slot-empty"' + (label ? ' title="' + esc(label) + '"' : '') + '></div>';
   const nm = v4ItemName(it.id);
+  const hasPop = !!it.containerHas;
   const lines = [nm + (it.count > 1 ? ' ×' + it.count : '')];
   if (it.customName) lines.push((V4_IS_EN ? 'Named: ' : '自定义名：') + it.customName);
   for (const e of it.ench) lines.push(v4TrEnch(e.id) + ' ' + v4Roman(e.lvl));
   if (it.containerCount) lines.push((V4_IS_EN ? 'Contains ' : '内含 ') + it.containerCount + (V4_IS_EN ? ' stacks' : ' 组物品'));
   if (it.damage) lines.push((V4_IS_EN ? 'Damage: ' : '耐久损耗：') + it.damage);
   if (it.unbreakable) lines.push(V4_IS_EN ? 'Unbreakable' : '无法破坏');
+  /* containers with contents: replace the native title with a custom hover popover (icons + itemized list) */
+  let popAttr = '';
+  if (hasPop) {
+    popAttr = ' data-v4pop="' + esc(JSON.stringify({
+      id: it.id,
+      cn: it.customName || '',
+      c: (it.container || []).map(c => ({ id: c.id, n: c.count, s: c.slot }))
+    })) + '"';
+  }
   const tip = lines.join('\n');
-  return '<div class="inv-slot" title="' + esc(tip) + '">' +
+  return '<div class="inv-slot"' + (hasPop ? popAttr : ' title="' + esc(tip) + '"') + '>' +
     iconHTML('inv', v4Bare(it.id), true) +
     (it.count > 1 ? '<span class="cnt">' + it.count + '</span>' : '') +
     (it.ench.length ? '<span class="en">✨</span>' : '') +
     '</div>';
+}
+/* ============================ container hover popover (shulker boxes etc.) ============================ */
+let V4_POP_EL = null;
+function v4PopEl() {
+  if (V4_POP_EL) return V4_POP_EL;
+  V4_POP_EL = document.createElement('div');
+  V4_POP_EL.className = 'v4-pop';
+  V4_POP_EL.id = 'v4Pop';
+  document.body.appendChild(V4_POP_EL);
+  return V4_POP_EL;
+}
+function v4PopHTML(d) {
+  const slots = new Array(27).fill(null);
+  let stacks = 0, items = 0, seq = 0;
+  for (const c of (d.c || [])) {
+    let i = (c.s != null && c.s >= 0 && c.s < 27) ? c.s : -1;
+    if (i < 0 || slots[i]) { while (seq < 27 && slots[seq]) seq++; i = seq < 27 ? seq : -1; }
+    if (i >= 0) slots[i] = c;
+    stacks++;
+    items += c.n || 1;
+  }
+  let grid = '';
+  for (let i = 0; i < 27; i++) {
+    const c = slots[i];
+    if (!c) { grid += '<div class="v4-pop-cell empty"></div>'; continue; }
+    grid += '<div class="v4-pop-cell">' + iconHTML('inv', v4Bare(c.id), true) +
+      (c.n > 1 ? '<span class="ct">' + c.n + '</span>' : '') + '</div>';
+  }
+  let nm = v4ItemName(d.id);
+  if (d.cn) nm += ' · ' + d.cn;
+  const hd = '<div class="v4-pop-hd"><span>📦 ' + esc(nm) + '</span><span class="v4-pop-sub">' +
+    stacks + ' / 27 ' + (V4_IS_EN ? 'slots' : '格') +
+    (stacks ? ' · ' + items + (V4_IS_EN ? ' items' : ' 件') : ' · ' + (V4_IS_EN ? 'empty' : '空的')) + '</span></div>';
+  return hd + '<div class="v4-pop-grid">' + grid + '</div>';
+}
+function v4PopShow(slot, d) {
+  const pop = v4PopEl();
+  pop.innerHTML = v4PopHTML(d);
+  if (typeof bindIconFallbacks === 'function') bindIconFallbacks(pop);
+  pop.style.display = 'block';
+  const r = slot.getBoundingClientRect();
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let x = r.right + 8;
+  if (x + pw > window.innerWidth - 8) x = r.left - pw - 8;   // flip to the left when the right side is short
+  if (x < 8) x = 8;
+  let y = Math.min(Math.max(8, r.top), window.innerHeight - ph - 8);
+  pop.style.left = x + 'px';
+  pop.style.top = y + 'px';
+}
+function v4PopHide() {
+  if (V4_POP_EL) V4_POP_EL.style.display = 'none';
+}
+/** Global event delegation: hovering a slot with data-v4pop pops the itemized contents (bind once) */
+function v4InitItemPop() {
+  if (v4InitItemPop.done) return;
+  v4InitItemPop.done = true;
+  document.addEventListener('mouseover', e => {
+    const slot = e.target && e.target.closest ? e.target.closest('[data-v4pop]') : null;
+    if (!slot) { v4PopHide(); return; }
+    let d = null;
+    try { d = JSON.parse(slot.getAttribute('data-v4pop')); } catch (err) { /* ignore bad data */ }
+    if (d) v4PopShow(slot, d); else v4PopHide();
+  });
+  window.addEventListener('scroll', v4PopHide, true);
 }
 function v4InvGrid(items, cols, maxCells) {
   const byslot = new Map();
@@ -3511,6 +3632,7 @@ function v4InitPlayerSearch() {
 /* 档案页的交互型工具（导出卡片 / 时间线开关 / 搜索补全）只需初始化一次 */
 function v4InitProfileTools() {
   v4InitPlayerSearch();
+  v4InitItemPop();
   const btn = $('#btnExportCard');
   if (btn && btn.dataset.v4card !== '1') {
     btn.dataset.v4card = '1';
@@ -4936,7 +5058,8 @@ function bindIconFallbacks(root) {
     img.dataset.bound = '1';
     img.onerror = function () { window.__icoFail(this); };
     const urls = (img.dataset.urls || '').split('|');
-    if (urls[0]) img.src = urls[0];
+    /* never overwrite an existing src (inline-assigned, or mid fallback chain) */
+    if (urls[0] && !img.getAttribute('src')) img.src = urls[0];
   });
 }
 
