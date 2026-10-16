@@ -5581,10 +5581,10 @@ function copyReport() {
   updateStatusPills();
   renderAll();
 
-  /* 如果由本地/远程服务器托管，尝试自动载入内置数据 */
+  /* 不自动载入内置示例数据：GitHub Pages 拉取 4MB 的 stats.zip 太慢，需要时点「载入示例数据」按钮 */
   setTimeout(() => {
     if (location.protocol === 'http:' || location.protocol === 'https:') {
-      loadBuiltin();
+      setStatus('拖入 stats.zip 开始 · 或点「载入示例数据」体验示例');
     } else {
       setStatus('本地打开模式 · 请手动选择 stats.zip 文件');
     }

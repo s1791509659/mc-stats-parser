@@ -5570,10 +5570,11 @@ function copyReport() {
   updateStatusPills();
   renderAll();
 
-  /* 如果由本地/远程服务器托管，尝试自动载入内置数据 */
+  /* Do not auto-load the bundled demo data: pulling the 4MB stats.zip from
+     GitHub Pages can be painfully slow — use the "Load sample data" button instead */
   setTimeout(() => {
     if (location.protocol === 'http:' || location.protocol === 'https:') {
-      loadBuiltin();
+      setStatus('Drop a stats.zip to start · or click "Load sample data"');
     } else {
       setStatus('Local mode · please select a stats.zip manually');
     }
