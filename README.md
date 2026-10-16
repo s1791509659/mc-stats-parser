@@ -17,7 +17,7 @@ A tool to analyze players' stats file in Minecraft — all parsing happens **loc
 
 ## 🌐 Access
 
-### 1. GitHub Pages: [MC-Statshub](https://s1791509659.github.io/mc-statshub/en_us/) (English) · [中文](https://s1791509659.github.io/mc-statshub/)
+### 1. GitHub Pages: [MC-Statshub](https://s1791509659.github.io/MC-Statshub/en_us/) (English) · [中文](https://s1791509659.github.io/MC-Statshub/)
 
 - English at `/en_us/`, Chinese at the root path
 - Available in most areas once you can open GitHub
@@ -132,7 +132,7 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 ## 🌐 访问入口
 
-### 1. GitHub Pages：[MC-Statshub](https://s1791509659.github.io/mc-statshub/)（中文页）· [English](https://s1791509659.github.io/mc-statshub/en_us/)
+### 1. GitHub Pages：[MC-Statshub](https://s1791509659.github.io/MC-Statshub/)（中文页）· [English](https://s1791509659.github.io/MC-Statshub/en_us/)
 
 - 根路径为中文页，英文页在 `/en_us/`
 - 只要能打开 GitHub 就能访问
