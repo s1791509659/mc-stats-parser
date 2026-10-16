@@ -626,7 +626,7 @@ canvas{max-width:100%}
 .v4-pop-sub{font-size:11px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 .v4-pop-grid{display:grid;grid-template-columns:repeat(9,34px);gap:3px}
 .v4-pop-cell{position:relative;width:34px;height:34px;border-radius:8px;background:var(--panel3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
-.v4-pop-cell.empty{background:rgba(148,163,184,.05);border-style:dashed}
+.v4-pop-cell.v4-empty{background:rgba(148,163,184,.05);border-style:dashed}
 .v4-pop-cell .ico{width:24px;height:24px;border:none;background:none}
 .v4-pop-cell .ico img{width:24px;height:24px;image-rendering:pixelated}
 .v4-pop-cell .ico .fb{font-size:12px}
@@ -2633,7 +2633,7 @@ function v4PopHTML(d) {
   let grid = '';
   for (let i = 0; i < 27; i++) {
     const c = slots[i];
-    if (!c) { grid += '<div class="v4-pop-cell empty"></div>'; continue; }
+    if (!c) { grid += '<div class="v4-pop-cell v4-empty"></div>'; continue; }
     grid += '<div class="v4-pop-cell">' + iconHTML('inv', v4Bare(c.id), true) +
       (c.n > 1 ? '<span class="ct">' + c.n + '</span>' : '') + '</div>';
   }
