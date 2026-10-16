@@ -3318,12 +3318,12 @@ async function v4BuildScoreCard(p) {
   for (const a of S.adv.values()) if (a.players.has(p.uuid) && a.players.get(p.uuid)) mine.push(a);
   mine.sort((x, y) => (x.players.size - y.players.size) || x.key.localeCompare(y.key));
   const rare = mine.slice(0, 5);
-  txt('💎 ' + V4T.cardRare, 74, 500, '800 21px ' + F, '#eef4ff');
+  txt('💎 ' + V4T.cardRare, 74, 528, '800 21px ' + F, '#eef4ff');
   if (!rare.length) {
-    txt(V4T.cardNoRare, 74, 546, '500 17px ' + F, '#7f90ab');
+    txt(V4T.cardNoRare, 74, 570, '500 17px ' + F, '#7f90ab');
   } else {
     rare.forEach((a, i) => {
-      const y = 542 + i * 42;
+      const y = 570 + i * 42;
       txt(v4AdvCatMeta(v4AdvCatOf(a.key)).emoji, 76, y, '400 19px ' + F, '#e8eefb');
       txt(v4AdvInfo(a.key).t, 108, y, '600 19px ' + F, '#dfe8f6');
       txt(num(a.players.size) + (V4_IS_EN ? ' players' : ' 人达成'), W - 76, y, '600 17px ' + F, '#8ea0bd', 'right');
