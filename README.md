@@ -1,6 +1,6 @@
-# Minecraft Stats Parser
+# Minecraft Player Analyzer
 
-[![Version](https://img.shields.io/badge/version-V3-blue)](https://github.com/s1791509659/mc-stats-parser)
+[![Version](https://img.shields.io/badge/version-V4-blue)](https://github.com/s1791509659/mc-stats-parser)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/s1791509659/mc-stats-parser)
 
 **English** | [简体中文](#简体中文)
@@ -15,30 +15,47 @@ A tool to analyze players' stats file in Minecraft — all parsing happens **loc
 
 ## 🌐 Access
 
-### 1. GitHub Pages: [MC Stats Parser](https://s1791509659.github.io/mc-stats-parser/en_us/)
+### 1. GitHub Pages: [MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/en_us/)
 
 - English default
 - Available in most areas once you can open GitHub
 - Stable and safe
-- 
+
+### 2. Retinbox page: [MC Player Analyzer](https://stats.rth1.xyz/)
+
+- Chinese default
+- China-network friendly
+
 ---
 
-## ✨ Features (V3)
+## ✨ Features (V4)
 
 All data is parsed **entirely in your browser** — nothing leaves your computer.
 
 ### 📊 Server Overview
 - 10+ KPI cards (auto-hides metrics with no data): total playtime, blocks mined/placed, mob kills, deaths, travel distance, and more
+- **"Blocks placed" is derived**: vanilla Minecraft has no standalone placed stat — placing a block increments that block's `used` stat. This tool detects the block-like entries of `used` (anything mined by anyone + block-family names + an explicit list) and sums them, so the number is now a meaningful real value instead of a permanent 0
 - Server-wide behavior distribution chart (the "custom" counter category is excluded by default to keep the chart readable — toggle it back on anytime)
 - Top blocks/items, most active players, death leaderboard
 - 20+ automatic "Server Records" (biggest miner, most deaths, longest distance traveled…)
+- **Enchantment popularity (Top 12)** and **status-effect usage** across the server
 
 ### 👤 Player Profiles
 - Avatar, auto-computed title & badge, 12 personal stats
 - 8-dimension behavior radar (normalized against the whole server)
 - Top statistics bar chart — click a bar to jump straight to the server-wide ranking for that stat
 - **41 unlockable achievements** with progress bars
+- **Inventory / ender chest / equipment viewer** — real item icons, enchantments and counts, read straight from the player `.dat` (armor & offhand slots of both old and new storage formats)
+- **Live player state** — game mode, dimension, coordinates, health, food, XP level, spawn point, current vehicle and more
+- **Enchantment summary** for everything the player is carrying
+- **Progress timeline** — a cumulative unlock curve (day/week/month granularity picked automatically) plus a day-by-day list, with first/last unlock, active span and busiest-day stats
+- **Score card export** — render the whole profile into a shareable PNG (avatar, title, server-wide ranks, KPI grid, rarest advancements)
 - One-click copy of a shareable profile summary
+
+### 🏅 Advancements
+- Server-wide completion of 118 vanilla advancements, grouped by category (story / nether / end / adventure / husbandry / datapack)
+- Per-advancement unlock count, completion share, first & latest achiever
+- "In progress" entries — someone is working on it but nobody finished yet
 
 ### 🏆 Leaderboard
 - 18 preset metrics + full-text search across **all** 5000+ stat keys
@@ -72,6 +89,7 @@ Works with stats exports from **any** server:
 
 ### 🛠 Misc
 - Dark / light theme, keyboard shortcuts (`/` `1-6` `R` `T` `P`/`N`/`B` `Esc`)
+- **Global player search with avatar autocomplete** — hit `Ctrl`/`⌘` + `K` from anywhere
 - URL deep links (share a specific player / leaderboard / comparison)
 - Drag & drop import anywhere on the page
 - Animated counters, toasts, skeleton loading
@@ -110,30 +128,47 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 ## 🌐 访问入口
 
-### 1. GitHub Pages：[MC Stats Parser](https://s1791509659.github.io/mc-stats-parser/)
+### 1. GitHub Pages：[MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/en_us/)
 
 - 英文默认
 - 只要能打开 GitHub 就能访问
 - 稳定安全
 
+### 2. Retinbox 镜像：[MC Player Analyzer](https://stats.rth1.xyz/)
+
+- 中文默认
+- 国内网络友好
+
 ---
 
-## ✨ 功能一览（V3）
+## ✨ 功能一览（V4）
 
 所有数据完全在浏览器本地解析，不上传任何内容。
 
 ### 📊 服务器总览
 - 10+ 张 KPI 卡片（无数据的自动隐藏）：总游戏时长、挖掘/放置方块数、生物击杀、死亡次数、旅行距离等
+- **「放置方块」为推算值**：原版 Minecraft 没有独立的放置统计，放置方块会记到该方块的 `used`（使用）统计里。本工具会识别出 `used` 中的方块（全服挖过的物品 + 方块族命名 + 显式清单）并汇总，因此这个数字现在是有意义的真实值，而不是永远的 0
 - 全服行为分布环图（默认排除占比过大的「综合统计」，保持图表可读，可一键勾选恢复）
 - 最热门方块/物品、最肝玩家榜、死亡榜
 - 20+ 项自动评选的「服务器之最」（最强矿工、死亡冠军、旅行最远……）
+- **附魔流行度 Top 12** 与 **状态效果** 使用分布
 
 ### 👤 玩家档案
 - 头像、自动计算的称号徽章、12 项个人数据
 - 8 维行为雷达图（相对全服归一化）
 - Top 统计条形图 —— 点击柱子直接跳转到该统计项的全服排行榜
 - **41 个可解锁成就**，带进度条
+- **背包 / 末影箱 / 装备栏查看** —— 真实物品图标、附魔与数量，直接读自玩家 `.dat`（新旧两种存储格式的盔甲与副手槽位都支持）
+- **玩家实时状态** —— 游戏模式、所在维度、坐标、生命、饱食度、经验等级、重生点、当前骑乘等
+- **附魔汇总** —— 汇总该玩家身上所有附魔
+- **进度时间线** —— 累计解锁曲线（自动按天/周/月选粒度）+ 按日期分组的列表，含首次/最近解锁、活跃跨度、最高产的一天
+- **战绩卡片导出** —— 把整份档案渲染成可分享的 PNG（头像、称号、全服排名、KPI 网格、最稀有成就）
 - 一键复制可分享的档案摘要
+
+### 🏅 成就总览
+- 全服 118 项原版成就的完成情况，按分类汇总（剧情 / 下界 / 末地 / 冒险 / 农牧 / 数据包）
+- 每项成就的达成人数、完成占比、首位与最近达成者
+- 「进行中条目」—— 有人推进但全服尚无人达成
 
 ### 🏆 排行榜
 - 18 个预设指标 + 对全部 5000+ 统计项的全文搜索
@@ -167,6 +202,7 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 ### 🛠 其他
 - 明暗主题、快捷键（`/` `1-6` `R` `T` `P`/`N`/`B` `Esc`）
+- **全局玩家搜索（带头像自动补全）** —— 任意位置按 `Ctrl`/`⌘` + `K` 唤起
 - URL 深链接（可分享指定玩家 / 排行榜 / 对比页面）
 - 整页任意位置拖拽导入
 - 数字滚动动画、Toast 提示、骨架屏加载

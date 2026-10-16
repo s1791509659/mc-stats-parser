@@ -1,0 +1,11 @@
+# 本地备份文件（不纳入版本管理）
+*.bak-*.html
+*.bak-*.md
+index.原版V2备份.html
+index.V3-当前版本.html
+
+# 测试用真实存档（含玩家数据，勿上传）
+players.zip
+
+# 模组构建产物（属于 statsweb 仓库）
+statsweb-*.jar

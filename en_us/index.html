@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minecraft Stats Analyzer V3</title>
+<title>Minecraft Player Analyzer</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
@@ -548,7 +548,81 @@ canvas{max-width:100%}
   .kpi .k-value{font-size:21px}
   thead th,tbody td{padding:9px 10px}
 }
-</style>
+/*V4S:css*/
+/* ---------- V4：成就 / 玩家档案 样式 ---------- */
+.v4-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.v4-kv-item{padding:9px 11px;border-radius:11px;background:var(--panel3);border:1px solid var(--border)}
+.v4-kv-item .l{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.3px}
+.v4-kv-item .v{font-size:13.5px;font-weight:700;margin-top:5px;word-break:break-word;line-height:1.5}
+.v4-kv-item .v .cat-tag{margin:2px 4px 2px 0;font-weight:600}
+.v4-bar{height:9px;border-radius:99px;background:var(--track);overflow:hidden;border:1px solid var(--border)}
+.v4-bar>i{display:block;height:100%;border-radius:99px;transition:width .5s ease}
+.v4-catrow{display:grid;grid-template-columns:112px 1fr 76px;gap:12px;align-items:center;padding:7px 0}
+.v4-catname{font-size:13px;font-weight:700;white-space:nowrap}
+.v4-catnum{font-size:12.5px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.v4-catnum b{color:var(--text)}
+.v4-tl{display:flex;flex-direction:column}
+.v4-tl-item{display:flex;gap:9px;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--border);font-size:13px;flex-wrap:wrap}
+.v4-tl-item:last-child{border-bottom:none}
+.v4-tl-date{color:var(--muted);font-size:11.5px;min-width:106px;font-variant-numeric:tabular-nums}
+.v4-itemlist{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.v4-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:9px;background:var(--panel3);border:1px solid var(--border);font-size:12.5px}
+.v4-chip b{font-weight:800}
+.inv-wrap{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
+.inv-block{min-width:0}
+.inv-title{font-size:12px;font-weight:800;color:var(--muted);margin-bottom:9px;letter-spacing:.4px}
+.inv-grid{display:grid;grid-template-columns:repeat(9,46px);gap:5px}
+.inv-slot{position:relative;width:46px;height:46px;border-radius:10px;background:var(--panel3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .12s ease,border-color .12s ease}
+.inv-slot:not(.slot-empty):hover{transform:translateY(-2px);border-color:var(--border-strong)}
+.inv-slot.slot-empty{background:rgba(148,163,184,.05);border-style:dashed;opacity:.8}
+.inv-slot .ico img{width:30px;height:30px;image-rendering:pixelated}
+.inv-slot .ico .fb{font-size:15px}
+.inv-slot .cnt{position:absolute;right:3px;bottom:1px;font-size:11px;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+.inv-slot .en{position:absolute;left:2px;top:0;font-size:10px;line-height:1.2}
+.v4-equip{display:flex;flex-direction:column;gap:7px}
+.v4-equip-row{display:flex;align-items:center;gap:10px}
+.v4-equip-l{font-size:11.5px;color:var(--muted);font-weight:700;min-width:52px}
+.v4-equip-n{font-size:12.5px;line-height:1.6}
+.v4-ench{font-size:11.5px;color:var(--muted);line-height:1.6}
+@media(max-width:720px){
+  .inv-grid{grid-template-columns:repeat(9,minmax(30px,1fr));gap:3px}
+  .inv-slot{width:100%;height:38px}
+  .v4-catrow{grid-template-columns:92px 1fr 66px;gap:8px}
+}
+
+/* ---------- V4：进度时间线 ---------- */
+.v4-tl-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start;margin-top:14px}
+.v4-tl-side{min-width:0}
+.v4-tl-scroll{max-height:372px;overflow:auto;padding-right:6px}
+.v4-tl-day{padding:7px 0;border-bottom:1px dashed var(--border)}
+.v4-tl-day:last-child{border-bottom:none}
+.v4-tl-dayh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.v4-tl-dayh b{color:var(--text);font-size:12.5px}
+.v4-tl-dayc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.v4-tl-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:8px;background:var(--panel3);border:1px solid var(--border);font-size:12px}
+.v4-tl-more{margin-top:9px;font-size:12px;color:var(--accent2);cursor:pointer;user-select:none}
+.v4-tl-more:hover{text-decoration:underline}
+@media(max-width:900px){.v4-tl-grid{grid-template-columns:minmax(0,1fr);gap:18px}.v4-tl-scroll{max-height:300px}}
+
+/* ---------- V4：玩家搜索自动补全 ---------- */
+.v4-ac-wrap{position:relative}
+.v4-ac{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:80;background:var(--panel-solid);border:1px solid var(--border-strong);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;max-height:336px;overflow-y:auto}
+.v4-ac-hd{display:flex;justify-content:space-between;gap:10px;padding:7px 11px;font-size:11.5px;color:var(--muted);background:var(--panel3);border-bottom:1px solid var(--border);position:sticky;top:0}
+.v4-ac-row{display:flex;align-items:center;gap:9px;padding:6px 11px;cursor:pointer;font-size:13px}
+.v4-ac-row:hover,.v4-ac-row.on{background:var(--panel3)}
+.v4-ac-av{width:24px;height:24px;border-radius:6px;image-rendering:pixelated;background:var(--panel3);flex:none}
+.v4-ac-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v4-ac-nm b{color:var(--accent2);font-weight:800}
+.v4-ac-meta{flex:none;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.v4-ac-empty{padding:14px 12px;text-align:center;font-size:12.5px;color:var(--muted)}
+.v4-ac-kbd{border:1px solid var(--border);border-radius:5px;padding:0 4px;font-size:10.5px;color:var(--dim)}
+.v4-ac-hintline{display:flex;gap:8px;align-items:center;justify-content:space-between}
+
+/* ---------- V4：战绩卡片 ---------- */
+.v4-card-wrap img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.v4-card-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
+.v4-card-busy{padding:26px 0;text-align:center;color:var(--muted);font-size:13px}
+/*V4E:css*/</style>
 </head>
 
 <body>
@@ -558,7 +632,7 @@ canvas{max-width:100%}
     <div class="brand">
       <div class="logo">⛏️</div>
       <div>
-        <h1>Minecraft Stats Analyzer<span class="ver">V3</span></h1>
+        <h1>Minecraft Player Analyzer<span class="ver">V4</span></h1>
         <div class="sub" id="dataStatus">No data yet · drop a stats.zip to begin</div>
       </div>
     </div>
@@ -573,7 +647,8 @@ canvas{max-width:100%}
   <div class="container" style="padding-bottom:0">
     <nav class="tabs" id="tabs">
       <button class="tab active" data-tab="overview">📊 Server Overview</button>
-      <button class="tab" data-tab="profile">👤 Player Profile</button>
+<!--V4S:tab-->      <button class="tab" data-tab="adv">🏅 Advancements</button>
+<!--V4E:tab-->      <button class="tab" data-tab="profile">👤 Player Profile</button>
       <button class="tab" data-tab="ranking">🏆 Leaderboard</button>
       <button class="tab" data-tab="compare">⚖️ Compare Players</button>
       <button class="tab" data-tab="table">📋 Data Table</button>
@@ -592,7 +667,7 @@ canvas{max-width:100%}
       <button class="btn ghost" id="btnBuiltin">⚡ Load Sample Data</button>
       <button class="btn ghost sm" id="btnReport">📋 Import Report</button>
       <button class="btn danger sm" id="btnClear">🗑 Clear</button>
-      <input type="file" id="fileInput" accept=".zip,.json" multiple hidden>
+      <input type="file" id="fileInput" accept=".zip,.json,.dat" multiple hidden>
       <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
       <span class="pill" id="pillFiles">Files: 0</span>
       <span class="pill" id="pillPlayers">Players: 0</span>
@@ -600,7 +675,9 @@ canvas{max-width:100%}
     </div>
     <div class="source-row" style="margin-top:11px">
       <span class="txt" id="uploadInfo">
-        Works with export packages from any server: <b>.zip</b> (stats / &lt;world&gt;/stats any folder layout), one or many  <b>.json</b>, or even an entire  <b>stats folder</b>. File names can be UUIDs or player names.
+        Works with export packages from any server: <b>.zip</b> (stats / &lt;world&gt;/stats any folder layout), one or many  <b>.json</b>, or even an entire  <b>stats folder</b>. File names can be UUIDs or player names.<br>
+        You can also zip and upload the whole <b>world/players</b> folder (player data lives here since 26.1):
+        <b>stats</b>, <b>advancements</b> and <b>data</b> (inventory / levels / position) are parsed together.
       </span>
     </div>
     <div class="progress" id="progress"><i id="progressBar"></i></div>
@@ -618,7 +695,8 @@ canvas{max-width:100%}
     </div>
     <p class="muted" style="font-size:12.5px;margin-top:16px">
       Compatible with stats from vanilla / plugin / modded servers: both <code>&lt;uuid&gt;.json</code> and <code>&lt;PlayerName&gt;.json</code> are recognized.
-      Non-stat files (advancements, level.dat, etc.) are skipped automatically.
+      <b>stats</b>, <b>advancements</b> and <b>data/*.dat</b> (inventory and live player state) are all parsed automatically;
+      other non-stat files are skipped.
     </p>
   </div>
 
@@ -636,6 +714,7 @@ canvas{max-width:100%}
           </label>
         </div>
         <div class="chart-box"><canvas id="ovCatChart"></canvas></div>
+        <div class="muted" id="ovCatNote" style="font-size:12px;margin-top:10px;line-height:1.6;display:none">🧱 "Placed" is derived: vanilla has no dedicated placed stat, placing a block counts as "using" that block item. Blocks are detected from "what anyone mined" plus block-family names.</div>
       </div>
       <div class="card">
         <div class="card-h">
@@ -657,11 +736,68 @@ canvas{max-width:100%}
       </div>
     </div>
 
-    <div class="card">
+<!--V4S:ovextra-->
+    <div class="grid g-2 mb">
+      <div class="card">
+        <div class="card-h"><h2>🌍 Dimension Split</h2><span class="hint">from playerdata files</span></div>
+        <div class="chart-box"><canvas id="ovDimChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>✨ Enchantment Popularity · Top 12</h2><span class="hint">enchanted items server-wide</span></div>
+        <div class="chart-box"><canvas id="ovEnchChart"></canvas></div>
+      </div>
+    </div>
+
+<!--V4E:ovextra-->    <div class="card">
       <div class="card-h"><h2>👑 Server Records</h2><span class="hint">Automatically selected from all players</span></div>
       <div class="grid g-3" id="ovRecords"></div>
     </div>
+  </section><!--V4S:advview-->
+
+  <!-- ============ Advancements ============ -->
+  <section class="view" id="view-adv">
+    <div class="grid g-kpi mb" id="advKpis"></div>
+
+    <div class="card mb hidden" id="advEmpty">
+      <div class="fact" style="border-color:rgba(251,191,36,.45)">
+        <span class="em">🏅</span>
+        <div>No advancement files in this dataset. Zip up the server's <b>world/players</b> folder (with its <b>advancements</b>, <b>data</b> and <b>stats</b> subfolders) and upload it — individual <b>&lt;uuid&gt;.json</b> advancement files work too.</div>
+      </div>
+    </div>
+
+    <div class="grid g-2 mb">
+      <div class="card">
+        <div class="card-h"><h2>📚 Completion by Category</h2><span class="hint">unlocked / seen</span></div>
+        <div id="advCats" style="padding-top:2px"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>💎 Rarest Advancements · Top 12</h2><span class="hint">fewest players</span></div>
+        <div class="chart-box tall"><canvas id="advRareChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid g-2 mb">
+      <div class="card">
+        <div class="card-h"><h2>🏆 Most Advancements · Top 10</h2><span class="hint">completed count</span></div>
+        <div class="chart-box tall"><canvas id="advRankChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>🕒 Latest Unlocks</h2><span class="hint">newest first · latest 50</span></div>
+        <div id="advTimeline" style="max-height:430px;overflow:auto;padding-right:4px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h2>📋 All Advancements</h2>
+        <span class="hint" id="advTableHint"></span>
+        <label class="mini-toggle right"><input type="checkbox" id="chkAdvUnlocked"> Unlocked only</label>
+      </div>
+      <div class="table-wrap" style="max-height:580px"><table id="advTable"></table></div>
+    </div>
   </section>
+
+<!--V4E:advview-->
 
   <!-- ============ Player档案 ============ -->
   <section class="view" id="view-profile">
@@ -699,6 +835,7 @@ canvas{max-width:100%}
           <div class="uuid-row">
             <code id="pfUuid">—</code>
             <button class="link-btn" id="btnCopyUuid">📋 Copy UUID</button>
+            <button class="link-btn" id="btnExportCard">🖼️ Score Card</button>
             <button class="link-btn" id="btnCopyReport">📄 Copy Summary</button>
             <button class="link-btn" id="btnCompareWith">⚖️ Compare</button>
           </div>
@@ -729,13 +866,44 @@ canvas{max-width:100%}
       <div class="chart-box tall"><canvas id="pfTopChart"></canvas></div>
     </div>
 
-    <div class="card">
+    <div class="card mb">
       <div class="card-h">
         <h2>🏅 Achievements</h2>
         <span class="hint" id="achSummary"></span>
       </div>
       <div class="ach-grid" id="achGrid"></div>
+    </div><!--V4S:pfextra-->
+
+    <div class="grid g-2 mb">
+      <div class="card">
+        <div class="card-h"><h2>🎮 Player State</h2><span class="hint">from data/&lt;uuid&gt;.dat</span></div>
+        <div id="pfState"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>✨ Status Effects</h2><span class="hint">at the time of the save</span></div>
+        <div id="pfEffects"></div>
+      </div>
     </div>
+
+    <div class="card mb">
+      <div class="card-h"><h2>🎒 Inventory / Equipment / Ender Chest</h2><span class="hint">hover a slot for enchantments and custom names</span></div>
+      <div id="pfInv"></div>
+    </div>
+
+    <div class="card mb">
+      <div class="card-h"><h2>🏅 Advancement Progress</h2><span class="hint" id="pfAdvSummary"></span></div>
+      <div id="pfAdv"></div>
+    </div>
+
+    <div class="card mb">
+      <div class="card-h">
+        <h2>🕒 Progression Timeline</h2><span class="hint" id="pfTlSummary"></span>
+        <label class="mini-toggle right"><input type="checkbox" id="chkPfTlAll"> Show all</label>
+      </div>
+      <div id="pfTlBody"></div>
+    </div>
+
+<!--V4E:pfextra-->
   </section>
 
   <!-- ============ Leaderboard ============ -->
@@ -928,7 +1096,7 @@ canvas{max-width:100%}
 
 <script>
 /* ==========================================================================
-   Minecraft Stats Analyzer V3
+   Minecraft Player Analyzer
    ========================================================================== */
 
 /* ---------------------------------- 小工具 --------------------------------- */
@@ -1122,7 +1290,10 @@ const S = {
   global:  new Map(),     // cat|item -> { count, players:Set }
   catGlobal: new Map(),   // cat -> Total
   keys:    new Set(),     // 所有出现过的 cat|item
-  leaders: new Map(),     // 懒加载缓存: cat|item -> [{uuid,count}] 已Sort
+  leaders: new Map(),/*V4S:sadv*/
+  adv: new Map(),          // V4：成就键 -> { 达成人数 / 时间线 }
+  advSeen: new Set(),      // V4：全服出现过的成就键
+/*V4E:sadv*/     // 懒加载缓存: cat|item -> [{uuid,count}] 已Sort
   loaded:  false,
   busy:    false,         // 正在解析中，避免并发导入互相踩踏
   current: null,
@@ -1167,16 +1338,87 @@ function fmtStatShort(cat, item, v) {
 
 /* --------------------------------- 图标 --------------------------------- */
 const ICON_BASES = [
-  'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21/assets/minecraft/textures/',
-  'https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/'
+  'https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
+  'https://testingcf.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
+  'https://gcore.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
+  'https://fastly.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.21/assets/minecraft/textures/',
+  'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21/assets/minecraft/textures/'
 ];
 const KIND_CACHE = new Map();
 
 /** 返回候选 URL 列表: 实体类先试 entity，其余先试 item 再试 block */
+/* 原版没有平面物品贴图的物品（GUI 里是 3D 模型/实体渲染）：别名指向真实方块贴图，
+ * 箱子类则内嵌裁剪好的正面图标（data URI，不依赖网络）。 */
+const ICON_ALIAS = {
+  dropper: 'block/dropper_front.png',
+  dispenser: 'block/dispenser_front.png',
+  crafting_table: 'block/crafting_table_front.png',
+  piston: 'block/piston_top.png',
+  sticky_piston: 'block/piston_top_sticky.png',
+  furnace: 'block/furnace_front.png',
+  blast_furnace: 'block/blast_furnace_front.png',
+  smoker: 'block/smoker_front.png',
+  barrel: 'block/barrel_top.png',
+  hopper: 'block/hopper_top.png',
+  jukebox: 'block/jukebox_top.png',
+  observer: 'block/observer_front.png',
+  loom: 'block/loom_front.png',
+  cartography_table: 'block/cartography_table_top.png',
+  fletching_table: 'block/fletching_table_top.png',
+  smithing_table: 'block/smithing_table_front.png',
+  brewing_stand: 'block/brewing_stand.png',
+  anvil: 'block/anvil.png',
+  chipped_anvil: 'block/chipped_anvil.png',
+  damaged_anvil: 'block/damaged_anvil.png',
+  banner: 'entity/banner/base.png',
+  ominous_banner: 'entity/banner/base.png'
+};
+['white','orange','magenta','light_blue','yellow','lime','pink','gray','light_gray','cyan','purple','blue','brown','green','red','black']
+  .forEach(c => { ICON_ALIAS[c + '_banner'] = 'entity/banner/base.png'; });
+/* 3D 模型/多面方块（栅栏、门、台阶、墙、玻璃板、床等）原版没有独立平面贴图，
+ * 按命名规律推导出一张真实存在的贴图作为图标；返回 '' 表示无法推导。 */
+const ICON_WOODS = new Set(['oak','spruce','birch','jungle','acacia','dark_oak','mangrove','cherry','bamboo','crimson','warped','pale_oak']);
+function deriveIconAlias(item) {
+  let m;
+  if ((m = item.match(/^(\w+)_stained_glass_pane$/))) return 'block/' + m[1] + '_stained_glass.png';
+  if (item === 'glass_pane') return 'block/glass.png';
+  if ((m = item.match(/^(\w+)_door$/))) return 'block/' + m[1].replace(/^waxed_/, '') + '_door_bottom.png';
+  if ((m = item.match(/^(\w+)_trapdoor$/))) return 'block/' + m[1].replace(/^waxed_/, '') + '_trapdoor.png';
+  if (item === 'nether_brick_fence') return 'block/nether_bricks.png';
+  if ((m = item.match(/^(\w+)_(fence|fence_gate|sign|hanging_sign|button|pressure_plate)$/))) {
+    if (ICON_WOODS.has(m[1])) return 'block/' + m[1] + '_planks.png';
+    if (m[0] === 'stone_button') return 'block/stone.png';
+    if (m[0] === 'polished_blackstone_button') return 'block/polished_blackstone.png';
+    if (m[0] === 'light_weighted_pressure_plate') return 'block/gold_block.png';
+    if (m[0] === 'heavy_weighted_pressure_plate') return 'block/iron_block.png';
+  }
+  if ((m = item.match(/^(\w+)_(stairs|wall)$/))) {
+    let b = m[1];
+    if (m[2] === 'stairs' && ICON_WOODS.has(b)) return 'block/' + b + '_planks.png';
+    if (b === 'quartz') b = 'quartz_block_side';
+    else if (b === 'smooth_quartz') b = 'quartz_block_bottom';
+    else if (b === 'smooth_sandstone') b = 'sandstone_top';
+    else if (b === 'smooth_red_sandstone') b = 'red_sandstone_top';
+    else if (b === 'purpur') b = 'purpur_block';
+    if (/_brick$/.test(b) || /_tile$/.test(b)) b += 's';
+    if (/^waxed_/.test(b)) b = b.slice(6);
+    return 'block/' + b + '.png';
+  }
+  if ((m = item.match(/^(\w+)_bed$/))) return 'block/' + m[1] + '_wool.png';
+  return '';
+}
+const ICON_EMBED = {
+  chest: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAABJElEQVR42o2SwUrDQBCG9y28GALWbKXSpq1YBUUQxNcoKghi8eAh4MmL5KhG8AXE4MG3yD3PNPUbmGXTKnj4s7Mz/+zM/xOXbm7I3ihTzMa+A3IHk/5a7vQoF7frU3m9HijernryON9SvC9G4bTYcH4yFTfIEvm6S+XjthfA/S9QPzsei9vZTuT7YajJz/u+xm3bSl3X4Xy5SQKo60R2JjAURaGoqqoTo8sQVp3lmRz+YD/3gcykOKY2HXo9GeZw7ekyD8LLslQ0TdOJMQ+T4NKjjSTYHZiOWJcBD+BqI2s+X/h/OUseLj06kTXM0d+mUTPAVY180BbbbaS4mYnU4AZzYo0Q7IH4EdsIrjayL79arG9VY5yHGzTySqxxVaetaRPpWQI2aJVfMAPFwgAAAABJRU5ErkJggg==',
+  ender_chest: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAhElEQVR42mNg4hP5Tw5mkFTW+K9sYPTfLsgHTOPCcjp6cDUgPXCN3ikxcAUwNi5xuEYTT+//+V1VYNrA2R2sABsbpgasEWQSiEEKBulhIDtwQISwkjJWzCoqA8bo4igaYYoIYRSNxGqCYdpoVDMzBGO8TkX3o52XN1Y2URphYiRpJMapAKxJBlUlwq7uAAAAAElFTkSuQmCC',
+  trapped_chest: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAABKUlEQVR42o2STUoDQRCF5wK68ScYHAaM05FIMv5gcgFX5hBBBTVRBF0IrkRwbUSIBwhCQG/gKVx6m9KvoIqeGMHFm66ueq+rXjFJtlqR3VauaG+FEsh1tuu/cqcH85JshkyeThqK5+Oa3PXWFKOLlp8WGwbdH2EjT2Vymcn4vObg/heon9FxYz2V99umJl+v6xp/jarycb/s57CfOqhrR2YmMLz0FxRvN0ulGF8GH7Vd5NLbn5O9IjiZTnFMbacZ9KRZwtYejgo3Pr5aVHwOV0oxy2NJcNGokASzA/MR+zKwA7gqZMzHw/CvzZKHi0Y7MoZtdFY3aga46pEP3uJ1GykW05EaXF9O7BGCPRA/YhPBVSHz8qvF/qY9xnm47pFXYo/TPm1M64jmGzYFizW9uy2rAAAAAElFTkSuQmCC'
+};
 function iconCandidates(cat, item) {
   const kind = (cat === 'killed' || cat === 'killed_by' || cat === 'entity_killed_by')
     ? ['entity', 'item'] : ['item', 'block'];
   const out = [];
+  const alias = ICON_ALIAS[item] || deriveIconAlias(item), embed = ICON_EMBED[item];
+  if (embed) out.push(embed);
+  if (alias) for (const b of ICON_BASES) out.push(b + alias);
   for (const base of ICON_BASES) for (const k of kind) out.push(base + k + '/' + item + '.png');
   return out;
 }
@@ -1201,6 +1443,11 @@ window.__icoFail = function (img) {
   if (i < urls.length) {
     img.dataset.i = i;
     img.src = urls[i];
+  } else if (!img.dataset.retried) {
+    /* CDN 偶发限流会让全部候选失败：隔 4 秒整体重试一轮 */
+    img.dataset.retried = '1';
+    img.dataset.i = '0';
+    setTimeout(function () { img.src = urls[0]; }, 4000);
   } else {
     img.classList.add('hidden');
     const fb = img.parentElement.querySelector('.fb');
@@ -1346,7 +1593,8 @@ let IMPORT_FILES = new Map();   // Player键 -> 参与合并的文件数
 
 function resetImport() {
   IMPORT = newReport();
-  IMPORT_FILES = new Map();
+  IMPORT_FILES = new Map();/*V4S:resettop*/
+  v4Reset();/*V4E:resettop*/
   try { NAME2UUID.clear(); } catch (e) {}
   S.fileCount = 0;
 }
@@ -1360,6 +1608,19 @@ function showImportReport() {
     ['usercache entries', num(r.usercache)],
     ['Distinct Stats', num(S.keys.size)],
     ['Skipped non-stat JSON', num(r.skipped)],
+    ['Advancement files', num(r.advFiles)],
+    ['Advancements unlocked', num(r.advDone)],
+    ['Advancements in progress', num(r.advProgress)],
+    ['Recipe unlocks (excluded)', num(r.recipeEntries)],
+    ['Playerdata .dat files', num(r.dataFiles)],
+    ['Playerdata failures', num(r.dataBad)],
+    ['Stale playerdata ignored', num(r.dataStale)],
+    ['Advancement files', num(r.advFiles)],
+    ['Advancements unlocked', num(r.advDone)],
+    ['Advancements in progress', num(r.advProgress)],
+    ['Recipe unlocks (excluded)', num(r.recipeEntries)],
+    ['Playerdata .dat files', num(r.dataFiles)],
+    ['Playerdata failures', num(r.dataBad)],
     ['JSON parse failures', num(r.badJson)],
     ['Nested zips', num(r.nestedZip)],
     ['Files keyed by player name', num(r.named)]
@@ -1387,8 +1648,8 @@ function showImportReport() {
 
   if (!S.players.size) {
     html += '<div class="fact" style="margin-top:14px;border-color:rgba(248,113,113,.4)"><span class="em">⚠️</span><div>' +
-      'No player stats found. Make sure the zip contains ' +
-      '<b>&lt;uuid&gt;.json</b> files from the server (or upload those json files directly).</div></div>';
+      'No player data found. Make sure the zip contains the server <b>world/players</b> folder (26.1+) ' +
+      'or <b>world/stats</b> (older) with <b>&lt;uuid&gt;.json / .dat</b> files inside.</div></div>';
   }
 
   openModal('📋 Import Report', html);
@@ -1449,7 +1710,12 @@ async function handleFiles(files) {
         IMPORT.files++;
         const text = await f.text();
         if (/usercache\.json$/i.test(path)) processUserCache(text);
+        else if (/advancement/i.test(path)) v4ProcessAdvancementFile(text, path);   // V4：成就
         else processStatsFile(text, path);
+      }
+      else if (lower.endsWith('.dat')) {   // V4：玩家档案
+        IMPORT.files++;
+        await v4ProcessDataFile(await f.arrayBuffer(), path);
       }
       S.fileCount++;
     }
@@ -1485,7 +1751,8 @@ async function handleZip(file, depth) {
 
   const dataEntries = entries.filter(e => /\.json$/i.test(e.name) && !/usercache\.json$/i.test(e.name));
   const nestedZips = entries.filter(e => /\.zip$/i.test(e.name));
-  const total = (dataEntries.length + nestedZips.length) || 1;
+  const datEntries = entries.filter(e => /\.dat$/i.test(e.name));   // V4：玩家档案
+  const total = (dataEntries.length + nestedZips.length + datEntries.length) || 1;
   let done = 0;
 
   showProgress(0, 'Parsing zip (0 / ' + total + ')');
@@ -1496,7 +1763,8 @@ async function handleZip(file, depth) {
       try {
         const text = await entry.async('text');
         IMPORT.files++;
-        processStatsFile(text, entry.name);
+        if (/advancement/i.test(entry.name)) v4ProcessAdvancementFile(text, entry.name);   // V4：成就
+        else processStatsFile(text, entry.name);
       } catch (e) {
         IMPORT.badJson++;
       }
@@ -1506,7 +1774,21 @@ async function handleZip(file, depth) {
     await new Promise(r => setTimeout(r, 0));
   }
 
-  /* Nested zips (有些导出工具会打包成 <world>.zip) */
+  /* Nested zips (有些导出工具会打包成 <world>.zip) *//*V4S:datloop*/
+  /* V4：玩家档案 .dat（gzip + NBT） */
+  for (let i = 0; i < datEntries.length; i += 12) {
+    const slice = datEntries.slice(i, i + 12);
+    await Promise.all(slice.map(async (entry) => {
+      try {
+        IMPORT.files++;
+        await v4ProcessDataFile(await entry.async('uint8array'), entry.name);
+      } catch (e) { IMPORT.dataBad++; }
+      done++;
+    }));
+    showProgress(done / total * 100, V4T.progressDat + '（' + done + ' / ' + total + '）');
+    await new Promise(r => setTimeout(r, 0));
+  }
+/*V4E:datloop*/
   for (const entry of nestedZips) {
     try {
       const buf = await entry.async('uint8array');
@@ -1520,7 +1802,1712 @@ async function handleZip(file, depth) {
   }
 }
 
-/* ------------------------------ usercache ------------------------------ */
+/*V4S:core*/
+const V4LANG = {"adv":{"minecraft:adventure/adventuring_time":["Adventuring Time","Discover every biome"],"minecraft:adventure/arbalistic":["Arbalistic","Kill five unique mobs with one crossbow shot"],"minecraft:adventure/avoid_vibration":["Sneak 100","Sneak near a Sculk Sensor or Warden to prevent it from detecting you"],"minecraft:adventure/blowback":["Blowback","Kill a Breeze with a deflected Breeze-shot Wind Charge"],"minecraft:adventure/brush_armadillo":["Isn't It Scute?","Get Armadillo Scutes from an Armadillo using a Brush"],"minecraft:adventure/bullseye":["Bullseye","Hit the bullseye of a Target block from at least 30 meters away"],"minecraft:adventure/craft_decorated_pot_using_only_sherds":["Careful Restoration","Make a Decorated Pot out of 4 Pottery Sherds"],"minecraft:adventure/crafters_crafting_crafters":["Crafters Crafting Crafters","Be near a Crafter when it crafts a Crafter"],"minecraft:adventure/fall_from_world_height":["Caves & Cliffs","Free fall from the top of the world (build limit) to the bottom of the world and survive"],"minecraft:adventure/heart_transplanter":["Heart Transplanter","Place a Creaking Heart with the correct alignment between two Pale Oak Log blocks"],"minecraft:adventure/hero_of_the_village":["Hero of the Village","Successfully defend a village from a raid"],"minecraft:adventure/honey_block_slide":["Sticky Situation","Jump into a Honey Block to break your fall"],"minecraft:adventure/kill_a_mob":["Monster Hunter","Kill any hostile monster"],"minecraft:adventure/kill_all_mobs":["Monsters Hunted","Kill one of every hostile monster"],"minecraft:adventure/kill_mob_near_sculk_catalyst":["It Spreads","Kill a mob near a Sculk Catalyst"],"minecraft:adventure/lighten_up":["Lighten Up","Scrape a Copper Bulb with an Axe to make it brighter"],"minecraft:adventure/lightning_rod_with_villager_no_fire":["Surge Protector","Protect a Villager from an undesired shock without starting a fire"],"minecraft:adventure/minecraft_trials_edition":["Minecraft: Trial(s) Edition","Step foot in a Trial Chamber"],"minecraft:adventure/ol_betsy":["Ol' Betsy","Shoot a Crossbow"],"minecraft:adventure/overoverkill":["Over-Overkill","Deal 50 hearts of damage in a single hit using the Mace"],"minecraft:adventure/play_jukebox_in_meadows":["Sound of Music","Make the Meadows come alive with the sound of music from a Jukebox"],"minecraft:adventure/read_power_from_chiseled_bookshelf":["The Power of Books","Read the power signal of a Chiseled Bookshelf using a Comparator"],"minecraft:adventure/revaulting":["Revaulting","Unlock an Ominous Vault with an Ominous Trial Key"],"minecraft:adventure/root":["Adventure","Adventure, exploration and combat"],"minecraft:adventure/salvage_sherd":["Respecting the Remnants","Brush a Suspicious block to obtain a Pottery Sherd"],"minecraft:adventure/shoot_arrow":["Take Aim","Shoot something with an Arrow"],"minecraft:adventure/sleep_in_bed":["Sweet Dreams","Sleep in a Bed to change your respawn point"],"minecraft:adventure/sniper_duel":["Sniper Duel","Kill a Skeleton from at least 50 meters away"],"minecraft:adventure/spear_many_mobs":["Mob Kabob","Hit five mobs in the same Charge attack using the Spear"],"minecraft:adventure/spyglass_at_dragon":["Is It a Plane?","Look at the Ender Dragon through a Spyglass"],"minecraft:adventure/spyglass_at_ghast":["Is It a Balloon?","Look at a Ghast through a Spyglass"],"minecraft:adventure/spyglass_at_parrot":["Is It a Bird?","Look at a Parrot through a Spyglass"],"minecraft:adventure/summon_iron_golem":["Hired Help","Summon an Iron Golem to help defend a village"],"minecraft:adventure/throw_trident":["A Throwaway Joke","Throw a Trident at something.\nNote: Throwing away your only weapon is not a good idea."],"minecraft:adventure/totem_of_undying":["Postmortal","Use a Totem of Undying to cheat death"],"minecraft:adventure/trade_at_world_height":["Star Trader","Trade with a Villager at the build height limit"],"minecraft:adventure/trade":["What a Deal!","Successfully trade with a Villager"],"minecraft:adventure/trim_with_all_exclusive_armor_patterns":["Smithing with Style","Apply these smithing templates at least once: Spire, Snout, Rib, Ward, Silence, Vex, Tide, Wayfinder"],"minecraft:adventure/trim_with_any_armor_pattern":["Crafting a New Look","Craft trimmed armor at a Smithing Table"],"minecraft:adventure/two_birds_one_arrow":["Two Birds, One Arrow","Kill two Phantoms with a piercing Arrow"],"minecraft:adventure/under_lock_and_key":["Under Lock and Key","Unlock a Vault with a Trial Key"],"minecraft:adventure/use_lodestone":["Country Lode, Take Me Home","Use a Compass on a Lodestone"],"minecraft:adventure/very_very_frightening":["Very Very Frightening","Strike a Villager with lightning"],"minecraft:adventure/voluntary_exile":["Voluntary Exile","Kill a raid captain.\nMaybe consider staying away from villages for the time being..."],"minecraft:adventure/walk_on_powder_snow_with_leather_boots":["Light as a Rabbit","Walk on Powder Snow... without sinking in it"],"minecraft:adventure/who_needs_rockets":["Who Needs Rockets?","Use a Wind Charge to launch yourself upward 8 blocks"],"minecraft:adventure/whos_the_pillager_now":["Who's the Pillager Now?","Give a Pillager a taste of their own medicine"],"minecraft:end/dragon_breath":["You Need a Mint","Collect Dragon's Breath in a Glass Bottle"],"minecraft:end/dragon_egg":["The Next Generation","Hold the Dragon Egg"],"minecraft:end/elytra":["Sky's the Limit","Find Elytra"],"minecraft:end/enter_end_gateway":["Remote Getaway","Escape the island"],"minecraft:end/find_end_city":["The City at the End of the Game","Go on in, what could happen?"],"minecraft:end/kill_dragon":["Free the End","Good luck"],"minecraft:end/levitate":["Great View From Up Here","Levitate up 50 blocks from the attacks of a Shulker"],"minecraft:end/respawn_dragon":["The End... Again...","Respawn the Ender Dragon"],"minecraft:end/root":["The End","Or the beginning?"],"minecraft:husbandry/allay_deliver_cake_to_note_block":["Birthday Song","Have an Allay drop a Cake at a Note Block"],"minecraft:husbandry/allay_deliver_item_to_player":["You've Got a Friend in Me","Have an Allay deliver items to you"],"minecraft:husbandry/axolotl_in_a_bucket":["The Cutest Predator","Catch an Axolotl in a Bucket"],"minecraft:husbandry/balanced_diet":["A Balanced Diet","Eat everything that is edible, even if it's not good for you"],"minecraft:husbandry/breed_all_animals":["Two by Two","Breed all the animals!"],"minecraft:husbandry/breed_an_animal":["The Parrots and the Bats","Breed two animals together"],"minecraft:husbandry/complete_catalogue":["A Complete Catalogue","Tame all Cat variants!"],"minecraft:husbandry/feed_snifflet":["Little Sniffs","Feed a Snifflet"],"minecraft:husbandry/fishy_business":["Fishy Business","Catch a fish"],"minecraft:husbandry/froglights":["With Our Powers Combined!","Have all Froglights in your inventory"],"minecraft:husbandry/kill_axolotl_target":["The Healing Power of Friendship!","Team up with an Axolotl and win a fight"],"minecraft:husbandry/leash_all_frog_variants":["When the Squad Hops into Town","Get each Frog variant on a Lead"],"minecraft:husbandry/make_a_sign_glow":["Glow and Behold!","Make the text of any kind of sign glow"],"minecraft:husbandry/netherite_hoe":["Serious Dedication","Use a Netherite Ingot to upgrade a Hoe, and then reevaluate your life choices"],"minecraft:husbandry/obtain_sniffer_egg":["Smells Interesting","Obtain a Sniffer Egg"],"minecraft:husbandry/place_dried_ghast_in_water":["Stay Hydrated!","Place a Dried Ghast block into water"],"minecraft:husbandry/plant_any_sniffer_seed":["Planting the Past","Plant any Sniffer seed"],"minecraft:husbandry/plant_seed":["A Seedy Place","Plant a seed and watch it grow"],"minecraft:husbandry/remove_wolf_armor":["Shear Brilliance","Remove Wolf Armor from a Wolf using Shears"],"minecraft:husbandry/repair_wolf_armor":["Good as New","Fully repair damaged Wolf Armor using Armadillo Scutes"],"minecraft:husbandry/ride_a_boat_with_a_goat":["Whatever Floats Your Goat!","Get in a Boat and float with a Goat"],"minecraft:husbandry/root":["Husbandry","The world is full of friends and food"],"minecraft:husbandry/safely_harvest_honey":["Bee Our Guest","Use a Campfire to collect Honey from a Beehive using a Glass Bottle without aggravating the Bees"],"minecraft:husbandry/silk_touch_nest":["Total Beelocation","Move a Bee Nest or Beehive, with 3 Bees inside, using Silk Touch"],"minecraft:husbandry/tactical_fishing":["Tactical Fishing","Catch a Fish... without a Fishing Rod!"],"minecraft:husbandry/tadpole_in_a_bucket":["Bukkit Bukkit","Catch a Tadpole in a Bucket"],"minecraft:husbandry/tame_an_animal":["Best Friends Forever","Tame an animal"],"minecraft:husbandry/uh_oh":["Uh-Oh","Have a Sulfur Cube absorb a TNT block"],"minecraft:husbandry/wax_off":["Wax Off","Scrape Wax off of a Copper block!"],"minecraft:husbandry/wax_on":["Wax On","Apply Honeycomb to a Copper block!"],"minecraft:husbandry/whole_pack":["The Whole Pack","Tame one of each Wolf variant"],"minecraft:nether/all_effects":["How Did We Get Here?","Have every effect applied at the same time"],"minecraft:nether/all_potions":["A Furious Cocktail","Have every potion effect applied at the same time"],"minecraft:nether/brew_potion":["Local Brewery","Brew a Potion"],"minecraft:nether/charge_respawn_anchor":["Not Quite \"Nine\" Lives","Charge a Respawn Anchor to the maximum"],"minecraft:nether/create_beacon":["Bring Home the Beacon","Construct and place a Beacon"],"minecraft:nether/create_full_beacon":["Beaconator","Bring a Beacon to full power"],"minecraft:nether/distract_piglin":["Oooh, Shiny!","Distract Piglins with gold"],"minecraft:nether/explore_nether":["Hot Tourist Destinations","Explore all Nether biomes"],"minecraft:nether/fast_travel":["Subspace Bubble","Use the Nether to travel 7 km in the Overworld"],"minecraft:nether/find_bastion":["Those Were the Days","Enter a Bastion Remnant"],"minecraft:nether/find_fortress":["A Terrible Fortress","Break your way into a Nether Fortress"],"minecraft:nether/get_wither_skull":["Spooky Scary Skeleton","Obtain a Wither Skeleton's skull"],"minecraft:nether/loot_bastion":["War Pigs","Loot a Chest in a Bastion Remnant"],"minecraft:nether/netherite_armor":["Cover Me in Debris","Get a full suit of Netherite armor"],"minecraft:nether/obtain_ancient_debris":["Hidden in the Depths","Obtain Ancient Debris"],"minecraft:nether/obtain_blaze_rod":["Into Fire","Relieve a Blaze of its rod"],"minecraft:nether/obtain_crying_obsidian":["Who is Cutting Onions?","Obtain Crying Obsidian"],"minecraft:nether/return_to_sender":["Return to Sender","Destroy a Ghast with a fireball"],"minecraft:nether/ride_strider_in_overworld_lava":["Feels Like Home","Take a Strider for a loooong ride on a lava lake in the Overworld"],"minecraft:nether/ride_strider":["This Boat Has Legs","Ride a Strider with a Warped Fungus on a Stick"],"minecraft:nether/root":["Nether","Bring summer clothes"],"minecraft:nether/summon_wither":["Withering Heights","Summon the Wither"],"minecraft:nether/uneasy_alliance":["Uneasy Alliance","Rescue a Ghast from the Nether, bring it safely home to the Overworld... and then kill it"],"minecraft:nether/use_lodestone":["Country Lode, Take Me Home","Use a Compass on a Lodestone"],"minecraft:story/cure_zombie_villager":["Zombie Doctor","Weaken and then cure a Zombie Villager"],"minecraft:story/deflect_arrow":["Not Today, Thank You","Deflect a projectile with a Shield"],"minecraft:story/enchant_item":["Enchanter","Enchant an item at an Enchanting Table"],"minecraft:story/enter_the_end":["The End?","Enter the End Portal"],"minecraft:story/enter_the_nether":["We Need to Go Deeper","Build, light, and enter a Nether Portal"],"minecraft:story/follow_ender_eye":["Eye Spy","Follow an Eye of Ender"],"minecraft:story/form_obsidian":["Ice Bucket Challenge","Obtain a block of Obsidian"],"minecraft:story/iron_tools":["Isn't It Iron Pick?","Upgrade your Pickaxe"],"minecraft:story/lava_bucket":["Hot Stuff","Fill a Bucket with lava"],"minecraft:story/mine_diamond":["Diamonds!","Acquire diamonds"],"minecraft:story/mine_stone":["Stone Age","Mine Stone with your new Pickaxe"],"minecraft:story/obtain_armor":["Suit Up","Protect yourself with a piece of iron armor"],"minecraft:story/root":["Minecraft","The heart and story of the game"],"minecraft:story/shiny_gear":["Cover Me with Diamonds","Diamond armor saves lives"],"minecraft:story/smelt_iron":["Acquire Hardware","Smelt an Iron Ingot"],"minecraft:story/upgrade_tools":["Getting an Upgrade","Construct a better Pickaxe"],"minecraft:husbandry/break_diamond_hoe":["Serious Dedication","Completely use up a diamond hoe, and then reevaluate your life choices"]},"ench":{"aqua_affinity":"Aqua Affinity","bane_of_arthropods":"Bane of Arthropods","binding_curse":"Curse of Binding","blast_protection":"Blast Protection","breach":"Breach","channeling":"Channeling","density":"Density","depth_strider":"Depth Strider","efficiency":"Efficiency","feather_falling":"Feather Falling","fire_aspect":"Fire Aspect","fire_protection":"Fire Protection","flame":"Flame","fortune":"Fortune","frost_walker":"Frost Walker","impaling":"Impaling","infinity":"Infinity","knockback":"Knockback","looting":"Looting","loyalty":"Loyalty","luck_of_the_sea":"Luck of the Sea","lunge":"Lunge","lure":"Lure","mending":"Mending","multishot":"Multishot","piercing":"Piercing","power":"Power","projectile_protection":"Projectile Protection","protection":"Protection","punch":"Punch","quick_charge":"Quick Charge","respiration":"Respiration","riptide":"Riptide","sharpness":"Sharpness","silk_touch":"Silk Touch","smite":"Smite","soul_speed":"Soul Speed","sweeping":"Sweeping Edge","sweeping_edge":"Sweeping Edge","swift_sneak":"Swift Sneak","thorns":"Thorns","unbreaking":"Unbreaking","vanishing_curse":"Curse of Vanishing","wind_burst":"Wind Burst"},"effect":{"absorption":"Absorption","bad_omen":"Bad Omen","blindness":"Blindness","breath_of_the_nautilus":"Breath of the Nautilus","conduit_power":"Conduit Power","darkness":"Darkness","dolphins_grace":"Dolphin's Grace","fire_resistance":"Fire Resistance","freezing":"Freezing","glowing":"Glowing","haste":"Haste","health_boost":"Health Boost","hero_of_the_village":"Hero of the Village","hunger":"Hunger","infested":"Infested","instant_damage":"Instant Damage","instant_health":"Instant Health","invisibility":"Invisibility","jump_boost":"Jump Boost","levitation":"Levitation","luck":"Luck","mining_fatigue":"Mining Fatigue","nausea":"Nausea","night_vision":"Night Vision","oozing":"Oozing","poison":"Poison","raid_omen":"Raid Omen","regeneration":"Regeneration","resistance":"Resistance","saturation":"Saturation","slow_falling":"Slow Falling","slowness":"Slowness","speed":"Speed","strength":"Strength","trial_omen":"Trial Omen","unluck":"Bad Luck","water_breathing":"Water Breathing","weakness":"Weakness","weaving":"Weaving","wind_charged":"Wind Charged","wither":"Wither"},"alias":{"minecraft:husbandry/bred_all_animals":"minecraft:husbandry/breed_all_animals","minecraft:husbandry/obtain_netherite_hoe":"minecraft:husbandry/netherite_hoe","minecraft:adventure/read_power_of_chiseled_bookshelf":"minecraft:adventure/read_power_from_chiseled_bookshelf","minecraft:husbandry/breed_all_animals":"minecraft:husbandry/bred_all_animals","minecraft:husbandry/netherite_hoe":"minecraft:husbandry/obtain_netherite_hoe","minecraft:adventure/read_power_from_chiseled_bookshelf":"minecraft:adventure/read_power_of_chiseled_bookshelf"}};
+
+const V4_IS_EN = true;
+const V4T = {
+  kvJoin: (a, b) => a + ': ' + b,
+  pctWrap: x => ' (' + x + ')',
+  dim: { overworld: 'Overworld', the_nether: 'The Nether', the_end: 'The End' },
+  advCat: { story: 'Story', nether: 'Nether', end: 'The End', adventure: 'Adventure', husbandry: 'Husbandry', recipes: 'Recipes' },
+  advCatDp: 'Datapack / Mod',
+  recAdv: 'Advancement King', recLevel: 'Highest Level', recEnder: 'Ender Chest Hoarder',
+  kpiAdvTotal: 'Advancements Unlocked', kpiAdvTotalSub: (a, b) => a + ' distinct · by ' + b + ' players',
+  kpiAdvAvg: 'Per Player', kpiAdvAvgSub: (n, c) => 'Top: ' + n + ' (' + c + ')',
+  kpiAdvRare: 'Rarest Achievement', kpiAdvRareSub: 'Fewest players server-wide',
+  kpiLevel: 'Avg XP Level', kpiLevelSub: (n, l) => 'Top: ' + n + ' (' + l + ')',
+  kpiInv: 'Profile Coverage', kpiInvSub: (a, b) => a + ' of ' + b + ' players have a playerdata file',
+  noPdata: 'No player data parsed (data/*.dat) — dimension breakdown unavailable',
+  noEnch: 'No enchanted items found',
+  kAdvUnlocked: 'Unlocked', kAdvUnlockedSub: n => n + ' ever seen on this server',
+  kAdvTotal: 'Total Unlocks', kAdvTotalSub: a => a + ' per player',
+  kAdvTop: 'Most Unlocked', kAdvRare: 'Rarest One', kAdvDp: 'Datapack Ones', kAdvDpSub: 'From datapacks / mods, not vanilla',
+  kAdvProgress: 'In Progress', kAdvProgressSub: 'Started but not finished',
+  catNote: 'Category completion = achievements unlocked by anyone in that category ÷ all achievements of that category seen on this server. Recipe unlocks are derived data and excluded from advancement stats.',
+  noAdv: 'No advancement data found: an advancements folder (or individual advancement JSON files) inside the zip is detected automatically.',
+  tlDone: 'unlocked', tlProgress: 'in progress',
+  thAdv: 'Advancement', thCat: 'Category', thDone: 'Unlocked by', thPct: 'Share', thFirst: 'First', thLast: 'Latest',
+  tableHint: (a, b) => a + ' total · ' + b + ' recipe unlocks excluded',
+  noPdShort: "This dataset has no data/<uuid>.dat player profile for this player (playerdata/<uuid>.dat before 26.1), so the inventory and live state are unavailable.",
+  sMode: 'Game mode', sDim: 'Dimension', sPos: 'Position', sPosNote: 'Where the save was taken',
+  sHealth: 'Health', sHealthNote: '10 hearts when full', sFood: 'Food', sAir: 'Air',
+  sLevel: 'XP level', sLevelUnit: '', sLevelNote: 'Total XP ', sFly: 'Flight',
+  sFlyYes: 'Flying', sFlyNo: 'On ground', sMayflyYes: 'Can fly', sCreative: 'Creative abilities',
+  sRespawn: 'Respawn point', sForced: '(forced)', sSpawn: 'World spawn', sDeath: 'Last death',
+  sVehicle: 'Riding', sFrozen: 'Frozen ticks', sCredits: 'End credits',
+  sCreditsYes: 'Seen', sVer: 'Save version', sVerNote: 'Minecraft DataVersion of this player file',
+  sStale: 'Profile source', sStaleVal: '⚠️ leftover old-version file',
+  sStaleNote: 'No <uuid>.dat exists for this player, so a leftover <uuid>-<n>.dat from an old world upgrade was used; it may be outdated',
+  noEffect: 'No active potion effects in this save',
+  invMain: 'Inventory', invEnder: 'Ender chest', invEquip: 'Equipment',
+  invEmpty: 'Empty inventory (offline for long, or not saved)', invEmptyEnder: 'Empty ender chest',
+  invEnchSum: 'Enchantment summary',
+  rpAdv: 'Advancements',
+  rpLevel: 'XP level',
+  rpInv: 'Inventory/ender/equipment (counts)',
+  sEffects: 'Status effects',
+  cmAdv: 'Advancements',
+  cmLevel: 'XP level',
+  cmXp: 'Total XP',
+  cmItem: 'Carried items',
+  cmUnit: '',
+  noGzip: 'This browser lacks DecompressionStream, so data/*.dat player files cannot be decompressed (needs Chrome 80+ / Edge 80+ / Safari 16.4+ / Firefox 113+).',
+  progressDat: 'Parsing playerdata files',
+  noAdvShort: 'No advancement data for this player (advancements/<uuid>.json).',
+  pfAdvSummary: (a, b, c) => a + ' / ' + b + ' unlocked (' + c + '%)',
+  pfAdvAllHint: 'Denominator = advancements seen on this server, including datapack ones',
+  pfAdvRecent: 'Recently unlocked', pfAdvProgress: 'In progress',
+
+  /* ---------- Progression timeline ---------- */
+  tlTitle: 'Progression Timeline',
+  tlHint: 'Rebuilds the journey from advancement unlock times',
+  tlCurve: 'Cumulative unlocks',
+  tlList: 'By date',
+  tlListRecent: n => 'By date (last ' + n + ' days)',
+  tlShowAll: 'Show all',
+  tlFirst: 'First unlock', tlLast: 'Latest unlock', tlSpan: 'Active span', tlPerDay: 'Unlocks / day', tlBusiest: 'Busiest day',
+  tlSpanUnit: ' days',
+  tlNone: 'This player has no unlock timestamps (or no advancement data), so no timeline can be built.',
+  tlGran: { day: 'day', week: 'week', month: 'month' },
+  tlUnit: '',
+  tlMore: n => 'Show all (N more days)'.replace('N', n),
+  tlTipTotal: 'Cumulative',
+  tlTipItems: 'Unlocked in range',
+  tlWed: 'unlocked',
+
+  /* ---------- Player search ---------- */
+  pickPlaceholder: n => '— ' + n + ' matches, pick one above —',
+  acMatch: n => n + ' matches',
+  acNoMatch: 'No matching player',
+  acNoData: 'No data loaded yet',
+  acHint: '↑↓ navigate · Enter open · Esc close',
+  acTip: 'Press Ctrl+K anytime to open',
+  acMeta: (t, a) => t + ' · ' + a + ' advancements',
+
+  /* ---------- Score card ---------- */
+  cardBtn: '🖼️ Score Card',
+  cardTitle: 'Score Card',
+  cardGenerating: 'Rendering score card…',
+  cardReady: 'Score card ready',
+  cardFail: 'Failed to render the score card, please retry',
+  cardSave: '⬇️ Save PNG',
+  cardCopyImg: '📋 Copy image',
+  cardCopied: 'Image copied — paste it anywhere',
+  cardCopyFail: 'Copy failed, use “Save PNG” instead',
+  cardRare: 'Rarest advancements',
+  cardRankAdv: 'Advancement rank', cardRankPlay: 'Playtime rank',
+  cardRankUnit: '',
+  cardNoRare: 'No advancement data',
+  cardFooter: 'Generated by Minecraft Player Analyzer',
+  cardKpi: { play: 'Playtime', death: 'Deaths', mob: 'Mob kills', mined: 'Blocks mined', placed: 'Blocks placed', dist: 'Distance', adv: 'Advancements', level: 'XP level' },
+  cardPlayers: n => n + ' players on this server'
+};
+
+/* ============================ V4：成就 + 玩家档案 ============================
+ * 自 MC 26.1 起，世界玩家数据位于 world/players/ 下：
+ *   players/stats/<uuid>.json         统计（原有能力）
+ *   players/advancements/<uuid>.json  成就完成情况（新增）
+ *   players/data/<uuid>.dat           gzip 压缩的 NBT 玩家档案（新增）
+ * 兼容旧布局（world/stats、world/advancements、world/playerdata）与任意嵌套目录，
+ * 只看文件名后缀与内容特征，不依赖绝对路径。
+ * ========================================================================== */
+
+const V4_DP = '__dp__';
+
+/* ------------------------------- 小工具 ------------------------------- */
+function v4Bare(id) {
+  const s = String(id == null ? '' : id);
+  const i = s.indexOf(':');
+  return i >= 0 ? s.slice(i + 1) : s;
+}
+function v4Roman(n) {
+  let v = Math.max(1, Math.min(20, n | 0)), s = '';
+  const M = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  for (const [k, r] of M) while (v >= k) { s += r; v -= k; }
+  return s;
+}
+function v4ItemName(id) {
+  const bare = v4Bare(id);
+  const n = trItem(bare);
+  return n || prettyId(id);
+}
+function v4TrEnch(id) { return V4LANG.ench[v4Bare(id)] || V4LANG.ench[id] || v4Title(v4Bare(id)); }
+function v4TrEffect(id) { return V4LANG.effect[v4Bare(id)] || V4LANG.effect[id] || v4Title(v4Bare(id)); }
+function v4Title(s) {
+  const t = String(s).replace(/_/g, ' ');
+  return V4_IS_EN ? t.replace(/(^|\s|\/)([a-z])/g, (m, a, b) => a + b.toUpperCase()) : t;
+}
+function v4Pad2(n) { return String(n).padStart(2, '0'); }
+function v4FmtDate(ms) {
+  if (!ms) return '—';
+  const d = new Date(ms);
+  return d.getFullYear() + '-' + v4Pad2(d.getMonth() + 1) + '-' + v4Pad2(d.getDate()) +
+         ' ' + v4Pad2(d.getHours()) + ':' + v4Pad2(d.getMinutes());
+}
+function v4FmtDay(ms) { return ms ? v4FmtDate(ms).slice(0, 10) : '—'; }
+function v4FmtCoord(a) {
+  if (!a || a.length < 3) return '—';
+  return Math.round(a[0]) + ', ' + Math.round(a[1]) + ', ' + Math.round(a[2]);
+}
+/** ticks -> "1 天 3 小时" / "1d 3h" */
+function v4FmtDurTicks(t) {
+  if (!t || t <= 0) return '—';
+  const s = Math.floor(t / 20);
+  if (V4_IS_EN) {
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s / 60) + 'm ' + (s % 60) + 's';
+    if (s < 86400) return Math.floor(s / 3600) + 'h ' + Math.floor(s % 3600 / 60) + 'm';
+    return Math.floor(s / 86400) + 'd ' + Math.floor(s % 86400 / 3600) + 'h';
+  }
+  if (s < 60) return s + ' 秒';
+  if (s < 3600) return Math.floor(s / 60) + ' 分钟';
+  if (s < 86400) return Math.floor(s / 3600) + ' 小时 ' + Math.floor(s % 3600 / 60) + ' 分';
+  return Math.floor(s / 86400) + ' 天 ' + Math.floor(s % 86400 / 3600) + ' 小时';
+}
+/** 旧版 NBT 里的 § 格式代码（1.13 前自定义名普遍带） */
+function v4StripCodes(s) {
+  return typeof s === 'string' ? s.replace(/§[0-9a-fk-orx]/gi, '') : s;
+}
+function v4TrDim(id) {
+  /* 1.15 及更早：Dimension 是数字（0=主世界 -1=下界 1=末地） */
+  if (typeof id === 'number' || /^-?\d+$/.test(String(id == null ? '' : id))) {
+    const n = Number(id);
+    id = n === -1 ? 'the_nether' : (n === 1 ? 'the_end' : 'overworld');
+  }
+  const k = v4Bare(id);
+  const legacy = { nether: 'the_nether', end: 'the_end', overworld: 'overworld' };
+  return (V4T.dim && (V4T.dim[k] || V4T.dim[legacy[k]])) || v4Title(k);
+}
+const V4_GAMEMODE = [
+  [0, '生存'], [1, '创造'], [2, '冒险'], [3, '旁观']
+];
+const V4_GAMEMODE_EN = ['Survival', 'Creative', 'Adventure', 'Spectator'];
+function v4GamemodeName(g) {
+  const i = g | 0;
+  if (i < 0 || i > 3) return '—';
+  return V4_IS_EN ? V4_GAMEMODE_EN[i] : V4_GAMEMODE[i][1];
+}
+function v4Num(n) { return num(n); }
+function v4Stat(label, value, note) {
+  return '<div class="v4-kv-item"' + (note ? ' title="' + esc(note) + '"' : '') + '>' +
+    '<div class="l">' + esc(label) + '</div><div class="v">' + value + '</div></div>';
+}
+
+/* ============================ 成就分类 ============================ */
+const V4_ADV_CATS = [
+  { id: 'story',     emoji: '📜', color: '#fbbf24' },
+  { id: 'nether',    emoji: '🔥', color: '#f87171' },
+  { id: 'end',       emoji: '🌌', color: '#a78bfa' },
+  { id: 'adventure', emoji: '🗺️', color: '#4ade80' },
+  { id: 'husbandry', emoji: '🌾', color: '#38bdf8' },
+  { id: 'recipes',   emoji: '📖', color: '#94a3b8' },
+  { id: V4_DP,       emoji: '🧩', color: '#fb923c' }
+];
+function v4AdvCatOf(key) {
+  const i = key.indexOf(':');
+  if (i < 0) return V4_DP;
+  const ns = key.slice(0, i), path = key.slice(i + 1);
+  if (ns !== 'minecraft') return V4_DP;
+  const seg = path.split('/')[0];
+  return V4_ADV_CATS.some(c => c.id === seg) ? seg : V4_DP;
+}
+function v4AdvCatMeta(id) {
+  return V4_ADV_CATS.find(c => c.id === id) || { id: id, emoji: '📦', color: '#94a3b8' };
+}
+function v4AdvCatName(id) {
+  const m = V4T.advCat[id];
+  return m || (id === V4_DP ? V4T.advCatDp : v4Title(id));
+}
+/** 成就显示名 / 说明（兼容各版本 ID 改名：直接命中 → 别名表 → 规则变体 → 美化 ID） */
+function v4AdvInfo(key) {
+  let hit = V4LANG.adv[key];
+  if (!hit && V4LANG.alias) {
+    const a = V4LANG.alias[key];
+    if (a) hit = V4LANG.adv[a];
+  }
+  if (!hit) {
+    for (const v of v4AdvVariants(key)) {
+      hit = V4LANG.adv[v];
+      if (hit) break;
+    }
+  }
+  if (hit) return { t: hit[0], d: hit[1] || '' };
+  const i = key.indexOf(':');
+  const ns = i >= 0 ? key.slice(0, i) : '';
+  const path = i >= 0 ? key.slice(i + 1) : key;
+  const seg = path.split('/');
+  return { t: v4Title(seg[seg.length - 1]), d: ns + ':' + path };
+}
+/** 原版语言键与成就 ID 存在若干历史错位，这里按规则生成候选键 */
+function v4AdvVariants(key) {
+  const i = key.indexOf(':');
+  if (i < 0) return [];
+  const ns = key.slice(0, i), p = key.slice(i + 1);
+  const cands = new Set();
+  const add = (s) => { if (s && s !== p) cands.add(ns + ':' + s); };
+  add(p.replace('/obtain_', '/'));                       // husbandry/obtain_netherite_hoe → husbandry/netherite_hoe
+  add(p.replace(/\bobtain_/, ''));                       // obtain_xxx → xxx
+  add(p.replace('bred_', 'breed_'));                     // husbandry/bred_all_animals → breed_all_animals
+  add(p.replace('breed_all_', 'bred_all_'));             // 反向
+  add(p.replace('_of_', '_from_'));                      // read_power_of_ → read_power_from_
+  add(p.replace('_from_', '_of_'));                      // 反向
+  add(p.replace('_all_', '_every_'));                    // 少数条目的 all/every 差异
+  add(p.replace('_every_', '_all_'));
+  return Array.from(cands);
+}
+
+/* ============================ NBT 解析 ============================ */
+/** 读取 gzip 压缩的 NBT（.dat 玩家档案） */
+async function v4ReadGzipNbt(buf) {
+  const u8 = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+  let raw = u8;
+  if (u8.length > 2 && u8[0] === 0x1f && u8[1] === 0x8b) {          // gzip 魔数
+    if (typeof DecompressionStream !== 'function' || !window.Blob || typeof Blob.prototype.stream !== 'function') {
+      throw new Error(V4T.noGzip);
+    }
+    const stream = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const reader = stream.getReader();
+    const parts = [];
+    let size = 0;
+    for (;;) {
+      const r = await reader.read();
+      if (r.done) break;
+      parts.push(r.value);
+      size += r.value.length;
+    }
+    const out = new Uint8Array(size);
+    let off = 0;
+    for (const p of parts) { out.set(p, off); off += p.length; }
+    raw = out;
+  }
+  return v4ParseNbt(new DataView(raw.buffer, raw.byteOffset, raw.byteLength));
+}
+/** 大端 NBT 读取器（覆盖全部 12 种标签） */
+function v4ParseNbt(dv) {
+  let p = 0;
+  const dec = new TextDecoder('utf-8');
+  const u1 = () => dv.getUint8(p++);
+  const i1 = () => dv.getInt8(p++);
+  const i2 = () => { const v = dv.getInt16(p); p += 2; return v; };
+  const u2 = () => { const v = dv.getUint16(p); p += 2; return v; };
+  const i4 = () => { const v = dv.getInt32(p); p += 4; return v; };
+  const i8 = () => { const v = Number(dv.getBigInt64(p)); p += 8; return v; };
+  const f4 = () => { const v = dv.getFloat32(p); p += 4; return v; };
+  const f8 = () => { const v = dv.getFloat64(p); p += 8; return v; };
+  const str = () => {
+    const n = u2();
+    const s = dec.decode(new Uint8Array(dv.buffer, dv.byteOffset + p, n));
+    p += n;
+    return s;
+  };
+  function payload(t, depth) {
+    switch (t) {
+      case 1: return i1();
+      case 2: return i2();
+      case 3: return i4();
+      case 4: return i8();
+      case 5: return f4();
+      case 6: return f8();
+      case 7: {
+        const n = i4();
+        const a = new Int8Array(dv.buffer, dv.byteOffset + p, n);
+        p += n;
+        return Array.from(a);
+      }
+      case 8: return str();
+      case 9: {
+        const et = u1(), n = i4(), out = [];
+        for (let i = 0; i < n; i++) out.push(payload(et, depth + 1));
+        return out;
+      }
+      case 10: {
+        const o = {};
+        for (;;) {
+          const tt = u1();
+          if (tt === 0) break;
+          const nm = str();
+          o[nm] = payload(tt, depth + 1);
+        }
+        return o;
+      }
+      case 11: { const n = i4(), out = []; for (let i = 0; i < n; i++) out.push(i4()); return out; }
+      case 12: { const n = i4(), out = []; for (let i = 0; i < n; i++) out.push(i8()); return out; }
+      default: throw new Error('未知 NBT 标签 ' + t);
+    }
+  }
+  const root = u1();
+  if (root !== 10) throw new Error('NBT 根标签异常');
+  str();
+  return payload(10, 0);
+}
+
+/* ============================ 玩家键 / 数据容器 ============================ */
+function v4EnsurePlayer(key) {
+  let p = S.players.get(key);
+  if (!p) {
+    p = { uuid: key, name: null, map: new Map(), cat: new Map() };
+    S.players.set(key, p);
+  }
+  if (!p.adv) p.adv = new Map();     // 成就键 -> 达成时间(ms，0 表示未知)
+  if (!p.prog) p.prog = new Set();   // 进行中的成就键
+  if (p.pd === undefined) p.pd = null;
+  return p;
+}
+function v4KeyFromName(fileName) {
+  const key = uuidFromText(String(fileName || ''));
+  if (key) return key;
+  const stem = fileStem(fileName || '');
+  if (UUID_BARE_RE.test(stem)) return dashUuid(stem);
+  const mapped = NAME2UUID.get(String(stem).toLowerCase());
+  return mapped || null;
+}
+function v4UuidFromInts(a) {
+  if (!Array.isArray(a) || a.length !== 4) return null;
+  let h = '';
+  for (const v of a) {
+    const x = (v >>> 0).toString(16).padStart(8, '0');
+    h += x;
+  }
+  return dashUuid(h);
+}
+function v4Reset() {
+  S.adv = new Map();        // 成就键 -> { key, cat, players:Map<uuid,ms>, prog:Map<uuid,ms>, first, last }
+  S.advSeen = new Set();    // 全服出现过的成就键（含未解锁）
+  V4_RECORD_DONE = false;
+  V4_ADV_SORT = null;
+  /* 导入报告新增计数需要初始化，否则 ++ 会变成 NaN */
+  IMPORT.advFiles = 0;
+  IMPORT.advDone = 0;
+  IMPORT.advProgress = 0;
+  IMPORT.recipeEntries = 0;
+  IMPORT.dataFiles = 0;
+  IMPORT.dataBad = 0;
+  IMPORT.dataStale = 0;
+}
+function v4AdvEntry(key) {
+  let a = S.adv.get(key);
+  if (!a) {
+    a = { key: key, cat: v4AdvCatOf(key), players: new Map(), prog: new Map(), first: null, last: null };
+    S.adv.set(key, a);
+  }
+  return a;
+}
+
+/* ============================ 成就文件解析 ============================ */
+const V4_RECIPE_RE = /(^|:)recipes?\//;
+const V4_ADV_KEY_RE = /^[a-z0-9_][a-z0-9_.\-]*:[^\s]+$/i;
+
+/** 粗略判断一个 JSON 对象是不是成就文件（值是含 done / criteria 的对象） */
+function v4LooksLikeAdvancements(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+  let n = 0, hit = 0;
+  for (const k in data) {
+    if (k === 'DataVersion' || k === 'dataVersion') continue;
+    const v = data[k];
+    if (!v || typeof v !== 'object' || Array.isArray(v)) continue;
+    n++;
+    if ('done' in v || 'criteria' in v) hit++;
+    if (n >= 10) break;
+  }
+  return n > 0 && hit === n;
+}
+function v4McDate(s) {
+  if (typeof s !== 'string' || s.length < 10) return 0;
+  /* 游戏内格式：2024-06-14 14:24:32 +0800（localStorage 里也可能是 Unix 秒/毫秒） */
+  let t = s.trim().replace(' ', 'T').replace(/\s+/g, '');
+  t = t.replace(/([+-]\d{2})(\d{2})$/, '$1:$2');
+  const ms = Date.parse(t);
+  return isNaN(ms) ? 0 : ms;
+}
+function v4CriteriaTime(criteria) {
+  let best = 0, cnt = 0;
+  if (criteria && typeof criteria === 'object') {
+    for (const c in criteria) {
+      const v = criteria[c];
+      const ms = typeof v === 'string' ? v4McDate(v) : (typeof v === 'number' ? v : 0);
+      if (ms) { cnt++; if (ms > best) best = ms; }
+    }
+  }
+  return { ms: best, cnt: cnt };
+}
+
+function v4IngestAdvancements(data, fileName) {
+  let key = v4KeyFromName(fileName);
+  if (!key) {
+    key = uuidFromText(String(data.uuid || data.UUID || data.playerUuid || ''));
+  }
+  if (!key) {
+    const stem = fileStem(fileName || '') || 'unknown';
+    key = NAME2UUID.get(stem.toLowerCase()) || ('name:' + stem);
+  }
+  const p = v4EnsurePlayer(key);
+  let doneN = 0, proN = 0;
+  for (const k in data) {
+    if (k === 'DataVersion' || k === 'dataVersion') continue;
+    if (!V4_ADV_KEY_RE.test(k)) continue;
+    const v = data[k];
+    if (!v || typeof v !== 'object' || Array.isArray(v)) continue;
+    if (!('done' in v || 'criteria' in v)) continue;
+    if (V4_RECIPE_RE.test(k)) { IMPORT.recipeEntries++; continue; }   // 配方解锁不算成就
+    S.advSeen.add(k);
+    const ct = v4CriteriaTime(v.criteria);
+    const a = v4AdvEntry(k);
+    if (v.done === true) {
+      a.players.set(p.uuid, ct.ms);
+      if (ct.ms) {
+        if (!a.first || ct.ms < a.first.ms) a.first = { uuid: p.uuid, ms: ct.ms };
+        if (!a.last || ct.ms > a.last.ms) a.last = { uuid: p.uuid, ms: ct.ms };
+      }
+      p.adv.set(k, ct.ms || 0);
+      doneN++;
+    } else {
+      a.prog.set(p.uuid, ct.ms);
+      p.prog.add(k);
+      proN++;
+    }
+  }
+  IMPORT.advFiles++;
+  IMPORT.advDone += doneN;
+  IMPORT.advProgress += proN;
+}
+function v4ProcessAdvancementFile(content, fileName) {
+  let data;
+  try { data = JSON.parse(stripBOM(content)); } catch (e) { IMPORT.badJson++; return; }
+  if (!v4LooksLikeAdvancements(data)) { IMPORT.skipped++; return; }
+  v4IngestAdvancements(data, fileName);
+}
+
+/* ============================ 玩家档案（NBT）解析 ============================ */
+function v4TextOf(v) {
+  if (v == null) return null;
+  if (typeof v === 'string') {
+    const s = v.trim();
+    if (/^[{[]/.test(s)) {                       // 可能是 JSON 文本组件
+      try { return v4TextOf(JSON.parse(s)); } catch (e) { return v4StripCodes(s); }
+    }
+    return v4StripCodes(s);
+  }
+  if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+  if (Array.isArray(v)) {
+    const parts = v.map(v4TextOf).filter(Boolean);
+    return parts.length ? parts.join('') : null;
+  }
+  if (typeof v === 'object') {
+    let s = typeof v.text === 'string' ? v.text : '';
+    if (Array.isArray(v.extra)) s += v.extra.map(v4TextOf).filter(Boolean).join('');
+    if (!s && typeof v.translate === 'string') s = v4Title(v.translate);
+    return s || null;
+  }
+  return null;
+}
+function v4EnchList(c) {
+  const out = [];
+  if (!c) return out;
+  const src = c.levels && typeof c.levels === 'object' ? c.levels : c;
+  for (const k in src) {
+    const lv = src[k];
+    if (typeof lv === 'number' && lv > 0) out.push({ id: k, lvl: lv });
+  }
+  if (!out.length && Array.isArray(c)) {
+    for (const e of c) {
+      if (e && typeof e === 'object') {
+        const id = e.id || e.Id || e.name;
+        const lv = e.lvl || e.level || e.Level || 1;
+        if (id) out.push({ id: String(id), lvl: lv | 0 });
+      }
+    }
+  }
+  out.sort((a, b) => b.lvl - a.lvl);
+  return out;
+}
+function v4NormItem(it) {
+  if (!it || typeof it !== 'object') return null;
+  const id = it.id || it.Id || (it.Item && (it.Item.id || it.Item.Id));
+  if (!id || typeof id !== 'string') return null;
+  const comp = it.components || it.tag || {};
+  /* 1.13~1.20.4 的自定义名/附魔在 tag 下；1.20.5+ 在 components 下 */
+  const disp = comp.display || it.display || {};
+  const container = comp['minecraft:container'] || comp.Items ||
+                    (comp.BlockEntityTag && comp.BlockEntityTag.Items);
+  const enchSrc = comp['minecraft:enchantments'] || comp['minecraft:stored_enchantments'] ||
+                  comp.Enchantments || comp.StoredEnchantments || comp.ench;
+  let potion = comp['minecraft:potion_contents'] || comp.Potion || null;
+  if (typeof potion === 'string') potion = { potion: potion };   // 旧版 Potion 是字符串
+  return {
+    slot: it.Slot == null ? null : it.Slot | 0,
+    id: id,
+    count: Number(it.count != null ? it.count : (it.Count != null ? it.Count : 1)) || 1,
+    damage: comp['minecraft:damage'] || comp.Damage || 0,
+    unbreakable: !!(comp['minecraft:unbreakable'] || comp.Unbreakable),
+    customName: v4TextOf(comp['minecraft:custom_name']) || v4TextOf(comp['minecraft:item_name']) ||
+                v4TextOf(disp.Name) || null,
+    ench: v4EnchList(enchSrc),
+    trim: comp['minecraft:trim'] || comp.Trim || null,
+    potion: potion,
+    containerCount: Array.isArray(container) ? container.length : 0,
+    rarity: comp['minecraft:rarity'] || null
+  };
+}
+function v4NormItems(list) {
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  for (const it of list) {
+    const n = v4NormItem(it);
+    if (n) out.push(n);
+  }
+  return out;
+}
+function v4Dig(d, path) {
+  let cur = d;
+  for (const k of path) {
+    if (!cur || typeof cur !== 'object') return undefined;
+    cur = cur[k];
+  }
+  return cur;
+}
+function v4ParsePlayerData(d) {
+  const eq = d.equipment || {};
+  const eqOut = {};
+  for (const k of ['head', 'chest', 'legs', 'feet', 'mainhand', 'offhand', 'body']) {
+    const n = v4NormItem(eq[k]);
+    if (n) eqOut[k] = n;
+  }
+  const inv = v4NormItems(d.Inventory);
+  const ender = v4NormItems(d.EnderItems);
+  /* 旧版本盔甲/副手放在 Inventory 的 100~103 / -106 槽位 */
+  if (!Object.keys(eqOut).length) {
+    const slotMap = { 100: 'feet', 101: 'legs', 102: 'chest', 103: 'head', '-106': 'offhand' };
+    for (const it of inv) {
+      const s = slotMap[String(it.slot)];
+      if (s && !eqOut[s]) eqOut[s] = it;
+    }
+  }
+  /* 装备槽位（100~103 / -106）不属于背包 0~35 / 末影箱 0~26，留在列表里会被网格
+     排到最前面导致整体错位，必须剔除 */
+  const inv2 = inv.filter(it => it.slot != null && it.slot >= 0 && it.slot < 36);
+  const ender2 = ender.filter(it => it.slot != null && it.slot >= 0 && it.slot < 27);
+  const effects = [];
+  for (const e of (Array.isArray(d.active_effects) ? d.active_effects : [])) {
+    if (!e || typeof e !== 'object') continue;
+    const id = e.id || e.Id;
+    if (!id) continue;
+    effects.push({
+      id: String(id),
+      amp: (e.amplifier || 0) | 0,
+      dur: e.duration != null ? e.duration | 0 : null,
+      infinite: e.duration === -1 || e.infinite === true,
+      ambient: !!e.ambient
+    });
+  }
+  effects.sort((a, b) => (b.dur || 0) - (a.dur || 0));
+  const death = d.LastDeathLocation || d.lastDeathLocation;
+  const respawn = d.respawn;
+  const abilities = d.abilities || {};
+  return {
+    dv: d.DataVersion || d.dataVersion || 0,
+    gamemode: d.playerGameType != null ? d.playerGameType : (d.playerGameType == null && d.gameType != null ? d.gameType : 0),
+    prevGamemode: d.previousPlayerGameType != null ? d.previousPlayerGameType : null,
+    dimension: d.Dimension || null,
+    pos: Array.isArray(d.Pos) ? d.Pos : null,
+    rotation: Array.isArray(d.Rotation) ? d.Rotation : null,
+    health: typeof d.Health === 'number' ? d.Health : null,
+    absorption: typeof d.AbsorptionAmount === 'number' ? d.AbsorptionAmount : 0,
+    food: typeof d.foodLevel === 'number' ? d.foodLevel : null,
+    saturation: typeof d.foodSaturationLevel === 'number' ? d.foodSaturationLevel : null,
+    air: typeof d.Air === 'number' ? d.Air : null,
+    xpLevel: d.XpLevel | 0,
+    xpTotal: d.XpTotal | 0,
+    xpP: typeof d.XpP === 'number' ? d.XpP : 0,
+    flying: !!abilities.flying,
+    mayfly: !!abilities.mayfly,
+    instabuild: !!abilities.instabuild,
+    invulnerable: !!abilities.invulnerable,
+    onGround: d.OnGround === 1,
+    selected: d.SelectedItemSlot | 0,
+    seenCredits: d.seenCredits === 1,
+    score: d.Score | 0,
+    inv: inv2,
+    ender: ender2,
+    equipment: eqOut,
+    effects: effects,
+    lastDeath: death && typeof death === 'object' ? { dim: death.dimension || death.Dimension || null, pos: death.pos || death.Pos || null } : null,
+    respawn: respawn && typeof respawn === 'object' ? { dim: respawn.dimension || null, pos: respawn.pos || null, angle: respawn.angle != null ? respawn.angle : null, forced: respawn.forced === 1 } : null,
+    spawn: d.SpawnX != null ? { x: d.SpawnX, y: d.SpawnY, z: d.SpawnZ, dim: d.SpawnDimension || null, forced: d.SpawnForced === 1 } : null,
+    tags: Array.isArray(d.Tags) ? d.Tags.filter(t => typeof t === 'string') : [],
+    vehicle: d.RootVehicle ? (d.RootVehicle.id || d.RootVehicle.Id || d.RootVehicle.Type || null) : null,
+    ticksSinceHurtByMob: d.ticks_since_last_hurt_by_mob != null ? d.ticks_since_last_hurt_by_mob : null,
+    hurtByPlayer: Array.isArray(d.last_hurt_by_player) ? d.last_hurt_by_player : null,
+    fallDistance: typeof d.fall_distance === 'number' ? d.fall_distance : (typeof d.FallDistance === 'number' ? d.FallDistance : null),
+    frozen: d.TicksFrozen != null ? d.TicksFrozen : null,
+    enteredNetherPos: d.entered_nether_pos || d.enteredNetherPosition || null
+  };
+}
+/** 判断一份 NBT 是否真的是玩家档案（防止把 level.dat 等误当玩家） */
+function v4LooksLikePlayerData(d) {
+  if (!d || typeof d !== 'object' || Array.isArray(d)) return false;
+  if (d.Inventory || d.EnderItems || d.playerGameType != null || d.XpLevel != null || d.foodLevel != null) return true;
+  if (d.Health != null && (d.Dimension != null || d.Pos != null || d.XpTotal != null)) return true;
+  return false;
+}
+async function v4ProcessDataFile(buf, fileName) {
+  let nbt;
+  try { nbt = await v4ReadGzipNbt(buf); }
+  catch (e) { IMPORT.dataBad++; return; }
+  if (!nbt || typeof nbt !== 'object') { IMPORT.dataBad++; return; }
+  if (!v4LooksLikePlayerData(nbt)) { IMPORT.skipped++; return; }   // level.dat 等非玩家档案
+  let key = v4KeyFromName(fileName);
+  if (!key) key = v4UuidFromInts(nbt.UUID);
+  if (!key) {
+    const stem = fileStem(fileName || '') || 'unknown';
+    key = NAME2UUID.get(stem.toLowerCase()) || ('name:' + stem);
+  }
+  const p = v4EnsurePlayer(key);
+  /* 残留临时文件：<uuid>-<数字>.dat（旧版本升级留下的备份，数据往往严重过期）。
+   * 无论它在包里排在正式档案之前还是之后，都以正式档案为准。 */
+  const stem = baseName(fileName || '').replace(/\.dat(_old)?$/i, '').trim();
+  const stale = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-\d+$/i.test(stem);
+  if (stale) {
+    IMPORT.dataStale++;
+    if (!p.pd) { p.pd = v4ParsePlayerData(nbt); p.pdStale = true; }   // 先占位，正式档案来了就覆盖
+    return;
+  }
+  p.pd = v4ParsePlayerData(nbt);
+  p.pdStale = false;
+  IMPORT.dataFiles++;
+}
+
+/* ============================ 派生索引 / 查询 ============================ */
+function v4AdvCount(p) { return p && p.adv ? p.adv.size : 0; }
+function v4PdataPlayers() {
+  let n = 0;
+  for (const p of S.players.values()) if (p.pd) n++;
+  return n;
+}
+function v4AdvPlayersCount() {
+  let n = 0;
+  for (const p of S.players.values()) if (p.adv && p.adv.size) n++;
+  return n;
+}
+function v4SortAdv(entries) {
+  return entries.slice().sort((a, b) =>
+    (b.players.size - a.players.size) || (b.prog.size - a.prog.size) || a.key.localeCompare(b.key));
+}
+function v4AllAdvSorted() {
+  if (V4_ADV_SORT && V4_ADV_SORT.length === S.adv.size) return V4_ADV_SORT;
+  V4_ADV_SORT = v4SortAdv(Array.from(S.adv.values()));
+  return V4_ADV_SORT;
+}
+/** 每位玩家的达成时间线（用于“最近达成”） */
+function v4Recent(unlockLimit) {
+  const rows = [];
+  for (const a of S.adv.values()) {
+    for (const [uuid, ms] of a.players) {
+      if (ms) rows.push({ key: a.key, uuid: uuid, ms: ms });
+    }
+  }
+  rows.sort((x, y) => y.ms - x.ms);
+  return unlockLimit ? rows.slice(0, unlockLimit) : rows;
+}
+function v4EquipList(pd) {
+  const out = [];
+  const order = [['head', '头盔'], ['chest', '胸甲'], ['legs', '护腿'], ['feet', '靴子'], ['mainhand', '主手'], ['offhand', '副手'], ['body', '身体']];
+  for (const [k, zh] of order) {
+    if (pd.equipment[k]) out.push({ slot: k, label: V4_IS_EN ? v4EquipNameEN(k) : zh, item: pd.equipment[k] });
+  }
+  return out;
+}
+function v4EquipNameEN(k) {
+  return ({ head: 'Helmet', chest: 'Chestplate', legs: 'Leggings', feet: 'Boots', mainhand: 'Main hand', offhand: 'Off hand', body: 'Body' })[k] || k;
+}
+
+/* ============================ 物品渲染 ============================ */
+function v4SlotHTML(it, label) {
+  if (!it) return '<div class="inv-slot slot-empty"' + (label ? ' title="' + esc(label) + '"' : '') + '></div>';
+  const nm = v4ItemName(it.id);
+  const lines = [nm + (it.count > 1 ? ' ×' + it.count : '')];
+  if (it.customName) lines.push((V4_IS_EN ? 'Named: ' : '自定义名：') + it.customName);
+  for (const e of it.ench) lines.push(v4TrEnch(e.id) + ' ' + v4Roman(e.lvl));
+  if (it.containerCount) lines.push((V4_IS_EN ? 'Contains ' : '内含 ') + it.containerCount + (V4_IS_EN ? ' stacks' : ' 组物品'));
+  if (it.damage) lines.push((V4_IS_EN ? 'Damage: ' : '耐久损耗：') + it.damage);
+  if (it.unbreakable) lines.push(V4_IS_EN ? 'Unbreakable' : '无法破坏');
+  const tip = lines.join('\n');
+  return '<div class="inv-slot" title="' + esc(tip) + '">' +
+    iconHTML('inv', v4Bare(it.id), true) +
+    (it.count > 1 ? '<span class="cnt">' + it.count + '</span>' : '') +
+    (it.ench.length ? '<span class="en">✨</span>' : '') +
+    '</div>';
+}
+function v4InvGrid(items, cols, maxCells) {
+  const byslot = new Map();
+  let rest = [];
+  for (const it of items) {
+    if (it.slot != null && it.slot >= 0 && it.slot < (maxCells || 36)) byslot.set(it.slot, it);
+    else rest.push(it);
+  }
+  let html = '';
+  for (let i = 0; i < (maxCells || 36); i++) html += v4SlotHTML(byslot.get(i));
+  for (const it of rest) html += v4SlotHTML(it);       // 槽位异常的排最后，不挤乱网格
+  return '<div class="inv-grid">' + html + '</div>';
+}
+function v4ItemList(items) {
+  if (!items.length) return '<p class="muted" style="font-size:12.5px">—</p>';
+  const agg = new Map();
+  for (const it of items) {
+    const g = agg.get(it.id) || { id: it.id, count: 0, ench: new Set(), named: 0 };
+    g.count += it.count;
+    for (const e of it.ench) g.ench.add(v4TrEnch(e.id) + ' ' + v4Roman(e.lvl));
+    if (it.customName) g.named++;
+    agg.set(it.id, g);
+  }
+  const rows = Array.from(agg.values()).sort((a, b) => b.count - a.count);
+  return '<div class="v4-itemlist">' + rows.map(g =>
+    '<span class="v4-chip">' + esc(v4ItemName(g.id)) + ' <b>×' + num(g.count) + '</b>' +
+    (g.ench.size ? ' <span class="muted">✨' + g.ench.size + '</span>' : '') +
+    (g.named ? ' <span class="muted">✒️' + g.named + '</span>' : '') +
+    '</span>').join('') + '</div>';
+}
+function v4EnchSummary(items) {
+  const agg = new Map();
+  for (const it of items) for (const e of it.ench) {
+    const cur = agg.get(e.id) || { id: e.id, lvl: 0, n: 0 };
+    cur.lvl = Math.max(cur.lvl, e.lvl);
+    cur.n++;
+    agg.set(e.id, cur);
+  }
+  return Array.from(agg.values()).sort((a, b) => b.n - a.n || b.lvl - a.lvl);
+}
+
+/* ============================ 总览页增强 ============================ */
+let V4_RECORD_DONE = false;
+let V4_ADV_SORT = null;
+function v4EnsureRecordDefs() {
+  if (V4_RECORD_DONE || typeof RECORD_DEFS === 'undefined') return;
+  RECORD_DEFS.push(
+    { emoji: '🏅', name: V4T.recAdv, get: p => v4AdvCount(p), fmt: v => num(v) + (V4_IS_EN ? ' advancements' : ' 项成就') },
+    { emoji: '✨', name: V4T.recLevel, get: p => (p.pd ? p.pd.xpLevel : 0), fmt: v => (V4_IS_EN ? 'Level ' : '等级 ') + num(v) },
+    { emoji: '📦', name: V4T.recEnder, get: p => (p.pd ? p.pd.ender.length : 0), fmt: v => num(v) + (V4_IS_EN ? ' stacks' : ' 组物品') }
+  );
+  V4_RECORD_DONE = true;
+}
+function v4Overview(players) {
+  v4EnsureRecordDefs();
+  const n = players.length || 1;
+  const box = $('#ovKpis');
+  if (!box) return;
+
+  /* 追加 KPI 卡片 */
+  const advEntries = Array.from(S.adv.values());
+  const totalDone = advEntries.reduce((s, a) => s + a.players.size, 0);
+  const pdN = v4PdataPlayers();
+  const advN = v4AdvPlayersCount();
+  let lvlSum = 0, lvlMax = 0, lvlWho = null, topAdv = null;
+  for (const p of players) {
+    if (p.pd) {
+      lvlSum += p.pd.xpLevel;
+      if (p.pd.xpLevel > lvlMax) { lvlMax = p.pd.xpLevel; lvlWho = p; }
+    }
+    const c = v4AdvCount(p);
+    if (!topAdv || c > topAdv.c) topAdv = { p: p, c: c };
+  }
+  const extra = [];
+  if (S.advSeen && S.advSeen.size) {
+    extra.push({ emoji: '🏅', label: V4T.kpiAdvTotal, value: totalDone, fmt: compact,
+      sub: V4T.kpiAdvTotalSub(num(S.advSeen.size), num(advN)) });
+    extra.push({ emoji: '🎯', label: V4T.kpiAdvAvg, value: totalDone / n, fmt: v => (v >= 100 ? compact(v) : v.toFixed(1)),
+      sub: topAdv && topAdv.c ? V4T.kpiAdvAvgSub(pName(topAdv.p.uuid), num(topAdv.c)) : '—' });
+    const unlockedAdv = advEntries.filter(a => a.players.size > 0);
+    extra.push({ emoji: '🧠', label: V4T.kpiAdvRare, value: unlockedAdv.length ? Math.min.apply(null, unlockedAdv.map(a => a.players.size)) : 0,
+      fmt: v => num(v) + (V4_IS_EN ? ' ppl' : ' 人'), sub: V4T.kpiAdvRareSub });
+  }
+  if (pdN) {
+    extra.push({ emoji: '✨', label: V4T.kpiLevel, value: lvlSum / pdN, fmt: v => (v >= 100 ? compact(v) : v.toFixed(1)),
+      sub: lvlWho ? V4T.kpiLevelSub(pName(lvlWho.uuid), num(lvlMax)) : '—' });
+    extra.push({ emoji: '🎒', label: V4T.kpiInv, value: pdN, fmt: num, sub: V4T.kpiInvSub(num(pdN), num(n)) });
+  }
+  if (extra.length) {
+    const html = extra.map(k =>
+      '<div class="kpi"' + (k.note ? ' title="' + esc(k.note) + '"' : '') + '>' +
+        '<div class="chip">' + k.emoji + '</div>' +
+        '<div class="k-label">' + esc(k.label) + '</div>' +
+        '<div class="k-value" data-v="0" data-target="' + k.value + '"' + (k.skipValue ? ' data-fixed="1"' : '') + ' title="' + esc(k.sub) + '">' + (k.showValue != null ? k.showValue : '0') + '</div>' +
+        '<div class="k-sub">' + k.sub + '</div>' +
+      '</div>').join('');
+    box.insertAdjacentHTML('beforeend', html);
+    const els = $$('#ovKpis .k-value');
+    for (let i = 0; i < extra.length; i++) {
+      const el = els[els.length - extra.length + i];
+      if (!el || extra[i].skipValue) continue;
+      countUp(el, extra[i].value, extra[i].fmt);
+    }
+  }
+
+  /* 图表：维度分布 */
+  const dimAgg = new Map();
+  for (const p of players) {
+    if (!p.pd || !p.pd.dimension) continue;
+    dimAgg.set(p.pd.dimension, (dimAgg.get(p.pd.dimension) || 0) + 1);
+  }
+  const dimBox = $('#ovDimChart');
+  if (dimBox) {
+    if (dimAgg.size) {
+      const dims = Array.from(dimAgg.entries()).sort((a, b) => b[1] - a[1]);
+      const colors = { 'minecraft:overworld': '#4ade80', 'minecraft:the_nether': '#f87171', 'minecraft:the_end': '#a78bfa' };
+      mkChart('ovDimChart', {
+        type: 'doughnut',
+        data: {
+          labels: dims.map(d => v4TrDim(d[0])),
+          datasets: [{
+            data: dims.map(d => d[1]),
+            backgroundColor: dims.map((d, i) => colors[d[0]] || PALETTE[i % PALETTE.length]),
+            borderColor: document.documentElement.getAttribute('data-theme') === 'light' ? '#fff' : 'rgba(10,14,22,.85)',
+            borderWidth: 2, hoverOffset: 8
+          }]
+        },
+        options: { cutout: '58%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'circle', padding: 12 } },
+          tooltip: { backgroundColor: 'rgba(10,14,22,.94)', padding: 11, cornerRadius: 10,
+            callbacks: { label: c => ' ' + c.label + (V4_IS_EN ? ': ' : '：') + num(c.raw) + (V4_IS_EN ? ' players' : ' 位玩家') } } } }
+      });
+      v4SetEmpty('#ovDimChart', false, '');
+    } else {
+      v4SetEmpty('#ovDimChart', true, V4T.noPdata);
+    }
+  }
+
+  /* 图表：附魔流行度 */
+  const enchBox = $('#ovEnchChart');
+  if (enchBox) {
+    const agg = new Map();
+    let scanned = 0;
+    for (const p of players) {
+      if (!p.pd) continue;
+      scanned++;
+      const seen = new Set();
+      for (const it of p.pd.inv.concat(p.pd.ender, Object.values(p.pd.equipment))) {
+        for (const e of it.ench) seen.add(e.id);
+      }
+      for (const id of seen) {
+        const cur = agg.get(id) || { id: id, players: 0, items: 0 };
+        cur.players++;
+        agg.set(id, cur);
+      }
+      for (const it of p.pd.inv.concat(p.pd.ender, Object.values(p.pd.equipment))) {
+        for (const e of it.ench) { const cur = agg.get(e.id); if (cur) cur.items++; }
+      }
+    }
+    const rows = Array.from(agg.values()).sort((a, b) => b.items - a.items).slice(0, 12);
+    if (rows.length) {
+      mkChart('ovEnchChart', hBarConfig(
+        rows.map(r => v4TrEnch(r.id)),
+        rows.map(r => r.items),
+        rows.map((r, i) => PALETTE[(i + 3) % PALETTE.length]),
+        v => num(v) + (V4_IS_EN ? ' items' : ' 件')
+      ));
+      v4SetEmpty('#ovEnchChart', false, '');
+    } else {
+      v4SetEmpty('#ovEnchChart', true, V4T.noEnch);
+    }
+  }
+}
+/** 空数据时的占位提示 */
+function v4SetEmpty(sel, empty, text) {
+  const el = document.querySelector(sel);
+  if (!el) return;
+  const box = el.closest('.chart-box');
+  el.classList.toggle('hidden', empty);
+  if (!box) return;
+  let tip = box.querySelector('.chart-empty-tip');
+  if (empty) {
+    if (!tip) { tip = document.createElement('div'); tip.className = 'chart-empty-tip center muted'; tip.style.padding = '40px 20px'; box.appendChild(tip); }
+    tip.textContent = text;
+  } else if (tip) tip.remove();
+}
+
+/* ============================ 成就页 ============================ */
+function renderAdv() {
+  const players = Array.from(S.players.values());
+  const n = players.length || 1;
+  const entries = Array.from(S.adv.values());
+  const hint = $('#advEmpty');
+  if (hint) hint.classList.toggle('hidden', entries.length > 0);
+
+  const withPlayers = entries.filter(a => a.players.size > 0);
+  const totalDone = entries.reduce((s, a) => s + a.players.size, 0);
+  const progressOnly = entries.filter(a => a.players.size === 0 && a.prog.size > 0);
+  const dpEntries = entries.filter(a => a.cat === V4_DP);
+
+  /* KPI */
+  const maxEntry = v4SortAdv(withPlayers)[0];
+  const rareEntry = withPlayers.length ? v4SortAdv(withPlayers)[withPlayers.length - 1] : null;
+  const byPlayer = players.slice().sort((a, b) => v4AdvCount(b) - v4AdvCount(a));
+  const kpis = [
+    { e: '🏅', l: V4T.kAdvUnlocked, v: withPlayers.length, f: num, sub: V4T.kAdvUnlockedSub(num(entries.length)) },
+    { e: '✅', l: V4T.kAdvTotal, v: totalDone, f: compact, sub: V4T.kAdvTotalSub((totalDone / n).toFixed(1)) },
+    { e: '👑', l: V4T.kAdvTop, v: byPlayer.length ? v4AdvCount(byPlayer[0]) : 0, f: v => num(v) + (V4_IS_EN ? '' : ' 项'),
+      sub: byPlayer.length ? pName(byPlayer[0].uuid) : '—' },
+    { e: '💎', l: V4T.kAdvRare, v: rareEntry ? rareEntry.players.size : 0, f: v => num(v) + (V4_IS_EN ? ' ppl' : ' 人'),
+      sub: rareEntry ? v4AdvInfo(rareEntry.key).t : '—' },
+    { e: '🧩', l: V4T.kAdvDp, v: dpEntries.length, f: num, sub: V4T.kAdvDpSub },
+    { e: '⏳', l: V4T.kAdvProgress, v: progressOnly.length, f: num, sub: V4T.kAdvProgressSub }
+  ];
+  const kbox = $('#advKpis');
+  if (kbox) {
+    kbox.innerHTML = kpis.map(k =>
+      '<div class="kpi" title="' + esc(k.sub) + '"><div class="chip">' + k.e + '</div>' +
+      '<div class="k-label">' + esc(k.l) + '</div>' +
+      '<div class="k-value" style="font-size:22px" data-v="0" data-target="' + k.v + '" title="' + esc(k.sub) + '">0</div>' +
+      '<div class="k-sub">' + esc(k.sub) + '</div></div>').join('');
+    $$('#advKpis .k-value').forEach((el, i) => countUp(el, kpis[i].v, kpis[i].f));
+  }
+
+  /* 分类完成度 */
+  const catBox = $('#advCats');
+  if (catBox) {
+    const cats = V4_ADV_CATS.map(c => {
+      const list = entries.filter(a => a.cat === c.id);
+      const done = list.filter(a => a.players.size > 0).length;
+      return { c: c, total: list.length, done: done };
+    }).filter(x => x.total > 0);
+    catBox.innerHTML = cats.map(x => {
+      const pct = x.total ? x.done / x.total * 100 : 0;
+      return '<div class="v4-catrow">' +
+        '<div class="v4-catname"><span>' + x.c.emoji + '</span> ' + esc(v4AdvCatName(x.c.id)) + '</div>' +
+        '<div class="v4-bar"><i style="width:' + pct.toFixed(1) + '%;background:' + x.c.color + '"></i></div>' +
+        '<div class="v4-catnum"><b>' + x.done + '</b> / ' + x.total + '</div>' +
+      '</div>';
+    }).join('') + '<p class="muted" style="font-size:12px;margin-top:10px;line-height:1.6">' + esc(V4T.catNote) + '</p>';
+  }
+
+  /* 最稀有成就 */
+  const rare = v4SortAdv(withPlayers).slice(-12).reverse();
+  if (rare.length) {
+    mkChart('advRareChart', hBarConfig(
+      rare.map(a => v4AdvInfo(a.key).t),
+      rare.map(a => a.players.size),
+      rare.map((a, i) => v4AdvCatMeta(a.cat).color),
+      v => num(v) + (V4_IS_EN ? ' players' : ' 人达成')
+    ));
+    v4SetEmpty('#advRareChart', false, '');
+  } else v4SetEmpty('#advRareChart', true, V4T.noAdv);
+
+  /* 达成排行 */
+  const top10 = byPlayer.slice(0, 10);
+  if (top10.length && v4AdvCount(top10[0])) {
+    mkChart('advRankChart', hBarConfig(
+      top10.map(p => pName(p.uuid)),
+      top10.map(p => v4AdvCount(p)),
+      top10.map((p, i) => i === 0 ? '#fbbf24' : '#a78bfa'),
+      v => num(v) + (V4_IS_EN ? ' done' : ' 项')
+    ));
+    v4SetEmpty('#advRankChart', false, '');
+  } else v4SetEmpty('#advRankChart', true, V4T.noAdv);
+
+  /* 最近达成 */
+  const tl = $('#advTimeline');
+  if (tl) {
+    const rows = v4Recent(50);
+    tl.innerHTML = rows.length ? rows.map(r =>
+      '<div class="v4-tl-item">' +
+        '<span class="v4-tl-date">' + v4FmtDate(r.ms) + '</span>' +
+        '<b>' + esc(pName(r.uuid)) + '</b>' +
+        '<span class="muted">' + V4T.tlDone + '</span>' +
+        '<span>' + v4AdvCatMeta(v4AdvCatOf(r.key)).emoji + ' ' + esc(v4AdvInfo(r.key).t) + '</span>' +
+      '</div>').join('') : '<p class="muted" style="font-size:12.5px">' + esc(V4T.noAdv) + '</p>';
+  }
+
+  /* 全部成就表 */
+  const only = $('#chkAdvUnlocked');
+  const list = only && only.checked ? v4SortAdv(withPlayers) : v4AllAdvSorted();
+  const tb = $('#advTable');
+  if (tb) {
+    tb.innerHTML =
+      '<thead><tr><th>' + V4T.thAdv + '</th><th>' + V4T.thCat + '</th><th>' + V4T.thDone + '</th><th>' + V4T.thPct + '</th><th>' + V4T.thFirst + '</th><th>' + V4T.thLast + '</th></tr></thead><tbody>' +
+      list.map(a => {
+        const info = v4AdvInfo(a.key);
+        const cm = v4AdvCatMeta(a.cat);
+        const pct = (a.players.size / n * 100);
+        const st = a.players.size ? '' : ' style="opacity:.55"';
+        return '<tr' + st + '><td><div class="item-cell" style="gap:8px"><span class="ico"><span class="fb">' + cm.emoji + '</span></span>' +
+          '<div><div class="item-name">' + esc(info.t) + '</div>' +
+          (info.d ? '<div class="v4-ench">' + esc(info.d.length > 90 ? info.d.slice(0, 90) + '…' : info.d) + '</div>' : '') +
+          (a.prog.size ? '<div class="v4-ench">⏳ ' + esc(V4T.tlProgress) + ' ' + a.prog.size + '</div>' : '') +
+          '</div></div></td>' +
+          '<td><span class="cat-tag">' + cm.emoji + ' ' + esc(v4AdvCatName(a.cat)) + '</span></td>' +
+          '<td><b>' + num(a.players.size) + '</b> / ' + num(n) + '</td>' +
+          '<td>' + pct.toFixed(1) + '%</td>' +
+          '<td>' + (a.first ? esc(pName(a.first.uuid)) + '<br><span class="muted">' + v4FmtDay(a.first.ms) + '</span>' : '—') + '</td>' +
+          '<td>' + (a.last ? esc(pName(a.last.uuid)) + '<br><span class="muted">' + v4FmtDay(a.last.ms) + '</span>' : '—') + '</td>' +
+          '</tr>';
+      }).join('') + '</tbody>';
+  }
+  const hintEl = $('#advTableHint');
+  if (hintEl) hintEl.textContent = V4T.tableHint(num(entries.length), num(IMPORT.recipeEntries || 0));
+  bindIconFallbacks();
+}
+
+/* ============================ 档案页增强 ============================ */
+function renderPlayerExtra(p) {
+  const pd = p.pd;
+  /* 游戏状态 */
+  const st = $('#pfState');
+  if (st) {
+    if (!pd) {
+      st.innerHTML = '<p class="muted" style="font-size:12.5px;line-height:1.7">' + V4T.noPdShort + '</p>';
+    } else {
+      const rows = [];
+      rows.push(v4Stat(V4T.sMode, '<span class="cat-tag">' + esc(v4GamemodeName(pd.gamemode)) + '</span>'));
+      rows.push(v4Stat(V4T.sDim, pd.dimension ? v4TrDim(pd.dimension) : '—'));
+      rows.push(v4Stat(V4T.sPos, pd.pos ? v4FmtCoord(pd.pos) : '—', pd.pos ? V4T.sPosNote : ''));
+      if (pd.health != null) rows.push(v4Stat(V4T.sHealth, '❤️ ' + (pd.health / 2).toFixed(1) + ' / 10' + (pd.absorption ? ' ＋' + (pd.absorption / 2).toFixed(1) : ''), V4T.sHealthNote));
+      if (pd.food != null) rows.push(v4Stat(V4T.sFood, '🍗 ' + pd.food + ' / 20'));
+      if (pd.air != null) rows.push(v4Stat(V4T.sAir, pd.air + ' / 300'));
+      rows.push(v4Stat(V4T.sLevel, '✨ ' + num(pd.xpLevel) + V4T.sLevelUnit, V4T.sLevelNote + num(pd.xpTotal)));
+      rows.push(v4Stat(V4T.sFly, (pd.flying ? V4T.sFlyYes : V4T.sFlyNo) + (pd.mayfly ? ' / ' + V4T.sMayflyYes : '') + (pd.instabuild ? ' / ' + V4T.sCreative : '')));
+      if (pd.respawn && pd.respawn.pos) rows.push(v4Stat(V4T.sRespawn, v4TrDim(pd.respawn.dim) + ' · ' + v4FmtCoord(pd.respawn.pos) + (pd.respawn.forced ? ' ' + V4T.sForced : '')));
+      if (pd.spawn) rows.push(v4Stat(V4T.sSpawn, v4TrDim(pd.spawn.dim) + ' · ' + v4FmtCoord([pd.spawn.x, pd.spawn.y, pd.spawn.z])));
+      if (pd.lastDeath) rows.push(v4Stat(V4T.sDeath, v4TrDim(pd.lastDeath.dim) + ' · ' + v4FmtCoord(pd.lastDeath.pos)));
+      if (pd.vehicle) rows.push(v4Stat(V4T.sVehicle, v4ItemName(pd.vehicle)));
+      if (pd.frozen) rows.push(v4Stat(V4T.sFrozen, v4FmtDurTicks(pd.frozen)));
+      if (pd.seenCredits) rows.push(v4Stat(V4T.sCredits, '🏆 ' + V4T.sCreditsYes));
+      if (pd.dv) rows.push(v4Stat(V4T.sVer, String(pd.dv), V4T.sVerNote));
+      if (p.pdStale) rows.push(v4Stat(V4T.sStale, V4T.sStaleVal, V4T.sStaleNote));
+      st.innerHTML = '<div class="v4-kv">' + rows.join('') + '</div>';
+    }
+  }
+  /* 状态效果 */
+  const eff = $('#pfEffects');
+  if (eff) {
+    if (!pd) eff.innerHTML = '<p class="muted" style="font-size:12.5px">—</p>';
+    else if (!pd.effects.length) eff.innerHTML = '<p class="muted" style="font-size:12.5px">' + V4T.noEffect + '</p>';
+    else eff.innerHTML = '<div class="v4-itemlist">' + pd.effects.map(e =>
+        '<span class="v4-chip">🧪 ' + esc(v4TrEffect(e.id)) + (e.amp ? ' ' + v4Roman(e.amp + 1) : '') +
+        ' <span class="muted">' + (e.infinite ? '∞' : v4FmtDurTicks(e.dur)) + '</span></span>').join('') + '</div>';
+  }
+  /* 物品栏 */
+  const inv = $('#pfInv');
+  if (inv) {
+    if (!pd) inv.innerHTML = '<p class="muted" style="font-size:12.5px">' + V4T.noPdShort + '</p>';
+    else {
+      const equip = v4EquipList(pd);
+      const ench = v4EnchSummary(pd.inv.concat(pd.ender, Object.values(pd.equipment)));
+      let html = '<div class="inv-wrap">';
+      html += '<div class="inv-block"><div class="inv-title">🎒 ' + V4T.invMain + ' (' + pd.inv.length + ')</div>' + v4InvGrid(pd.inv, 9, 36) +
+        (pd.inv.length ? v4ItemList(pd.inv) : '<p class="muted" style="font-size:12.5px;margin-top:8px">' + V4T.invEmpty + '</p>') + '</div>';
+      html += '<div class="inv-block"><div class="inv-title">📦 ' + V4T.invEnder + ' (' + pd.ender.length + ')</div>' +
+        (pd.ender.length ? v4InvGrid(pd.ender, 9, 27) + v4ItemList(pd.ender) : '<p class="muted" style="font-size:12.5px;margin-top:8px">' + V4T.invEmptyEnder + '</p>') + '</div>';
+      if (equip.length) {
+        html += '<div class="inv-block"><div class="inv-title">🛡️ ' + V4T.invEquip + '</div><div class="v4-equip">' +
+          equip.map(e => '<div class="v4-equip-row">' + '<span class="v4-equip-l">' + esc(e.label) + '</span>' +
+            v4SlotHTML(e.item) +
+            '<span class="v4-equip-n">' + esc(v4ItemName(e.item.id)) + (e.item.count > 1 ? ' ×' + e.item.count : '') +
+              (e.item.customName ? ' <span class="muted">' + (V4_IS_EN ? '"' + esc(e.item.customName) + '"' : '「' + esc(e.item.customName) + '」') + '</span>' : '') +
+              (e.item.ench.length ? ' <span class="v4-ench">' + e.item.ench.map(x => esc(v4TrEnch(x.id)) + ' ' + v4Roman(x.lvl)).join(V4_IS_EN ? ', ' : '、') + '</span>' : '') +
+            '</span></div>').join('') + '</div></div>';
+      }
+      html += '</div>';
+      if (ench.length) {
+        html += '<div class="inv-title" style="margin-top:14px">✨ ' + V4T.invEnchSum + '</div><div class="v4-itemlist">' +
+          ench.map(e => '<span class="v4-chip">' + esc(v4TrEnch(e.id)) + ' <b>' + v4Roman(e.lvl) + '</b>' +
+            ' <span class="muted">×' + e.n + '</span></span>').join('') + '</div>';
+      }
+      inv.innerHTML = html;
+    }
+  }
+  /* 原版成就进度 */
+  const ad = $('#pfAdv');
+  if (ad) {
+    const total = S.advSeen ? S.advSeen.size : 0;
+    const got = v4AdvCount(p);
+    if (!total && !got) {
+      ad.innerHTML = '<p class="muted" style="font-size:12.5px">' + V4T.noAdvShort + '</p>';
+      const s0 = $('#pfAdvSummary');
+      if (s0) s0.textContent = '';
+    } else {
+      const pct = total ? got / total * 100 : 0;
+      const mine = [];
+      for (const [k, ms] of p.adv) mine.push({ key: k, ms: ms });
+      mine.sort((a, b) => (b.ms || 0) - (a.ms || 0));
+      const prog = Array.from(p.prog).map(k => ({ key: k }));
+      const sum = $('#pfAdvSummary');
+      if (sum) sum.textContent = V4T.pfAdvSummary(num(got), num(total), pct.toFixed(1));
+      let html = '<div class="v4-bar" style="height:12px"><i style="width:' + pct.toFixed(1) + '%;background:linear-gradient(90deg,#fbbf24,#4ade80)"></i></div>' +
+        '<div class="muted" style="font-size:12px;margin:6px 0 12px">' + V4T.pfAdvAllHint + '</div>';
+      html += '<div class="inv-title">🕒 ' + V4T.pfAdvRecent + '</div><div class="v4-tl">' +
+        (mine.filter(x => x.ms).slice(0, 12).map(x =>
+          '<div class="v4-tl-item"><span class="v4-tl-date">' + v4FmtDate(x.ms) + '</span><span>' +
+          v4AdvCatMeta(v4AdvCatOf(x.key)).emoji + ' ' + esc(v4AdvInfo(x.key).t) + '</span></div>').join('') ||
+          '<p class="muted" style="font-size:12.5px">—</p>') + '</div>';
+      if (prog.length) {
+        html += '<div class="inv-title" style="margin-top:14px">⏳ ' + V4T.pfAdvProgress + ' (' + prog.length + ')</div><div class="v4-itemlist">' +
+          prog.slice(0, 40).map(x => '<span class="v4-chip">' + v4AdvCatMeta(v4AdvCatOf(x.key)).emoji + ' ' + esc(v4AdvInfo(x.key).t) + '</span>').join('') + '</div>';
+      }
+      ad.innerHTML = html;
+    }
+  }
+  /* 进度时间线（按成就解锁时间还原成长轨迹） */
+  v4RenderTimeline(p);
+  bindIconFallbacks();
+}
+
+/* ============================ 与既有功能的集成 ============================ */
+/** 档案摘要（复制档案摘要按钮）追加的内容 */
+function v4ReportLines(p) {
+  const out = [];
+  const KV = V4T.kvJoin, PW = V4T.pctWrap, SEP = V4_IS_EN ? ', ' : '、';
+  const advN = v4AdvCount(p), advT = (S.advSeen && S.advSeen.size) || 0;
+  if (advT) out.push(KV(V4T.rpAdv, advN + ' / ' + advT + ' ' + PW((advN / advT * 100).toFixed(1) + '%')));
+  const pd = p.pd;
+  if (pd) {
+    out.push(KV(V4T.rpLevel, num(pd.xpLevel) + V4T.sLevelUnit + ' ' + PW(num(pd.xpTotal) + ' XP')));
+    if (pd.dimension) out.push(KV(V4T.sDim, v4TrDim(pd.dimension) + (pd.pos ? ' · ' + v4FmtCoord(pd.pos) : '')));
+    out.push(KV(V4T.rpInv, pd.inv.length + ' / ' + pd.ender.length + ' / ' + Object.keys(pd.equipment).length));
+    if (pd.effects.length) out.push(KV(V4T.sEffects, pd.effects.map(e => v4TrEffect(e.id) + (e.amp ? ' ' + v4Roman(e.amp + 1) : '')).join(SEP)));
+  }
+  return out;
+}
+/** 对比页：追加成就 / 等级 / 物品栏维度 */
+function v4PushCompareMetrics(metrics) {
+  metrics.push({ l: V4T.cmAdv, g: p => v4AdvCount(p), f: v => num(v) + V4T.cmUnit });
+  metrics.push({ l: V4T.cmLevel, g: p => (p.pd ? p.pd.xpLevel : 0), f: v => num(v) + V4T.sLevelUnit });
+  metrics.push({ l: V4T.cmXp, g: p => (p.pd ? p.pd.xpTotal : 0), f: compact });
+  metrics.push({ l: V4T.cmItem, g: p => (p.pd ? p.pd.inv.length + p.pd.ender.length : 0), f: v => num(v) + (V4_IS_EN ? ' items' : ' 件') });
+}
+
+/* ============================ API（模组）接入 ============================ */
+/** 把 /api/data 里单个玩家的成就 / 档案塞进统计模型 */
+function v4IngestServerPlayer(p, raw) {
+  if (!p) return;
+  const target = v4EnsurePlayer(p.uuid);
+  if (raw) {
+    if (raw.adv && typeof raw.adv === 'object') {
+      for (const k in raw.adv) {
+        const ms = Number(raw.adv[k]) || 0;
+        S.advSeen.add(k);
+        const a = v4AdvEntry(k);
+        a.players.set(target.uuid, ms);
+        if (ms) {
+          if (!a.first || ms < a.first.ms) a.first = { uuid: target.uuid, ms: ms };
+          if (!a.last || ms > a.last.ms) a.last = { uuid: target.uuid, ms: ms };
+        }
+        target.adv.set(k, ms);
+      }
+    }
+    if (Array.isArray(raw.prog)) {
+      for (const k of raw.prog) {
+        S.advSeen.add(k);
+        v4AdvEntry(k).prog.set(target.uuid, 0);
+        target.prog.add(k);
+      }
+    }
+    if (raw.pdata && typeof raw.pdata === 'object') target.pd = v4NormalizePdata(raw.pdata);
+    else if (raw.pd && typeof raw.pd === 'object') target.pd = v4NormalizePdata(raw.pd);
+  }
+}
+/** 模组接口可能给出「原始 NBT 的 JSON 表示」（含 Inventory / DataVersion 等键），
+ *  也可能给出已经归一化的档案对象；这里统一成后者。 */
+function v4NormalizePdata(pd) {
+  if (pd.Inventory || pd.EnderItems || pd.DataVersion != null || pd.playerGameType != null) {
+    try { return v4ParsePlayerData(pd); } catch (e) { return null; }
+  }
+  return pd;
+}
+
+/* ============================ 玩家进度时间线 ============================ */
+const V4_TL_RECENT_DAYS = 30;
+let V4_TL_SHOW_ALL = false;
+
+function v4PlayerUnlocks(p) {
+  const rows = [];
+  if (p && p.adv) for (const kv of p.adv) if (kv[1]) rows.push({ key: kv[0], ms: kv[1] });
+  rows.sort((a, b) => a.ms - b.ms);
+  return rows;
+}
+function v4DayKey(ms) { const d = new Date(ms); return d.getFullYear() + '-' + v4Pad2(d.getMonth() + 1) + '-' + v4Pad2(d.getDate()); }
+function v4WeekKey(ms) {
+  const d = new Date(ms);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));   /* 周一为一周起点 */
+  return v4DayKey(d.getTime());
+}
+function v4MonthKey(ms) { const d = new Date(ms); return d.getFullYear() + '-' + v4Pad2(d.getMonth() + 1); }
+/** 跨度越大用越粗的粒度，避免折线挤成一团 */
+function v4TlMode(spanDays) { return spanDays <= 60 ? 'day' : (spanDays <= 500 ? 'week' : 'month'); }
+function v4TlAdvName(key) { return v4AdvCatMeta(v4AdvCatOf(key)).emoji + ' ' + v4AdvInfo(key).t; }
+
+function v4RenderTimeline(p) {
+  const body = $('#pfTlBody');
+  const sum = $('#pfTlSummary');
+  const chk = $('#chkPfTlAll');
+  if (!body) return;
+  if (chk) chk.checked = V4_TL_SHOW_ALL;
+
+  const rows = v4PlayerUnlocks(p);
+  if (!rows.length) {
+    if (sum) sum.textContent = '';
+    body.innerHTML = '<p class="muted" style="font-size:12.5px;line-height:1.7">' + V4T.tlNone + '</p>';
+    return;
+  }
+  const first = rows[0].ms, last = rows[rows.length - 1].ms;
+  const spanDays = Math.max(1, Math.round((last - first) / 86400000) + 1);
+  const byDay = new Map();
+  for (const r of rows) {
+    const k = v4DayKey(r.ms);
+    if (!byDay.has(k)) byDay.set(k, []);
+    byDay.get(k).push(r);
+  }
+  const dayList = Array.from(byDay.keys()).sort().reverse();   /* 新的在前 */
+  let busiest = dayList[0];
+  for (const k of dayList) if (byDay.get(k).length > byDay.get(busiest).length) busiest = k;
+
+  if (sum) sum.textContent = V4T.tlHint;
+
+  /* ---- 累计曲线（按跨度自动选粒度） ---- */
+  const mode = v4TlMode(spanDays);
+  const seq = [], idx = new Map();
+  for (const r of rows) {
+    const k = mode === 'day' ? v4DayKey(r.ms) : (mode === 'week' ? v4WeekKey(r.ms) : v4MonthKey(r.ms));
+    if (!idx.has(k)) { idx.set(k, seq.length); seq.push({ k: k, n: 0, keys: [] }); }
+    const b = seq[idx.get(k)];
+    b.n++;
+    if (b.keys.length < 8) b.keys.push(r.key);
+  }
+  let acc = 0;
+  const labels = [], vals = [], meta = [];
+  for (const b of seq) {
+    acc += b.n;
+    labels.push(mode === 'month' ? b.k : b.k.slice(5));
+    vals.push(acc);
+    meta.push(b);
+  }
+
+  /* ---- 统计条 ---- */
+  const kv = [
+    v4Stat(V4T.tlFirst, v4FmtDay(first)),
+    v4Stat(V4T.tlLast, v4FmtDay(last)),
+    v4Stat(V4T.tlSpan, num(spanDays) + V4T.tlSpanUnit),
+    v4Stat(V4T.tlPerDay, (rows.length / spanDays).toFixed(2) + V4T.tlUnit),
+    v4Stat(V4T.tlBusiest, v4FmtDay(byDay.get(busiest)[0].ms) + ' · ' + num(byDay.get(busiest).length) + V4T.tlUnit)
+  ];
+
+  /* ---- 按日期列表 ---- */
+  const shown = V4_TL_SHOW_ALL ? dayList : dayList.slice(0, V4_TL_RECENT_DAYS);
+  const listHtml = shown.map(k => {
+    const items = byDay.get(k);
+    const chips = items.slice(0, 14).map(r =>
+      '<span class="v4-tl-chip">' + esc(v4TlAdvName(r.key)) + '</span>').join('');
+    const rest = items.length > 14 ? '<span class="v4-tl-chip muted">+' + (items.length - 14) + '</span>' : '';
+    return '<div class="v4-tl-day">' +
+      '<div class="v4-tl-dayh"><span>' + esc(k) + '</span><b>' + num(items.length) + V4T.tlUnit + '</b></div>' +
+      '<div class="v4-tl-dayc">' + chips + rest + '</div>' +
+    '</div>';
+  }).join('');
+
+  body.innerHTML =
+    '<div class="v4-kv">' + kv.join('') + '</div>' +
+    '<div class="v4-tl-grid">' +
+      '<div class="v4-tl-side">' +
+        '<div class="inv-title">📈 ' + esc(V4T.tlCurve) + '</div>' +
+        '<div class="chart-box"><canvas id="pfTlChart"></canvas></div>' +
+      '</div>' +
+      '<div class="v4-tl-side">' +
+        '<div class="inv-title">📅 ' + esc(V4_TL_SHOW_ALL ? V4T.tlList : V4T.tlListRecent(V4_TL_RECENT_DAYS)) + '</div>' +
+        '<div class="v4-tl-scroll">' + listHtml + '</div>' +
+        (!V4_TL_SHOW_ALL && dayList.length > shown.length
+          ? '<div class="v4-tl-more" id="pfTlMore">' + esc(V4T.tlMore(dayList.length - shown.length)) + '</div>' : '') +
+      '</div>' +
+    '</div>';
+
+  const more = $('#pfTlMore');
+  if (more) more.addEventListener('click', () => { V4_TL_SHOW_ALL = true; v4RenderTimeline(p); });
+
+  const SEP = V4_IS_EN ? ': ' : '：';
+  mkChart('pfTlChart', {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: vals,
+        borderColor: '#4ade80',
+        backgroundColor: 'rgba(74,222,128,.15)',
+        fill: true, tension: .33, borderWidth: 2,
+        pointRadius: labels.length > 60 ? 0 : 3,
+        pointHoverRadius: 5, pointBackgroundColor: '#4ade80', pointBorderWidth: 0
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10,14,22,.94)', borderColor: 'rgba(140,170,210,.25)', borderWidth: 1,
+          padding: 11, cornerRadius: 10, displayColors: false,
+          callbacks: {
+            title: c => (meta[c[0].dataIndex] ? meta[c[0].dataIndex].k : ''),
+            label: c => {
+              const b = meta[c.dataIndex];
+              if (!b) return '';
+              const out = [V4T.tlTipTotal + SEP + num(c.parsed.y), V4T.tlTipItems + SEP + num(b.n) + V4T.tlUnit];
+              for (const k of b.keys.slice(0, 5)) out.push('· ' + v4TlAdvName(k));
+              if (b.n > b.keys.length) out.push('· …');
+              return out;
+            }
+          }
+        }
+      },
+      scales: baseScales()
+    }
+  });
+}
+
+/* ============================ 战绩卡片（导出 PNG） ============================ */
+const V4_CARD_W = 1200, V4_CARD_H = 840;
+
+function v4RoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function v4LoadImg(src) {
+  return new Promise(res => {
+    if (!src) return res(null);
+    const im = new Image();
+    im.onload = () => res(im);
+    im.onerror = () => res(null);
+    im.src = src;
+  });
+}
+/** 头像优先用在线皮肤（带 CORS，避免 canvas 被污染），失败回落到本地生成头像 */
+async function v4CardAvatarImg(uuid) {
+  const local = v4LoadImg(window.__v4LocalAvatar(String(uuid || 'unknown')));
+  try {
+    if (uuid && isOnlineUuid(uuid) && typeof AVATAR_BASES !== 'undefined') {
+      const im = new Image();
+      im.crossOrigin = 'anonymous';
+      const p = new Promise(res => { im.onload = () => res(im); im.onerror = () => res(null); });
+      im.src = AVATAR_BASES[0](encodeURIComponent(uuid));
+      const got = await p;
+      if (got) return got;
+    }
+  } catch (e) { /* 忽略，用本地头像 */ }
+  return await local;
+}
+function v4RankOf(p, get) {
+  const mine = get(p);
+  let above = 0, total = 0;
+  for (const q of S.players.values()) { total++; if (get(q) > mine) above++; }
+  return { rank: above + 1, total: total };
+}
+
+async function v4BuildScoreCard(p) {
+  const cv = document.createElement('canvas');
+  cv.width = V4_CARD_W; cv.height = V4_CARD_H;
+  const ctx = cv.getContext('2d');
+  const W = V4_CARD_W, H = V4_CARD_H;
+  const F = '"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif';
+  const SEP = V4_IS_EN ? ': ' : '：';
+  const txt = (s, x, y, font, color, align) => {
+    ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align || 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(s, x, y);
+  };
+
+  /* 背景 + 光斑 */
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#0b1220'); bg.addColorStop(.55, '#111a2b'); bg.addColorStop(1, '#0c1523');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  const rg = ctx.createRadialGradient(W - 190, 110, 20, W - 190, 110, 430);
+  rg.addColorStop(0, 'rgba(74,222,128,.20)'); rg.addColorStop(1, 'rgba(74,222,128,0)');
+  ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+  const rg2 = ctx.createRadialGradient(160, H - 70, 20, 160, H - 70, 400);
+  rg2.addColorStop(0, 'rgba(56,189,248,.16)'); rg2.addColorStop(1, 'rgba(56,189,248,0)');
+  ctx.fillStyle = rg2; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(140,170,210,.20)'; ctx.lineWidth = 2;
+  v4RoundRect(ctx, 14, 14, W - 28, H - 28, 26); ctx.stroke();
+
+  /* 头像（圆形裁剪） */
+  const ax = 74, ay = 74, ar = 64;
+  const av = await v4CardAvatarImg(p.uuid);
+  ctx.save();
+  ctx.beginPath(); ctx.arc(ax + ar, ay + ar, ar, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+  if (av) {
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(av, ax, ay, ar * 2, ar * 2);
+    ctx.imageSmoothingEnabled = true;
+  } else {
+    ctx.fillStyle = '#1f2b3d'; ctx.fillRect(ax, ay, ar * 2, ar * 2);
+    txt((pName(p.uuid) || '?').charAt(0).toUpperCase(), ax + ar, ay + ar + 20, '700 56px ' + F, '#8ea0bd', 'center');
+  }
+  ctx.restore();
+  ctx.beginPath(); ctx.arc(ax + ar, ay + ar, ar, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(74,222,128,.75)'; ctx.lineWidth = 3; ctx.stroke();
+
+  /* 名字 / 称号 / UUID */
+  const nx = ax + ar * 2 + 34;
+  txt(pName(p.uuid), nx, 132, '800 44px ' + F, '#eef4ff');
+  const t = computeTitle(p);
+  if (t && t.title) {
+    const badge = (t.icon ? t.icon + ' ' : '') + t.title;
+    ctx.font = '700 20px ' + F;
+    const bw = ctx.measureText(badge).width + 30;
+    ctx.fillStyle = 'rgba(251,191,36,.16)';
+    v4RoundRect(ctx, nx, 152, bw, 38, 12); ctx.fill();
+    ctx.strokeStyle = 'rgba(251,191,36,.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+    txt(badge, nx + 15, 178, '700 20px ' + F, '#fbbf24');
+  }
+  const uuidTxt = p.uuid && String(p.uuid).startsWith('file:') ? '—' : String(p.uuid || '—');
+  txt(uuidTxt, nx, 216, '500 15px ' + F, '#7f90ab');
+
+  /* 右上角排名 */
+  const rAdv = v4RankOf(p, q => v4AdvCount(q));
+  const rPlay = v4RankOf(p, q => pGet(q, 'custom', 'play_time'));
+  const rankLine = [
+    '🏅 ' + V4T.cardRankAdv + SEP + (V4_IS_EN ? '#' + rAdv.rank : '第 ' + rAdv.rank + ' 名') + ' / ' + rAdv.total,
+    '🕰️ ' + V4T.cardRankPlay + SEP + (V4_IS_EN ? '#' + rPlay.rank : '第 ' + rPlay.rank + ' 名') + ' / ' + rPlay.total
+  ];
+  rankLine.forEach((s, i) => txt(s, W - 76, 110 + i * 34, '600 19px ' + F, '#9fb2cd', 'right'));
+
+  /* 分隔线 */
+  ctx.strokeStyle = 'rgba(140,170,210,.16)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(74, 238); ctx.lineTo(W - 74, 238); ctx.stroke();
+
+  /* KPI 网格 4×2 */
+  const pd = p.pd;
+  const advGot = v4AdvCount(p), advTotal = (S.advSeen && S.advSeen.size) || 0;
+  const KP = V4T.cardKpi;
+  const kpis = [
+    ['🕰️', KP.play, fmtTicks(pGet(p, 'custom', 'play_time'))],
+    ['💀', KP.death, num(pGet(p, 'custom', 'deaths')) + (V4_IS_EN ? '' : ' 次')],
+    ['⚔️', KP.mob, compact(pGet(p, 'custom', 'mob_kills'))],
+    ['🧭', KP.dist, fmtDist(pTravel(p))],
+    ['⛏️', KP.mined, compact(pCat(p, 'mined'))],
+    ['🧱', KP.placed, compact(pCat(p, 'placed'))],
+    ['🏅', KP.adv, advTotal ? advGot + ' / ' + advTotal : num(advGot)],
+    ['✨', KP.level, pd ? num(pd.xpLevel) : '—']
+  ];
+  const cx0 = 74, cy0 = 268, cw = (W - 148 - 3 * 18) / 4, chh = 100;
+  kpis.forEach((k, i) => {
+    const cx = cx0 + (i % 4) * (cw + 18), cy = cy0 + Math.floor(i / 4) * (chh + 18);
+    ctx.fillStyle = 'rgba(255,255,255,.045)';
+    v4RoundRect(ctx, cx, cy, cw, chh, 16); ctx.fill();
+    ctx.strokeStyle = 'rgba(140,170,210,.16)'; ctx.lineWidth = 1; ctx.stroke();
+    txt(k[0], cx + 16, cy + 34, '400 22px ' + F, '#e8eefb');
+    txt(k[1], cx + 48, cy + 33, '700 15px ' + F, '#8ea0bd');
+    txt(String(k[2]), cx + 16, cy + 76, '800 30px ' + F, '#eef4ff');
+  });
+
+  /* 稀有成就 */
+  const mine = [];
+  for (const a of S.adv.values()) if (a.players.has(p.uuid) && a.players.get(p.uuid)) mine.push(a);
+  mine.sort((x, y) => (x.players.size - y.players.size) || x.key.localeCompare(y.key));
+  const rare = mine.slice(0, 5);
+  txt('💎 ' + V4T.cardRare, 74, 500, '800 21px ' + F, '#eef4ff');
+  if (!rare.length) {
+    txt(V4T.cardNoRare, 74, 546, '500 17px ' + F, '#7f90ab');
+  } else {
+    rare.forEach((a, i) => {
+      const y = 542 + i * 42;
+      txt(v4AdvCatMeta(v4AdvCatOf(a.key)).emoji, 76, y, '400 19px ' + F, '#e8eefb');
+      txt(v4AdvInfo(a.key).t, 108, y, '600 19px ' + F, '#dfe8f6');
+      txt(num(a.players.size) + (V4_IS_EN ? ' players' : ' 人达成'), W - 76, y, '600 17px ' + F, '#8ea0bd', 'right');
+    });
+  }
+
+  /* 页脚 */
+  ctx.strokeStyle = 'rgba(140,170,210,.14)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(74, H - 78); ctx.lineTo(W - 74, H - 78); ctx.stroke();
+  txt(V4T.cardPlayers(S.players.size) + ' · ' + v4FmtDate(Date.now()), 74, H - 44, '500 16px ' + F, '#7f90ab');
+  txt(V4T.cardFooter, W - 76, H - 44, '500 16px ' + F, '#7f90ab', 'right');
+
+  return cv;
+}
+
+async function v4ShowScoreCard(p) {
+  if (!p) return;
+  openModal(V4T.cardTitle + ' · ' + pName(p.uuid), '<div class="v4-card-busy">' + V4T.cardGenerating + '</div>');
+  let cv = null, url = '';
+  try { cv = await v4BuildScoreCard(p); url = cv.toDataURL('image/png'); } catch (e) { console.warn('战绩卡片渲染失败', e); }
+  const body = $('#modalBody');
+  if (!body) return;
+  if (!cv || !url) { body.innerHTML = '<p class="muted">' + V4T.cardFail + '</p>'; return; }
+
+  const fname = 'scorecard_' + String(pName(p.uuid)).replace(/[^\w\u4e00-\u9fa5-]/g, '') + '_' + v4FmtDay(Date.now()).replace(/-/g, '') + '.png';
+  body.innerHTML =
+    '<div class="v4-card-wrap"><img src="' + url + '" alt="score card"></div>' +
+    '<div class="v4-card-actions">' +
+      '<button class="btn ghost sm" id="btnCardCopy">' + V4T.cardCopyImg + '</button>' +
+      '<button class="btn sm" id="btnCardSave">' + V4T.cardSave + '</button>' +
+    '</div>';
+
+  const save = $('#btnCardSave');
+  if (save) save.addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = url; a.download = fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    toast(V4T.cardReady);
+  });
+  const cp = $('#btnCardCopy');
+  if (cp) cp.addEventListener('click', async () => {
+    try {
+      const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      toast(V4T.cardCopied);
+    } catch (e) { toast(V4T.cardCopyFail, 'warn'); }
+  });
+}
+
+/* ============================ 玩家搜索（自动补全） ============================ */
+let V4_AC_ROWS = [], V4_AC_IDX = -1;
+
+function v4AcClose() {
+  const b = $('#v4AcBox');
+  if (b) b.classList.add('hidden');
+  V4_AC_ROWS = []; V4_AC_IDX = -1;
+}
+function v4SearchMatches(kw) {
+  const k = String(kw || '').toLowerCase().trim();
+  const out = [];
+  for (const p of S.players.values()) {
+    const name = pName(p.uuid) || '';
+    const i = k ? name.toLowerCase().indexOf(k) : -1;
+    const hitUuid = k && p.uuid && String(p.uuid).toLowerCase().indexOf(k) >= 0;
+    if (k && i < 0 && !hitUuid) continue;
+    out.push({ uuid: p.uuid, name: name, i: i });
+  }
+  out.sort((a, b) => {                    /* 前缀命中 > 命中靠前 > 名字较短 */
+    const ap = a.i === 0 ? 0 : (a.i > 0 ? 1 : 2), bp = b.i === 0 ? 0 : (b.i > 0 ? 1 : 2);
+    if (ap !== bp) return ap - bp;
+    if (a.i !== b.i) return a.i - b.i;
+    if (a.name.length !== b.name.length) return a.name.length - b.name.length;
+    return a.name.localeCompare(b.name, V4_IS_EN ? 'en' : 'zh');
+  });
+  return out;
+}
+function v4AcHighlight(name, kw) {
+  const k = String(kw || '').trim();
+  if (!k) return esc(name);
+  const i = name.toLowerCase().indexOf(k.toLowerCase());
+  if (i < 0) return esc(name);
+  return esc(name.slice(0, i)) + '<b>' + esc(name.slice(i, i + k.length)) + '</b>' + esc(name.slice(i + k.length));
+}
+function v4AcRender() {
+  const box = $('#v4AcBox'), input = $('#playerSearch');
+  if (!box || !input) return;
+  const kw = input.value || '';
+  const all = v4SearchMatches(kw);
+  V4_AC_ROWS = all.slice(0, 12);
+  V4_AC_IDX = V4_AC_ROWS.length ? 0 : -1;
+
+  let html = '<div class="v4-ac-hd"><span>' +
+    esc(all.length ? V4T.acMatch(all.length) : (S.loaded ? V4T.acNoMatch : V4T.acNoData)) + '</span>' +
+    '<span class="v4-ac-hintline"><span class="v4-ac-kbd">↑↓</span><span class="v4-ac-kbd">Enter</span><span class="v4-ac-kbd">Esc</span></span></div>';
+
+  if (!V4_AC_ROWS.length) {
+    html += '<div class="v4-ac-empty">' + esc(kw ? V4T.acNoMatch : V4T.acTip) + '</div>';
+  } else {
+    html += V4_AC_ROWS.map((r, i) => {
+      const p = player(r.uuid);
+      const metaTxt = V4T.acMeta(fmtTicks(pGet(p, 'custom', 'play_time')), num(v4AdvCount(p)));
+      return '<div class="v4-ac-row' + (i === V4_AC_IDX ? ' on' : '') + '" data-i="' + i + '">' +
+        '<img class="v4-ac-av" src="' + esc(avatar(r.uuid)) + '" data-au="' + esc(encodeURIComponent(r.uuid)) + '" onerror="__avFail(this)">' +
+        '<span class="v4-ac-nm">' + v4AcHighlight(r.name, kw) + '</span>' +
+        '<span class="v4-ac-meta">' + esc(metaTxt) + '</span>' +
+      '</div>';
+    }).join('');
+  }
+  box.innerHTML = html;
+  box.classList.remove('hidden');
+}
+function v4AcMove(d) {
+  if (!V4_AC_ROWS.length) return;
+  V4_AC_IDX = (V4_AC_IDX + d + V4_AC_ROWS.length) % V4_AC_ROWS.length;
+  const box = $('#v4AcBox');
+  if (!box) return;
+  $$('.v4-ac-row', box).forEach((el, i) => el.classList.toggle('on', i === V4_AC_IDX));
+  const cur = box.querySelector('.v4-ac-row.on');
+  if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest' });
+}
+function v4AcPick(row) {
+  if (!row) return;
+  const input = $('#playerSearch');
+  if (input) input.value = '';       /* 清空关键词：让下拉框恢复完整列表并正确定位到该玩家 */
+  v4AcClose();
+  if (typeof renderPlayers === 'function') renderPlayers();
+  goPlayer(row.uuid);
+}
+
+function v4InitPlayerSearch() {
+  const input = $('#playerSearch');
+  if (!input || input.dataset.v4ac === '1') return;
+  input.dataset.v4ac = '1';
+  input.setAttribute('autocomplete', 'off');
+
+  const host = document.createElement('div');
+  host.className = 'v4-ac-wrap';
+  input.parentNode.insertBefore(host, input);
+  host.appendChild(input);
+
+  const box = document.createElement('div');
+  box.className = 'v4-ac hidden';
+  box.id = 'v4AcBox';
+  host.appendChild(box);
+
+  input.addEventListener('input', v4AcRender);
+  input.addEventListener('focus', () => { if (S.loaded) v4AcRender(); });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!V4_AC_ROWS.length) return;
+      e.preventDefault();
+      v4AcMove(e.key === 'ArrowDown' ? 1 : -1);
+    } else if (e.key === 'Enter') {
+      if (!V4_AC_ROWS.length) return;
+      e.preventDefault();
+      v4AcPick(V4_AC_ROWS[V4_AC_IDX] || V4_AC_ROWS[0]);
+    } else if (e.key === 'Escape') {
+      v4AcClose();
+    }
+  });
+  box.addEventListener('mousedown', e => {
+    const rowEl = e.target && e.target.closest ? e.target.closest('.v4-ac-row') : null;
+    if (!rowEl) return;
+    e.preventDefault();                       /* 阻止 input 失焦 */
+    v4AcPick(V4_AC_ROWS[Number(rowEl.dataset.i)]);
+  });
+  document.addEventListener('mousedown', e => { if (!host.contains(e.target)) v4AcClose(); });
+  /* Ctrl/⌘ + K 随时唤起玩家搜索 */
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && String(e.key || '').toLowerCase() === 'k') {
+      e.preventDefault();
+      if (typeof switchTab === 'function' && S.tab !== 'profile') switchTab('profile');
+      setTimeout(() => {
+        const i2 = $('#playerSearch');
+        if (i2) { i2.focus(); i2.select(); if (S.loaded) v4AcRender(); }
+      }, 0);
+    }
+  });
+}
+
+/* 档案页的交互型工具（导出卡片 / 时间线开关 / 搜索补全）只需初始化一次 */
+function v4InitProfileTools() {
+  v4InitPlayerSearch();
+  const btn = $('#btnExportCard');
+  if (btn && btn.dataset.v4card !== '1') {
+    btn.dataset.v4card = '1';
+    btn.addEventListener('click', () => { const p = player(S.current); if (p) v4ShowScoreCard(p); });
+  }
+  const chk = $('#chkPfTlAll');
+  if (chk && chk.dataset.v4tl !== '1') {
+    chk.dataset.v4tl = '1';
+    chk.addEventListener('change', () => {
+      V4_TL_SHOW_ALL = chk.checked;
+      const p = player(S.current);
+      if (p) v4RenderTimeline(p);
+    });
+  }
+}
+
+/*V4E:core*//* ------------------------------ usercache ------------------------------ */
 function processUserCache(content) {
   let data;
   try { data = JSON.parse(stripBOM(content)); } catch (e) { return; }
@@ -1554,7 +3541,8 @@ function processStatsFile(content, fileName) {
   catch (e) { IMPORT.badJson++; return; }
 
   const pairs = extractStatsMap(data);
-  if (!pairs) {
+  if (!pairs) {/*V4S:advfallback*/
+    if (v4LooksLikeAdvancements(data)) { v4IngestAdvancements(data, fileName); return; }   // V4：成就文件/*V4E:advfallback*/
     IMPORT.skipped++;
     if (IMPORT.skippedNames.length < 12) IMPORT.skippedNames.push(baseName(fileName));
     return;
@@ -1580,7 +3568,8 @@ function processStatsFile(content, fileName) {
   if (byName) IMPORT.named++;
 
   let p = S.players.get(key);
-  if (!p) { p = { uuid: key, name: null, map: new Map(), cat: new Map() }; S.players.set(key, p); }
+  if (!p) { p = { uuid: key, name: null, map: new Map(), cat: new Map() }; S.players.set(key, p); }/*V4S:ensurep*/
+  p = v4EnsurePlayer(key);   // V4：补上 adv / prog / pd 字段/*V4E:ensurep*/
 
   /* JSON 里可能自带Player名 */
   if (!p.name && data && typeof data === 'object') {
@@ -1595,6 +3584,57 @@ function processStatsFile(content, fileName) {
 
   IMPORT.statsFiles++;
   IMPORT_FILES.set(key, (IMPORT_FILES.get(key) || 0) + 1);
+}
+
+/* ------------------ Derived "blocks placed" (vanilla has no placed stat) ------------------
+ * Vanilla stat types are only mined / crafted / used / broken / picked_up / dropped /
+ * killed / killed_by / custom — there is no standalone "placed". Placing a block increments
+ * minecraft:used for that block item (see the official wiki, ITEM_USED "block placement").
+ * So we derive the placed category from the block-like entries of `used`.
+ * Block detection merges three signals:
+ *   ① anything any player has mined on this server (minable ⇒ a block)
+ *   ② block-family name patterns (_slab / _stairs / _planks / _glass / _block ...)
+ *   ③ an explicit list (torch, chest, crafting table, ...)
+ */
+const BLOCK_NAME_RE = /(_slab|_stairs|_wall|_fence_gate|_fence|_door|_trapdoor|_button|_pressure_plate|_hanging_sign|_sign|_planks|_log|_wood|_hyphae|_stem|_leaves|_wool|_concrete_powder|_concrete|_glazed_terracotta|_terracotta|_carpet|_banner|_bed|_candle|_bricks|_brick|_glass_pane|_stained_glass|_glass|_tiles|_block|_ore|_cobblestone|_stone|_sand|_gravel|_quartz|_sandstone|_dirt)$/;
+const BLOCK_EXTRA = new Set((
+  'torch soul_torch redstone_torch lantern soul_lantern chest barrel crafting_table furnace blast_furnace ' +
+  'smoker stonecutter cartography_table fletching_table smithing_table loom grindstone composter cauldron ' +
+  'bell beacon conduit respawn_anchor lodestone note_block jukebox redstone_lamp sea_lantern bookshelf ' +
+  'chiseled_bookshelf lectern scaffolding ladder rail powered_rail detector_rail flower_pot decorated_pot ' +
+  'campfire soul_campfire end_rod glowstone sea_pickle hay_block target slime_block honey_block iron_bars ' +
+  'chain bedrock dragon_egg tinted_glass cobweb snow ice packed_ice blue_ice magma_block obsidian ' +
+  'crying_obsidian netherrack soul_sand soul_soil end_stone sponge tnt farmland dirt_path podzol mycelium ' +
+  'moss_block vine lily_pad cactus bamboo sugar_cane cocoa kelp seagrass glow_lichen sculk amethyst_cluster ' +
+  'dripstone_block nether_wart sweet_berry_bush chorus_flower spore_blossom turtle_egg anvil brewing_stand ' +
+  'enchanting_table end_portal_frame spawner trial_spawner vault crafter lightning_rod stone dirt sand gravel ' +
+  'cobblestone glass bricks clay mud deepslate tuff calcite basalt blackstone andesite diorite granite').split(' '));
+
+function isBlockItemName(id) {
+  const p = id.slice(id.lastIndexOf(':') + 1);   // for modded ids only the path matters
+  return BLOCK_NAME_RE.test(p) || BLOCK_EXTRA.has(p);
+}
+
+/** Builds the placed category from used; must run before the global index is rebuilt */
+function derivePlacedCategories() {
+  const minedUnion = new Set();
+  for (const p of S.players.values()) {
+    for (const k of p.map.keys()) {
+      if (k.startsWith('mined|')) minedUnion.add(k.slice(6));
+    }
+  }
+  for (const p of S.players.values()) {
+    let hasReal = false;
+    for (const k of p.map.keys()) { if (k.startsWith('placed|')) { hasReal = true; break; } }
+    if (hasReal) continue;                         // real data always wins
+    const add = [];
+    for (const [k, v] of p.map) {
+      if (!k.startsWith('used|')) continue;
+      const item = k.slice(5);
+      if (minedUnion.has(item) || isBlockItemName(item)) add.push(['placed|' + item, v]);
+    }
+    for (const [k, v] of add) p.map.set(k, (p.map.get(k) || 0) + v);
+  }
 }
 
 /** 解析完成后建立全局索引 */
@@ -1620,6 +3660,8 @@ function finalizeLoad() {
       S.players.delete(key);
     }
   }
+
+  derivePlacedCategories();   // vanilla has no placed stat, derive it from used (before index rebuild)
 
   S.global.clear();
   S.catGlobal.clear();
@@ -1680,7 +3722,7 @@ function updateStatusPills() {
   if (S.loaded && S.players.size) {
     let filesTxt = 'Parsing ' + num(nFiles) + ' files · ';
     setStatus('Loaded ' + S.players.size + ' players · ' + S.keys.size + ' stat keys · ' +
-      compact(totalOf('custom', 'play_time') / 20 / 3600) + 'h of playtime (' + filesTxt + 'see Import Report for details)');
+      compact(totalOf('custom', 'play_time') / 20 / 3600) + ' hours of playtime (' + filesTxt + 'see Import Report for details)');
   } else {
     setStatus('No data yet · drop a stats zip to begin');
   }
@@ -1697,7 +3739,68 @@ function pName(uuid) {
   return shortUuid(uuid);
 }
 function shortUuid(u) { return u && u.length > 8 ? u.slice(0, 8) + '…' : (u || 'Unknown player'); }
-function avatar(uuid) { return 'https://mc-heads.net/avatar/' + encodeURIComponent(uuid) + '/96'; }
+/* Avatar strategy: premium (v4) UUIDs use remote skin APIs; offline-server UUIDs
+   don't exist in the Mojang database, so every remote API just returns the default
+   Alex. For offline UUIDs we render a deterministic pixel avatar locally with
+   Canvas (colors derived from a UUID hash, unique per player, zero network). */
+const AVATAR_BASES = [
+  u => 'https://minotar.net/helm/' + u + '/96',
+  u => 'https://crafatar.com/avatars/' + u.replace(/-/g, '') + '?size=96&overlay',
+  u => 'https://mc-heads.net/avatar/' + u + '/96'
+];
+/* Premium UUID check: Mojang account UUIDs are always v4 (13th hex char is '4') */
+function isOnlineUuid(u) {
+  const h = String(u || '').replace(/-/g, '');
+  return h.length === 32 && h[12] === '4';
+}
+const _avCache = new Map();
+/* Deterministic 8x8 pixel avatar from a UUID (upscaled to 96x96 dataURL, cached) */
+window.__v4LocalAvatar = function (seed) {
+  seed = String(seed || 'unknown');
+  if (_avCache.has(seed)) return _avCache.get(seed);
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  let st = h;
+  const rnd = () => { st = (Math.imul(st, 1664525) + 1013904223) >>> 0; return st / 4294967296; };
+  const hairHue = rnd() * 360;
+  const skinHue = 20 + rnd() * 25;                                     // warm skin tones
+  const skin  = 'hsl(' + skinHue + ',' + (25 + rnd() * 20) + '%,' + (55 + rnd() * 22) + '%)';
+  const skinD = 'hsl(' + skinHue + ',' + (30 + rnd() * 20) + '%,' + (42 + rnd() * 14) + '%)';
+  const hair  = 'hsl(' + hairHue + ',' + (35 + rnd() * 40) + '%,' + (18 + rnd() * 38) + '%)';
+  const eye   = 'hsl(' + (rnd() * 360) + ',70%,' + (28 + rnd() * 30) + '%)';
+  let url = '';
+  try {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 8;
+    const cx = cv.getContext('2d');
+    for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) {
+      let c;
+      if (y < 2 || (y === 2 && rnd() < 0.5)) c = hair;        // hair + random fringe
+      else if (y === 4 && (x === 2 || x === 5)) c = eye;      // pupils
+      else if (y === 4 && (x === 1 || x === 6)) c = '#fff';   // eye whites
+      else if (y === 5 && (x === 3 || x === 4)) c = skinD;    // nose
+      else if (y === 6 && (x === 3 || x === 4)) c = skinD;    // mouth
+      else c = skin;
+      cx.fillStyle = c; cx.fillRect(x, y, 1, 1);
+    }
+    const up = document.createElement('canvas'); up.width = up.height = 96;
+    const ux = up.getContext('2d'); ux.imageSmoothingEnabled = false;
+    ux.drawImage(cv, 0, 0, 96, 96);
+    url = up.toDataURL('image/png');
+  } catch (e) { url = ''; }
+  _avCache.set(seed, url);
+  return url;
+};
+function avatar(uuid) {
+  if (isOnlineUuid(uuid)) return AVATAR_BASES[0](encodeURIComponent(uuid));
+  return window.__v4LocalAvatar(String(uuid || 'unknown'));
+}
+/* On load failure try the next remote source; fall back to a local avatar */
+window.__avFail = function (img) {
+  const u = img.dataset.au || '';
+  const i = Number(img.dataset.av || 0) + 1;
+  if (u && i < AVATAR_BASES.length) { img.dataset.av = i; img.src = AVATAR_BASES[i](u); }
+  else { const s = window.__v4LocalAvatar(decodeURIComponent(u)); if (s) img.src = s; else img.style.opacity = 0; }
+};
 
 /** Player某Stat item的值 */
 function pGet(p, cat, item) { return (p && p.map.get(cat + '|' + item)) || 0; }
@@ -1882,7 +3985,7 @@ function renderOverview() {
     { emoji: '🕰️', label: 'Total Playtime', value: totPlay, fmt: v => compact(v / 20 / 3600), sub: fmtTicks(totPlay), always: true },
     { emoji: '📏', label: 'Avg Playtime', value: totPlay / nPlayers, fmt: v => fmtTicks(v), sub: 'avg (ticks) ' + compact(totPlay / nPlayers) },
     { emoji: '⛏️', label: 'Blocks Mined', value: totMined, fmt: compact, sub: 'avg ' + compact(totMined / nPlayers) },
-    { emoji: '🧱', label: 'Blocks Placed', value: totPlaced, fmt: compact, sub: 'avg ' + compact(totPlaced / nPlayers) },
+    { emoji: '🧱', label: 'Blocks Placed', value: totPlaced, fmt: compact, sub: 'avg ' + compact(totPlaced / nPlayers) + ' · derived', note: 'Vanilla Minecraft has no "placed" stat: placing a block increments that block\'s "used" stat instead. This value is derived from used (block detection + block-family names).' },
     { emoji: '⚔️', label: 'Total Mob Kills', value: totKilled, fmt: compact, sub: 'mob kills: ' + compact(totKills) + ' times' },
     { emoji: '💀', label: 'Total Deaths', value: totDeaths, fmt: compact, sub: 'avg ' + (totDeaths / nPlayers).toFixed(1) + ' times' },
     { emoji: '🧭', label: 'Distance Traveled', value: totDist, fmt: () => fmtDist(totDist), sub: '≈ ' + (totDist / 100 / 40075000).toFixed(2) + ' laps around Earth' },
@@ -1892,7 +3995,7 @@ function renderOverview() {
   ].filter(k => k.always || k.value > 0);
 
   $('#ovKpis').innerHTML = kpis.map(k => (
-    '<div class="kpi">' +
+    '<div class="kpi"' + (k.note ? ' title="' + k.note + '"' : '') + '>' +
       '<div class="chip">' + k.emoji + '</div>' +
       '<div class="k-label">' + k.label + '</div>' +
       '<div class="k-value" data-v="0" data-target="' + k.value + '" title="' + num(k.value) + '">0</div>' +
@@ -1920,6 +4023,8 @@ function renderOverview() {
     const tip = ovCatBox.querySelector('.chart-empty-tip');
     if (tip) tip.remove();
   }
+  const ovCatNote = $('#ovCatNote');
+  if (ovCatNote) ovCatNote.style.display = catEntries.some(e => e.c === 'placed') ? '' : 'none';
   mkChart('ovCatChart', {
     type: 'doughnut',
     data: {
@@ -1984,7 +4089,8 @@ function renderOverview() {
     v => num(v) + ' times'
   ));
 
-  renderRecords(players);
+  renderRecords(players);/*V4S:ovext*/
+  v4Overview(players);   // V4/*V4E:ovext*/
 }
 
 /* 服务器之最 */
@@ -2065,16 +4171,24 @@ function renderPlayers() {
     .map(p => ({ uuid: p.uuid, name: pName(p.uuid) }))
     .filter(p => !keyword || p.name.toLowerCase().includes(keyword) || p.uuid.includes(keyword))
     .sort((a, b) => a.name.localeCompare(b.name, 'zh'));
+  const hasCurrent = list.some(p => p.uuid === S.current);
+  if (!hasCurrent) {
+    /* V4 修复：当前玩家被关键词过滤掉时不再偷偷改选中玩家 ——
+       旧逻辑会把 select 选中第一项却不刷新下方档案，
+       且该项已处于选中态，再点它不会触发 change，看起来“点了没反应”。 */
+    const ph = document.createElement('option');
+    ph.value = '';
+    ph.textContent = V4T.pickPlaceholder(num(list.length));
+    ph.disabled = true; ph.selected = true;
+    select.appendChild(ph);
+  }
   list.forEach(p => {
     const o = document.createElement('option');
     o.value = p.uuid; o.textContent = p.name;
     if (p.uuid === S.current) o.selected = true;
     select.appendChild(o);
   });
-  if (!list.some(p => p.uuid === S.current) && list.length) {
-    S.current = list[0].uuid;
-    select.value = S.current;
-  }
+  select.value = hasCurrent ? S.current : '';
 }
 
 function renderProfile() {
@@ -2083,7 +4197,10 @@ function renderProfile() {
 
   $('#pfAvatar').style.visibility = 'visible';
   $('#pfAvatar').src = avatar(p.uuid);
-  $('#pfAvatar').onerror = function () { this.style.visibility = 'hidden'; };
+  $('#pfAvatar').dataset.au = encodeURIComponent(p.uuid);
+  $('#pfAvatar').dataset.av = 0;
+  $('#pfAvatar').setAttribute('onerror', '__avFail(this)');
+  $('#pfAvatar').onerror = function () { window.__avFail(this); };
   $('#pfName').textContent = pName(p.uuid);
   $('#pfUuid').textContent = p.uuid && p.uuid.startsWith('file:') ? '(no valid UUID)' : p.uuid;
 
@@ -2101,7 +4218,7 @@ function renderProfile() {
     { l: 'Mob Kills', v: pGet(p, 'custom', 'mob_kills'), f: compact, e: '⚔️' },
     { l: 'Player Kills', v: pGet(p, 'custom', 'player_kills'), f: num, e: '🗡️' },
     { l: 'Blocks Mined', v: pCat(p, 'mined'), f: compact, e: '⛏️' },
-    { l: 'Blocks Placed', v: pCat(p, 'placed'), f: compact, e: '🧱' },
+    { l: 'Blocks Placed', v: pCat(p, 'placed'), f: compact, e: '🧱', note: 'Derived: vanilla has no "placed" stat — placing a block counts as "using" that block, so this is computed from used' },
     { l: 'Items Crafted', v: pCat(p, 'crafted'), f: compact, e: '🔨' },
     { l: 'Distance', v: travel, f: fmtDist, e: '🧭' },
     { l: 'Jumps', v: pGet(p, 'custom', 'jump'), f: compact, e: '🦘' },
@@ -2110,7 +4227,7 @@ function renderProfile() {
     { l: 'Server Rank', v: rankOf(p.uuid), f: v => '#' + num(v) + '', e: '🏆' }
   ];
   $('#pfKpis').innerHTML = kpis.map(k => (
-    '<div class="kpi"' + (k.v === 0 ? ' title="This stat is 0 (the player never did it, or this dataset does not record it)"' : '') + '>' +
+    '<div class="kpi"' + (k.note ? ' title="' + k.note + '"' : (k.v === 0 ? ' title="This stat is 0 (the player never did it, or this dataset does not record it)"' : '')) + '>' +
       '<div class="chip">' + k.e + '</div>' +
       '<div class="k-label">' + k.l + '</div>' +
       '<div class="k-value" style="font-size:21px" data-v="0">0</div>' +
@@ -2242,6 +4359,7 @@ function renderProfile() {
   });
 
   renderAchievements(p);
+  renderPlayerExtra(p);   // V4
 }
 
 /** Player在全服的排名 (By playtime) */
@@ -2494,7 +4612,7 @@ function drawRanking() {
     if (!e) return;
     pod += '<div class="podium-card ' + cls[i] + '" style="animation-delay:' + (i * 70) + 'ms">' +
       '<div class="podium-rank">' + medal[i] + '</div>' +
-      '<img class="podium-avatar" src="' + avatar(e.uuid) + '" onerror="this.style.opacity=0">' +
+      '<img class="podium-avatar" src="' + avatar(e.uuid) + '" data-au="' + e.uuid + '" onerror="__avFail(this)">' +
       '<div class="podium-name">' + esc(pName(e.uuid)) + '</div>' +
       '<div class="podium-uuid">#' + (i + 1) + '</div>' +
       '<div class="podium-score">' + esc(fmtFn(e.count)) + '</div>' +
@@ -2511,7 +4629,7 @@ function drawRanking() {
     const rk = rank <= 3 ? ' r' + rank : '';
     html += '<div class="rank-item">' +
       '<div class="rank-no' + rk + '">' + rank + '</div>' +
-      '<img class="rank-avatar" src="' + avatar(e.uuid) + '" onerror="this.style.opacity=0">' +
+      '<img class="rank-avatar" src="' + avatar(e.uuid) + '" data-au="' + e.uuid + '" onerror="__avFail(this)">' +
       '<div style="flex:1;min-width:0">' +
         '<div class="rank-name" style="cursor:pointer" data-goto="' + esc(e.uuid) + '">' + esc(pName(e.uuid)) + '</div>' +
         '<div class="rank-bar"><i style="width:' + (e.count / max * 100).toFixed(1) + '%"></i></div>' +
@@ -2592,13 +4710,14 @@ function renderCompare() {
     { l: 'Deaths', g: p => now(p, 'deaths'), f: v => num(v) + ' times' },
     { l: 'Mob Kills', g: p => now(p, 'mob_kills'), f: compact },
     { l: 'Blocks Mined', g: p => pCat(p, 'mined'), f: compact },
-    { l: 'Blocks Placed', g: p => pCat(p, 'placed'), f: compact },
+    { l: 'Blocks Placed (derived)', g: p => pCat(p, 'placed'), f: compact },
     { l: 'Items Crafted', g: p => pCat(p, 'crafted'), f: compact },
     { l: 'Distance', g: p => pTravel(p), f: fmtDist },
     { l: 'Activity Score', g: p => powerScore(p), f: v => v.toFixed(1) + ' pts' }
   ];
 
-  $('#cmpBars').innerHTML = metrics.map(m => {
+/*V4S:cmpmetric*/  v4PushCompareMetrics(metrics);   // V4：成就 / 等级 / 物品栏维度
+/*V4E:cmpmetric*/  $('#cmpBars').innerHTML = metrics.map(m => {
     const va = m.g(a), vb = m.g(b);
     if (!va && !vb) {
       return '<div style="margin-bottom:14px">' +
@@ -2634,6 +4753,7 @@ function renderCompare() {
   for (const k of allKeys) {
     const i = k.indexOf('|');
     const cat = k.slice(0, i), item = k.slice(i + 1);
+    if (cat === 'placed') continue;   // derived from used: would duplicate rows, the bar above already covers it
     const va = pGet(a, cat, item), vb = pGet(b, cat, item);
     if (!va && !vb) continue;
     rows.push({ cat, item, va, vb, diff: va - vb, sum: va + vb });
@@ -2895,7 +5015,7 @@ function renderFun() {
     return '<tr class="title-row" data-goto="' + esc(x.p.uuid) + '" style="cursor:pointer">' +
       '<td class="num"><span class="rank-no' + rk + '" style="display:inline-grid">' + (i + 1) + '</span></td>' +
       '<td><div class="item-cell">' +
-        '<img class="rank-avatar" src="' + avatar(x.p.uuid) + '" onerror="this.style.opacity=0">' +
+        '<img class="rank-avatar" src="' + avatar(x.p.uuid) + '" data-au="' + x.p.uuid + '" onerror="__avFail(this)">' +
         '<div class="item-name">' + esc(pName(x.p.uuid)) + '</div>' +
       '</div></td>' +
       '<td><span style="font-weight:800">' + t.icon + ' ' + esc(t.title) + '</span>' +
@@ -2914,6 +5034,7 @@ function topGlobalItem(n) {
   for (const [k, g] of S.global) {
     const cat = k.slice(0, k.indexOf('|'));
     if (cat === 'custom') continue;
+    if (cat === 'placed') continue;   // derived category: keep it out of "most popular item"
     if (!best || g.count > best.v) best = { item: k.slice(k.indexOf('|') + 1), cat, v: g.count };
   }
   return best;
@@ -2926,6 +5047,7 @@ function rarestItems(n, needHolder) {
     const i = k.indexOf('|');
     const cat = k.slice(0, i), item = k.slice(i + 1);
     if (cat === 'custom') continue;
+    if (cat === 'placed') continue;   // derived: don't treat a one-player block placement as a rare item
     if (g.players.size > 3) continue;
     arr.push({ cat, item, owners: g.players.size, holder: g.players.values().next().value });
   }
@@ -2954,7 +5076,8 @@ function applyTab() {
   });
   if (!hasData) return;
   if (S.tab === 'overview') renderOverview();
-  if (S.tab === 'profile') renderProfile();
+  if (S.tab === 'profile') renderProfile();/*V4S:advtab*/
+  if (S.tab === 'adv') renderAdv();/*V4E:advtab*/
   if (S.tab === 'ranking') renderRanking();
   if (S.tab === 'compare') renderCompare();
   if (S.tab === 'table') { renderCategories(); renderTable(); }
@@ -3065,7 +5188,8 @@ function bindEvents() {
   $('#btnBuiltin').addEventListener('click', loadBuiltin);
   $('#btnClear').addEventListener('click', () => {
     S.players.clear(); S.names.clear(); S.global.clear(); S.catGlobal.clear();
-    S.keys.clear(); S.leaders.clear(); S.loaded = false;
+    S.keys.clear(); S.leaders.clear(); S.loaded = false;/*V4S:clear*/
+    v4Reset();/*V4E:clear*/
     S.current = null; S.rankingMetric = null; METRIC_OPTIONS = null;
     RANK_MAP = null; TITLE_DIST = null; DIM_MAX = null;
     resetImport();
@@ -3104,6 +5228,7 @@ function bindEvents() {
 
   /* Player档案 */
   $('#playerSelect').addEventListener('change', e => {
+    if (!e.target.value) return;   // V4：占位项，忽略
     S.current = e.target.value;
     renderCategories(); renderTable(); renderProfile();
     syncUrl();
@@ -3224,7 +5349,7 @@ function bindEvents() {
     }
     const k = e.key.toLowerCase();
     if (k >= '1' && k <= '6') {
-      const tabs = ['overview', 'profile', 'ranking', 'compare', 'table', 'fun'];
+      const tabs = ['overview', 'profile', 'adv', 'ranking', 'compare', 'table', 'fun'];
       switchTab(tabs[Number(k) - 1]);
       return;
     }
@@ -3267,7 +5392,9 @@ function copyReport() {
     'Distance: ' + fmtDist(pTravel(p)),
     'Server rank: #' + rankOf(p.uuid) + '',
     'Achievements: ' + ACHIEVEMENTS.filter(a => a.t(p)).length + ' / ' + ACHIEVEMENTS.length
-  ];
+/*V4S:report*/    ,
+    ...v4ReportLines(p)
+/*V4E:report*/  ];
   copyText(lines.join('\n'), 'Profile summary copied');
 }
 
@@ -3282,7 +5409,8 @@ function copyReport() {
   document.documentElement.setAttribute('data-theme', theme);
 
   applyChartDefaults();
-  bindEvents();
+  bindEvents();/*V4S:inittools*/
+  v4InitProfileTools();   // V4：搜索补全 / 战绩卡片 / 时间线开关/*V4E:inittools*/
   loadTranslations();
 
   /* URL 参数 */
