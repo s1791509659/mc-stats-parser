@@ -15,15 +15,15 @@ A tool to analyze players' stats file in Minecraft — all parsing happens **loc
 
 ## 🌐 Access
 
-### 1. GitHub Pages: [MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/en_us/)
+### 1. GitHub Pages: [MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/en_us/) (English) · [中文](https://s1791509659.github.io/mc-stats-parser/)
 
-- English default
+- English at `/en_us/`, Chinese at the root path
 - Available in most areas once you can open GitHub
 - Stable and safe
 
-### 2. Retinbox page: [MC Player Analyzer](https://stats.rth1.xyz/)
+### 2. Retinbox page: [MC Player Analyzer](https://stats.rth1.xyz/en_us/) (English) · [中文](https://stats.rth1.xyz/)
 
-- Chinese default
+- English at `/en_us/`, Chinese at the root path
 - China-network friendly
 
 ---
@@ -116,7 +116,7 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 # 简体中文
 
-[English](#minecraft-stats-parser) | **简体中文**
+[English](#minecraft-player-analyzer) | **简体中文**
 
 一个用于分析 Minecraft 玩家统计数据文件的工具 —— 所有解析都在**浏览器本地完成**，数据不会上传到任何服务器。
 
@@ -128,15 +128,15 @@ Whether you're tracking individual player progress, analyzing server-wide trends
 
 ## 🌐 访问入口
 
-### 1. GitHub Pages：[MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/en_us/)
+### 1. GitHub Pages：[MC Player Analyzer](https://s1791509659.github.io/mc-stats-parser/)（中文页）· [English](https://s1791509659.github.io/mc-stats-parser/en_us/)
 
-- 英文默认
+- 根路径为中文页，英文页在 `/en_us/`
 - 只要能打开 GitHub 就能访问
 - 稳定安全
 
-### 2. Retinbox 镜像：[MC Player Analyzer](https://stats.rth1.xyz/)
+### 2. Retinbox 镜像：[MC Player Analyzer](https://stats.rth1.xyz/)（中文页）· [English](https://stats.rth1.xyz/en_us/)
 
-- 中文默认
+- 根路径为中文页，英文页在 `/en_us/`
 - 国内网络友好
 
 ---
