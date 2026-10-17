@@ -4735,6 +4735,18 @@ function fillMetricSelect() {
     const want = S.rankingMetric.cat + '|' + S.rankingMetric.item;
     if (list.some(m => m.cat + '|' + m.item === want)) sel.value = want;
   }
+
+  /* 唯一命中时自动应用：过滤后只剩一个选项时，原生 select 会把它显示成"已选中"，
+     但对已选中值的点击不触发 change 事件，榜单永远不刷新——必须在这里直接走选中流程 */
+  if (kw && list.length === 1) {
+    const m = list[0];
+    if (!S.rankingMetric || S.rankingMetric.cat !== m.cat || S.rankingMetric.item !== m.item) {
+      S.rankingMetric = { cat: m.cat, item: m.item };
+      $('#rankPreset').value = '';
+      sel.value = m.cat + '|' + m.item;
+      drawRanking();
+    }
+  }
 }
 
 function drawRanking() {

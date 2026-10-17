@@ -4724,6 +4724,19 @@ function fillMetricSelect() {
     const want = S.rankingMetric.cat + '|' + S.rankingMetric.item;
     if (list.some(m => m.cat + '|' + m.item === want)) sel.value = want;
   }
+
+  /* Auto-apply on a unique match: when filtering leaves a single option, the native select
+     displays it as "selected" but clicking an already-selected value never fires `change`,
+     so the ranking below would never refresh — apply the selection flow here directly */
+  if (kw && list.length === 1) {
+    const m = list[0];
+    if (!S.rankingMetric || S.rankingMetric.cat !== m.cat || S.rankingMetric.item !== m.item) {
+      S.rankingMetric = { cat: m.cat, item: m.item };
+      $('#rankPreset').value = '';
+      sel.value = m.cat + '|' + m.item;
+      drawRanking();
+    }
+  }
 }
 
 function drawRanking() {
